@@ -1,25 +1,39 @@
 const fs = require('fs');
 const { validationResult } = require('express-validator');
 const { User, Profile } = require('../models');
+const { badRequest, internalServerError, notFound } = require('./error');
+
+const unlinkProfilePicturePath = `${__dirname}/../uploads/profiles/`;
+//const jsonProfilePicturePath = `${baseUrl}/uploads/profiles/`;
 
 module.exports = {
     findAll: async (req, res) => {
-        //const profile = await Profile.findAll({ include: [{ model: User }] });
-        const profile = await Profile.findAll();
+        const profile = await Profile.findAll({ include: [{ model: User }] });
+        //const profile = await Profile.findAll();
         res.status(200).json({
             statusCode: 200,
             message: 'OK',
             data: profile
         });
     },
-    findByPk: async (req, res) => {
+    findbyID: async (req, res) => {
+        const errors = validationResult(req);
+        const jsonProfilePicturePath = `${req.baseUrl}/uploads/profiles/`;
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+        const profile = await Profile.findByPk(req.query.id, { include: [{ model: User }] });
 
+        if (profile) profile.profilePicture = `${jsonProfilePicturePath}${profile.profilePicture}`;
+        res.status(200).json({
+            statusCode: 200,
+            message: 'OK',
+            data: profile
+        });
     },
     update: async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const profile = await Profile.findByPk(req.body.userId);
+        const profile = await Profile.findByPk(req.query.id, { include: [{ model: User }] });
         const updatedData = {};
         const profilePicture = req.file ? req.file.filename : 'default-profile.png';
 
@@ -68,7 +82,7 @@ module.exports = {
             });
         }
 
-        await Profile.update(updatedData, { where: { id: req.body.userId } });
+        await Profile.update(updatedData, { where: { id: req.query.id } });
 
         res.status(201).json({
             success: true,

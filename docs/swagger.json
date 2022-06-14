@@ -129,16 +129,51 @@
             }
         },
         "/info-profile": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Get Profile to upgrade user",
+                "operationId": "info-profile-get",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "infoProfile successful",
+                        "schema": {
+                            "$ref": "#/responses/infoProfile"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            },
             "put": {
                 "tags": [
                     "Profile"
                 ],
                 "summary": "Profile to upgrade user",
-                "operationId": "info-profile",
+                "operationId": "info-profile-update",
                 "parameters": [
                     {
                         "name": "id",
-                        "in": "path",
+                        "in": "query",
                         "description": "profile id",
                         "required": true,
                         "type": "integer"
@@ -205,9 +240,6 @@
         "infoProfile": {
             "type": "object",
             "properties": {
-                "userId": {
-                    "type": "integer"
-                },
                 "name": {
                     "type": "string"
                 },
