@@ -357,7 +357,7 @@
                 "name": {
                     "type": "string"
                 },
-                "profilePict": {
+                "profilePicture": {
                     "type": "string",
                     "nullable": true
                 },
