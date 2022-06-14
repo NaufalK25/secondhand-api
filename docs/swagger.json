@@ -280,8 +280,10 @@
                     "type": "string"
                 },
                 "data": {
-                    "type": "object",
-                    "properties": {},
+                    "type": "array",
+                    "items": {
+                        "type:": "object"
+                    },
                     "nullable": true
                 }
             }

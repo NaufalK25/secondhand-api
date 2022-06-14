@@ -9,6 +9,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.RoleUser, { foreignKey: 'roleId', as: 'role' });
+      this.hasOne(models.Profile, { foreignKey: 'userId', as: 'user' });
+      this.hasMany(models.Wishlist, { foreignKey: 'userId', as: 'user' });
+      this.hasMany(models.ProductOffer, { foreignKey: 'buyerId', as: 'buyer' });
+      this.hasMany(models.Transaction, { foreignKey: 'buyerId', as: 'buyer' });
+      this.hasMany(models.User, { foreignKey: 'userId', as: 'user' });
     }
   }
   User.init(
