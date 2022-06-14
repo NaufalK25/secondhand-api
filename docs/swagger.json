@@ -24,10 +24,16 @@
     "produces": [
         "application/json"
     ],
-    "tags": {
-        "name": "Auth",
-        "description": "Authentication operations"
-    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Authentication operations"
+        },
+        {
+            "name": "Profile",
+            "description": "Profile Account Information"
+        }
+    ],
     "paths": {
         "/register": {
             "post": {
@@ -94,6 +100,46 @@
                     }
                 }
             }
+        },
+        "/info-profile": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Profile to upgrade user",
+                "operationId": "info-profile",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "profile id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/requestBodies/infoProfile"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "infoProfile successful",
+                        "schema": {
+                            "$ref": "#/responses/infoProfile"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                }
+            }
         }
     },
     "requestBodies": {
@@ -121,6 +167,27 @@
                 "password": {
                     "type": "string",
                     "minLength": 8
+                }
+            }
+        },
+        "infoProfile": {
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string",
+                    "minLength": 15
+                },
+                "cityId": {
+                    "type": "integer"
+                },
+                "address": {
+                    "type": "string"
                 }
             }
         }
@@ -184,6 +251,28 @@
                     "type": "object",
                     "properties": {},
                     "nullable": true
+                }
+            }
+        },
+        "infoProfile": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "user": {
+                            "$ref": "#/definitions/Profile"
+                        },
+                        "token": {
+                            "type": "string"
+                        }
+                    }
                 }
             }
         }
