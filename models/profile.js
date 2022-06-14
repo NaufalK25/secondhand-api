@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.User, { foreignKey: 'userId', as: 'user' });
+      this.belongsTo(models.City, { foreignKey: 'cityId', as: 'city' });
     }
   }
   Profile.init(
@@ -18,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       profilePicture: DataTypes.STRING,
       phoneNumber: DataTypes.STRING,
       cityId: DataTypes.INTEGER,
-      address: DataTypes.TEXT
+      address: DataTypes.STRING
     },
     {
       sequelize,
