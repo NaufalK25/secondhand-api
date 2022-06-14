@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   ProductResource.init(
     {
-      product_id: DataTypes.INTEGER,
+      productId: DataTypes.INTEGER,
       name: DataTypes.STRING,
       extension: DataTypes.STRING,
       path: DataTypes.STRING

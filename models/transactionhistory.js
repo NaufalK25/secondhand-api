@@ -18,8 +18,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   TransactionHistory.init(
     {
-      user_id: DataTypes.INTEGER,
-      transaction_id: DataTypes.INTEGER
+      userId: DataTypes.INTEGER,
+      transactionId: DataTypes.INTEGER
     },
     {
       sequelize,
