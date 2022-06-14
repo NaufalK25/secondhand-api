@@ -101,8 +101,35 @@
                 }
             }
         },
+        "/view-profile": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Profile to upgrade user",
+                "responses": {
+                    "200": {
+                        "description": "infoProfile successful",
+                        "schema": {
+                            "$ref": "#/responses/infoProfile"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
         "/info-profile": {
-            "post": {
+            "put": {
                 "tags": [
                     "Profile"
                 ],
@@ -138,7 +165,12 @@
                             "$ref": "#/responses/Error"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
             }
         }
     },
