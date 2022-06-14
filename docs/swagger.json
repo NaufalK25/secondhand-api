@@ -1,0 +1,263 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "SecondHand API",
+        "description": "Backend API for SecondHnad website",
+        "version": "1.0.0"
+    },
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "basePath": "/api/v1",
+    "securityDefinitions": {
+        "jwt": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Example: Bearer [JWT TOKEN]"
+        }
+    },
+    "cosumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "tags": {
+        "name": "Auth",
+        "description": "Authentication operations"
+    },
+    "paths": {
+        "/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register new user",
+                "operationId": "register",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/requestBodies/Register"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Registration successful",
+                        "schema": {
+                            "$ref": "#/responses/Register"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login to existing user",
+                "operationId": "login",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/requestBodies/Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "schema": {
+                            "$ref": "#/responses/Login"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "requestBodies": {
+        "Register": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 8
+                }
+            }
+        },
+        "Login": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 8
+                }
+            }
+        }
+    },
+    "responses": {
+        "Register": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "user": {
+                            "$ref": "#/definitions/User"
+                        },
+                        "profile": {
+                            "$ref": "#/definitions/Profile"
+                        }
+                    }
+                }
+            }
+        },
+        "Login": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "user": {
+                            "$ref": "#/definitions/User"
+                        },
+                        "token": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {},
+                    "nullable": true
+                }
+            }
+        }
+    },
+    "definitions": {
+        "User": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "roleId": {
+                    "type": "integer"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string",
+                    "nullable": true
+                },
+                "googleId": {
+                    "type": "string",
+                    "nullable": true
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "Profile": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "userId": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "profilePict": {
+                    "type": "string",
+                    "nullable": true
+                },
+                "phoneNumber": {
+                    "type": "string",
+                    "nullable": true
+                },
+                "cityId": {
+                    "type": "integer"
+                },
+                "address": {
+                    "type": "string",
+                    "nullable": true
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        }
+    }
+}
