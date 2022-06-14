@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      product_id: {
+      productId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Products',
@@ -16,9 +16,9 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
-        allowNull: false,
+        allowNull: false
       },
-      buyer_id: {
+      buyerId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
@@ -26,16 +26,20 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
+        allowNull: false
+      },
+      transactionDate: {
+        type: Sequelize.DATE,
         allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
-      transaction_date: {
-        type: Sequelize.DATE
-      },
-      fix_price: {
-        type: Sequelize.INTEGER
+      fixPrice: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

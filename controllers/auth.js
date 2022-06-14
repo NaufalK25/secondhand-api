@@ -15,9 +15,13 @@ module.exports = {
       });
     }
 
-    const { email, password } = req.body;
+    const { email } = req.body;
     const user = await User.findOne({ where: { email } });
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'secret');
+    const token = jwt.sign(
+      { id: user.id },
+      process.env.JWT_SECRET || 'secret',
+      { expiresIn: '7d' }
+    );
 
     res.status(200).json({
       success: true,

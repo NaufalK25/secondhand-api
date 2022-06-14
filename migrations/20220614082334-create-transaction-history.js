@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
+      userId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
@@ -16,9 +16,9 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
-        allowNull: false,
+        allowNull: false
       },
-      transaction_id: {
+      transactionId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Transactions',
@@ -26,7 +26,7 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
-        allowNull: false,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
