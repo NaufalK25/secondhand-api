@@ -1,42 +1,44 @@
-//const { getEndpoint } = require('../helper');
-
 module.exports = {
     badRequest: (err, req, res) => {
         res.status(400).json({
-            statusCode: 400,
-            errors: err
+            success: false,
+            message: 'Validation error',
+            data: err
         });
     },
     unAuthorized: (req, res) => {
         res.status(401).json({
-            statusCode: 401,
-            message: 'Unauthorized'
+            success: false,
+            message: 'Unauthorized',
+            data: null
         });
     },
     forbidden: (req, res) => {
         res.status(403).json({
-            statusCode: 403,
-            message: 'Forbidden'
+            success: false,
+            message: 'Forbidden',
+            data: null
         });
     },
     notFound: (req, res) => {
         res.status(404).json({
-            statusCode: 404,
-            //message: `Endpoint ${getEndpoint(req.originalUrl)} not found`
-            message: `Endpoint ${req.path} not found`
+            success: false,
+            message: `Endpoint ${req.path} not found`,
+            data: null
         });
     },
     methodNotAllowed: (req, res) => {
         res.status(405).json({
-            statusCode: 405,
-            //message: `Method ${req.method} not allowed at endpoint ${getEndpoint(req.originalUrl)}`
-            message: `Method ${req.method} not allowed at endpoint ${req.path}`
+            success: false,
+            message: `Method ${req.method} not allowed at endpoint ${req.path}`,
+            data: null
         });
     },
     internalServerError: (err, req, res) => {
         res.status(500).json({
-            statusCode: 500,
-            message: err.message ? err.message : err
+            success: false,
+            message: err.message ? err.message : err,
+            data: null
         });
     }
-}
+};

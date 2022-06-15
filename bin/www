@@ -14,15 +14,15 @@ require('dotenv').config();
  */
 
 const normalizePort = val => {
-  const port = parseInt(val, 10);
+    const port = parseInt(val, 10);
 
-  // named pipe
-  if (isNaN(port)) return val;
+    // named pipe
+    if (isNaN(port)) return val;
 
-  // port number
-  if (port >= 0) return port;
+    // port number
+    if (port >= 0) return port;
 
-  return false;
+    return false;
 };
 
 /**
@@ -30,21 +30,21 @@ const normalizePort = val => {
  */
 
 const onError = error => {
-  if (error.syscall !== 'listen') throw error;
+    if (error.syscall !== 'listen') throw error;
 
-  const bind = `${typeof port === 'string' ? 'Pipe' : 'Port'} $${port}`;
+    const bind = `${typeof port === 'string' ? 'Pipe' : 'Port'} $${port}`;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-    default:
-      throw error;
-  }
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+        default:
+            throw error;
+    }
 };
 
 /**
@@ -52,14 +52,15 @@ const onError = error => {
  */
 
 const onListening = () => {
-  const addr = server.address();
-  const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
-  debug(`Listening on ${bind}`);
+    const addr = server.address();
+    const bind =
+        typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
+    debug(`Listening on ${bind}`);
 
-  // development mode
-  if (process.env.NODE_ENV === '' || process.env.NODE_ENV === 'development') {
-    console.log(`Listening at http://localhost:${addr.port}`);
-  }
+    // development mode
+    if (process.env.NODE_ENV === '' || process.env.NODE_ENV === 'development') {
+        console.log(`Listening at http://localhost:${addr.port}`);
+    }
 };
 
 /**

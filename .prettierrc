@@ -5,5 +5,7 @@
     "semi": true,
     "singleQuote": true,
     "trailingComma": "none",
+    "useTabs": false,
+    "tabWidth": 4,
     "quoteProps": "as-needed"
 }

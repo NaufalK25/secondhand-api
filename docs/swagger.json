@@ -19,7 +19,8 @@
         }
     },
     "cosumes": [
-        "application/json"
+        "application/json",
+        "multipart/form-data"
     ],
     "produces": [
         "application/json"
@@ -27,11 +28,11 @@
     "tags": [
         {
             "name": "Auth",
-            "description": "Authentication operations"
+            "description": "Authentication Operations"
         },
         {
             "name": "Profile",
-            "description": "Profile Account Information"
+            "description": "User Profile Information"
         }
     ],
     "paths": {
@@ -101,17 +102,27 @@
                 }
             }
         },
-        "/view-profile": {
+        "/info-profile": {
             "get": {
                 "tags": [
                     "Profile"
                 ],
-                "summary": "Profile to upgrade user",
+                "summary": "Get Profile By Id",
+                "operationId": "info-profile-get",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Profile Id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "infoProfile successful",
+                        "description": "Get Info Profile successful",
                         "schema": {
-                            "$ref": "#/responses/infoProfile"
+                            "$ref": "#/responses/InfoProfile"
                         }
                     },
                     "400": {
@@ -119,40 +130,21 @@
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
-                    }
-                },
-                "security": [
-                    {
-                        "jwt": []
-                    }
-                ]
-            }
-        },
-        "/info-profile": {
-            "get": {
-                "tags": [
-                    "Profile"
-                ],
-                "summary": "Get Profile to upgrade user",
-                "operationId": "info-profile-get",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "query",
-                        "description": "profile id",
-                        "required": true,
-                        "type": "integer"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "infoProfile successful",
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
                         "schema": {
-                            "$ref": "#/responses/infoProfile"
+                            "$ref": "#/responses/Error"
                         }
                     },
-                    "400": {
-                        "description": "Validation error",
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -168,34 +160,80 @@
                 "tags": [
                     "Profile"
                 ],
-                "summary": "Profile to upgrade user",
+                "summary": "Update Profile By Id",
                 "operationId": "info-profile-update",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "query",
-                        "description": "profile id",
+                        "description": "Profile Id",
                         "required": true,
                         "type": "integer"
                     },
                     {
-                        "name": "body",
-                        "in": "body",
+                        "name": "name",
+                        "in": "formData",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/requestBodies/infoProfile"
-                        }
+                        "type": "string"
+                    },
+                    {
+                        "name": "profilePicture",
+                        "in": "formData",
+                        "required": true,
+                        "type": "file"
+                    },
+                    {
+                        "name": "phoneNumber",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "cityId",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "address",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "userId",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "infoProfile successful",
                         "schema": {
-                            "$ref": "#/responses/infoProfile"
+                            "$ref": "#/responses/InfoProfile"
                         }
                     },
                     "400": {
                         "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -237,15 +275,14 @@
                 }
             }
         },
-        "infoProfile": {
+        "InfoProfile": {
             "type": "object",
             "properties": {
                 "name": {
                     "type": "string"
                 },
                 "phoneNumber": {
-                    "type": "string",
-                    "minLength": 15
+                    "type": "string"
                 },
                 "cityId": {
                     "type": "integer"
@@ -301,6 +338,20 @@
                 }
             }
         },
+        "InfoProfile": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "$ref": "#/definitions/ProfileInclude"
+                }
+            }
+        },
         "Error": {
             "type": "object",
             "properties": {
@@ -314,31 +365,11 @@
                 "data": {
                     "type": "array",
                     "items": {
-                        "type:": "object"
+                        "type:": "object",
+                        "properties": {},
+                        "nullable": true
                     },
                     "nullable": true
-                }
-            }
-        },
-        "infoProfile": {
-            "type": "object",
-            "properties": {
-                "success": {
-                    "type": "boolean"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "data": {
-                    "type": "object",
-                    "properties": {
-                        "user": {
-                            "$ref": "#/definitions/Profile"
-                        },
-                        "token": {
-                            "type": "string"
-                        }
-                    }
                 }
             }
         }
@@ -411,6 +442,46 @@
                 "updatedAt": {
                     "type": "string",
                     "format": "date-time"
+                }
+            }
+        },
+        "ProfileInclude": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "userId": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "profilePicture": {
+                    "type": "string",
+                    "nullable": true
+                },
+                "phoneNumber": {
+                    "type": "string",
+                    "nullable": true
+                },
+                "cityId": {
+                    "type": "integer"
+                },
+                "address": {
+                    "type": "string",
+                    "nullable": true
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "User": {
+                    "$ref": "#/definitions/User"
                 }
             }
         }
