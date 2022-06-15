@@ -6,27 +6,32 @@ module.exports = {
       'ProductCategory', 
       [
         {
-          category: 'Aksesoris',
+          category: 'Elektronik',
+          description: null,
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
-          category: 'Rumah Tangga',
+          category: 'Kesehatan',
+          description: null,
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
-          category: 'Elekronik',
+          category: 'Kecantikan',
+          description: null,
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
           category: 'Fashion pria',
+          description: null,
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
           category: 'Fashion wanita',
+          description: null,
           createdAt: new Date(),
           updatedAt: new Date()
         }
@@ -35,11 +40,8 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+   
+      await queryInterface.bulkDelete('ProductCategory', null, {});
+     
   }
 };
