@@ -10,6 +10,9 @@ stages:
     - deploy
 
 install:
+    only:
+        # - main
+        - dev
     stage: install
     script:
         - apt-get update
