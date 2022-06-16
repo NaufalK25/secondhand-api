@@ -1,14 +1,16 @@
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
-const { login, register } = require('../controllers/auth');
+const { login, logout, register } = require('../controllers/auth');
 const { User, Profile } = require('../models');
 
 process.env.NODE_ENV = 'test';
 
-const mockRequest = ({ body }) => ({ body });
+const mockRequest = ({ body } = {}) => ({ body });
 const mockResponse = () => {
     const res = {};
+    res.cookie = jest.fn().mockReturnValue(res);
+    res.clearCookie = jest.fn().mockReturnValue(res);
     res.status = jest.fn().mockReturnValue(res);
     res.json = jest.fn().mockReturnValue(res);
     return res;
@@ -59,11 +61,14 @@ describe('POST /api/v1/login', () => {
 
         await login(req, res);
 
+        expect(res.cookie).toHaveBeenCalledWith('token', 'token', {
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'Login successful',
-            data: { user: { ...user }, token: 'token' }
+            data: { ...user }
         });
     });
     test('400 Bad Request', async () => {
@@ -95,6 +100,23 @@ describe('POST /api/v1/login', () => {
             success: false,
             message: 'Validation error',
             data: errors
+        });
+    });
+});
+
+describe('POST /api/v1/logout', () => {
+    test('200 OK', () => {
+        const req = mockRequest();
+        const res = mockResponse();
+
+        logout(req, res);
+
+        expect(res.clearCookie).toHaveBeenCalledWith('token');
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({
+            success: true,
+            message: 'Logout successful',
+            data: null
         });
     });
 });

@@ -1,6 +1,6 @@
 const errorController = require('../controllers/error');
 
-const mockRequest = ({ method, originalName } = {}) => ({ method, originalName });
+const mockRequest = ({ method, path } = {}) => ({ method, path });
 const mockResponse = () => {
     const res = {};
     res.status = jest.fn().mockReturnValue(res);
@@ -49,7 +49,7 @@ describe('errorController', () => {
         });
     });
     test('404 Not Found', () => {
-        const req = mockRequest({ originalName: '/api/v1/info-profiles' });
+        const req = mockRequest({ path: '/api/v1/profiles' });
         const res = mockResponse();
 
         errorController.notFound(req, res);
@@ -62,7 +62,7 @@ describe('errorController', () => {
         });
     });
     test('405 Method Not Allowed', () => {
-        const req = mockRequest({ method: 'POST', originalName: '/api/v1/info-profile' });
+        const req = mockRequest({ method: 'POST', path: '/api/v1/profile' });
         const res = mockResponse();
 
         errorController.methodNotAllowed(req, res);

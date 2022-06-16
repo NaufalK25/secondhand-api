@@ -16,11 +16,20 @@ module.exports = {
             process.env.JWT_SECRET || 'secret',
             { expiresIn: '7d' }
         );
-            
-        res.status(200).json({
+
+        res.cookie('token', token, { maxAge: 7 * 24 * 60 * 60 * 1000 }) // 7 days
+            .status(200)
+            .json({
+                success: true,
+                message: 'Login successful',
+                data: user
+            });
+    },
+    logout: (req, res) => {
+        res.clearCookie('token').status(200).json({
             success: true,
-            message: 'Login successful',
-            data: { user, token }
+            message: 'Logout successful',
+            data: null
         });
     },
     register: async (req, res) => {

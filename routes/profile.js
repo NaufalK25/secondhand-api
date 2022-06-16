@@ -16,7 +16,7 @@ const { Profile } = require('../models');
 const router = express.Router();
 
 router
-    .route('/info-profile')
+    .route('/profile')
     .get(
         (req, res, next) => {
             passport.authenticate(
@@ -30,6 +30,7 @@ router
                         if (!profile || profile.userId !== user.id)
                             return forbidden(req, res);
                     }
+                    req.user = user;
                     next();
                 }
             )(req, res, next);
@@ -51,6 +52,7 @@ router
                         if (!profile || profile.userId !== user.id)
                             return forbidden(req, res);
                     }
+                    req.user = user;
                     next();
                 }
             )(req, res, next);

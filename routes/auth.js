@@ -1,7 +1,7 @@
 const bcrypjs = require('bcryptjs');
 const { Router } = require('express');
 const { body } = require('express-validator');
-const { login, register } = require('../controllers/auth');
+const { login, logout, register } = require('../controllers/auth');
 const { methodNotAllowed } = require('../controllers/error');
 const { User } = require('../models');
 
@@ -44,6 +44,10 @@ router
         ],
         login
     )
+    .all(methodNotAllowed);
+
+router.route('/logout')
+    .post(logout)
     .all(methodNotAllowed);
 
 router
