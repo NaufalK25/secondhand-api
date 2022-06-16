@@ -1,22 +1,22 @@
 const express = require('express');
 const multer = require('multer');
-const { body, query } = require('express-validator');
-const passport = require('../middlewares/passport');
+const { body, param } = require('express-validator');
+const passport = require('../../middlewares/passport');
 const {
     forbidden,
     internalServerError,
     methodNotAllowed,
     notFound,
     unAuthorized
-} = require('../controllers/error');
-const { findbyID, update } = require('../controllers/profile');
-const { profileStorage } = require('../middlewares/file');
-const { Profile } = require('../models');
+} = require('../../controllers/error');
+const { findbyID, update } = require('../../controllers/profile');
+const { profileStorage } = require('../../middlewares/file');
+const { Profile } = require('../../models');
 
 const router = express.Router();
 
 router
-    .route('/profile')
+    .route('/profile/:id')
     .get(
         (req, res, next) => {
             passport.authenticate(
@@ -25,8 +25,8 @@ router
                 async (err, user, info) => {
                     if (err) return internalServerError(err, req, res);
                     if (!user) return unAuthorized(req, res);
-                    if (+req.query.id) {
-                        const profile = await Profile.findByPk(+req.query.id);
+                    if (+req.params.id) {
+                        const profile = await Profile.findByPk(+req.params.id);
                         if (!profile || profile.userId !== user.id)
                             return forbidden(req, res);
                     }
@@ -35,7 +35,7 @@ router
                 }
             )(req, res, next);
         },
-        [query('id').isInt().withMessage('Id must be an integer')],
+        [param('id').isInt().withMessage('Id must be an integer')],
         findbyID
     )
     .put(
@@ -46,12 +46,10 @@ router
                 async (err, user, info) => {
                     if (err) return internalServerError(err, req, res);
                     if (!user) return unAuthorized(req, res);
-                    if (+req.query.id) {
-                        const profile = await Profile.findByPk(+req.query.id);
-                        if (!profile) return notFound(req, res);
-                        if (!profile || profile.userId !== user.id)
-                            return forbidden(req, res);
-                    }
+                    const profile = await Profile.findByPk(+req.params.id);
+                    if (!profile) return notFound(req, res);
+                    if (!profile || profile.userId !== user.id)
+                        return forbidden(req, res);
                     req.user = user;
                     next();
                 }
@@ -59,7 +57,7 @@ router
         },
         multer({ storage: profileStorage }).single('profilePicture'),
         [
-            query('id').isInt().withMessage('Id must be an integer'),
+            param('id').isInt().withMessage('Id must be an integer'),
             body('name')
                 .optional()
                 .trim()

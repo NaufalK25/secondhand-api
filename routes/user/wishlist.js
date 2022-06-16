@@ -1,33 +1,30 @@
 const express = require('express');
 const passport = require('../../middlewares/passport');
-const { body, query } = require('express-validator');
+const { body } = require('express-validator');
 const {
     internalServerError,
     methodNotAllowed,
     unAuthorized
 } = require('../../controllers/error');
-const { findbyID, create } = require('../../controllers/wishlist');
+const { findByUser, create } = require('../../controllers/wishlist');
+const { Wishlist } = require('../../models');
 
 const router = express.Router();
 
 router
-    .route('/')
-    .get(
-        (req, res, next) => {
-            passport.authenticate(
-                'jwt',
-                { session: false },
-                async (err, user, info) => {
-                    if (err) return internalServerError(err, req, res);
-                    if (!user) return unAuthorized(req, res);
-                    req.user = user;
-                    next();
-                }
-            )(req, res, next);
-        },
-        [query('userId').isInt().withMessage('Id must be an integer')],
-        findbyID
-    )
+    .route('/wishlists')
+    .get((req, res, next) => {
+        passport.authenticate(
+            'jwt',
+            { session: false },
+            async (err, user, info) => {
+                if (err) return internalServerError(err, req, res);
+                if (!user) return unAuthorized(req, res);
+                req.user = user;
+                next();
+            }
+        )(req, res, next);
+    }, findByUser)
     .post(
         (req, res, next) => {
             passport.authenticate(
@@ -42,16 +39,20 @@ router
             )(req, res, next);
         },
         [
-            body('userId')
-                .notEmpty()
-                .withMessage('userId is required')
-                .isInt()
-                .withMessage('userId must be an integer'),
             body('productId')
                 .notEmpty()
                 .withMessage('productId is required')
                 .isInt()
                 .withMessage('productId must be an integer')
+                .custom(async (value, { req }) => {
+                    const wishlist = await Wishlist.findOne({
+                        where: { userId: req.user.id, productId: value }
+                    });
+
+                    if (wishlist) {
+                        throw new Error('Product already in wishlist');
+                    }
+                })
         ],
         create
     )
