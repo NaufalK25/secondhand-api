@@ -16,7 +16,7 @@ module.exports = {
             process.env.JWT_SECRET || 'secret',
             { expiresIn: '7d' }
         );
-
+            
         res.status(200).json({
             success: true,
             message: 'Login successful',

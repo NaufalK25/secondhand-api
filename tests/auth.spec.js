@@ -44,7 +44,7 @@ describe('POST /api/v1/login', () => {
         User.findOne = jest.fn().mockImplementation(() => ({ ...user }));
     });
     afterEach(() => {
-        jest.resetAllMocks();
+        jest.clearAllMocks();
     });
     test('200 OK', async () => {
         const req = mockRequest({

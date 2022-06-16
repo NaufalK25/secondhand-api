@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
+    "postinstall": "npx sequelize-cli db:migrate",
     "test": "jest"
   },
   "dependencies": {
