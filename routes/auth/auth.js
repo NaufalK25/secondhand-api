@@ -1,9 +1,9 @@
 const bcrypjs = require('bcryptjs');
 const { Router } = require('express');
 const { body } = require('express-validator');
-const { login, logout, register } = require('../controllers/auth');
-const { methodNotAllowed } = require('../controllers/error');
-const { User } = require('../models');
+const { login, logout, register } = require('../../controllers/auth');
+const { methodNotAllowed } = require('../../controllers/error');
+const { User } = require('../../models');
 
 const router = Router();
 

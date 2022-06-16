@@ -40,7 +40,7 @@ jest.mock('bcryptjs');
 jest.mock('jsonwebtoken');
 jest.mock('express-validator');
 
-describe('POST /api/v1/login', () => {
+describe('POST /api/v1/auth/login', () => {
     beforeEach(() => {
         jwt.sign.mockImplementation(() => 'token');
         User.findOne = jest.fn().mockImplementation(() => ({ ...user }));
@@ -104,7 +104,7 @@ describe('POST /api/v1/login', () => {
     });
 });
 
-describe('POST /api/v1/logout', () => {
+describe('POST /api/v1/auth/logout', () => {
     test('200 OK', () => {
         const req = mockRequest();
         const res = mockResponse();
@@ -121,7 +121,7 @@ describe('POST /api/v1/logout', () => {
     });
 });
 
-describe('POST /api/v1/register', () => {
+describe('POST /api/v1/auth/register', () => {
     beforeEach(() => {
         bcryptjs.hash.mockImplementation(() => 'hashedPassword');
         User.create = jest.fn().mockImplementation(() => ({ ...user }));

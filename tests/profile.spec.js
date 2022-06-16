@@ -5,11 +5,10 @@ const { User, Profile } = require('../models');
 
 process.env.NODE_ENV = 'test';
 
-const mockRequest = ({ body, params, file, query, protocol, path } = {}) => ({
+const mockRequest = ({ body, params, file, protocol, path } = {}) => ({
     body,
     params,
     file,
-    query,
     protocol,
     path,
     get: jest.fn().mockImplementation(header => {
@@ -51,7 +50,7 @@ const profileInclude = {
 jest.mock('fs/promises');
 jest.mock('express-validator');
 
-describe('GET /api/v1/profile', () => {
+describe('GET /api/v1/user/profile', () => {
     beforeEach(() => {
         Profile.findByPk = jest
             .fn()
@@ -61,7 +60,7 @@ describe('GET /api/v1/profile', () => {
         jest.clearAllMocks();
     });
     test('200 OK', async () => {
-        const req = mockRequest({ query: { id: 1 }, protocol: 'http' });
+        const req = mockRequest({ params: { id: 1 }, protocol: 'http' });
         const res = mockResponse();
 
         validationResult.mockImplementation(() => ({
@@ -84,14 +83,14 @@ describe('GET /api/v1/profile', () => {
         });
     });
     test('400 Bad Request', async () => {
-        const req = mockRequest({ query: { id: '' } });
+        const req = mockRequest({ params: { id: '' } });
         const res = mockResponse();
         const errors = [
             {
                 value: '',
                 msg: 'Id must be an integer',
                 param: 'id',
-                location: 'query'
+                location: 'params'
             }
         ];
 
@@ -111,9 +110,9 @@ describe('GET /api/v1/profile', () => {
     });
     test('404 Not Found', async () => {
         const req = mockRequest({
-            query: { id: 1 },
+            params: { id: 1 },
             protocol: 'http',
-            path: '/api/v1/profile'
+            path: '/api/v1/user/profile'
         });
         const res = mockResponse();
 
@@ -134,13 +133,14 @@ describe('GET /api/v1/profile', () => {
     });
 });
 
-describe('PUT /api/v1/profile', () => {
+describe('PUT /api/v1/user/profile', () => {
     beforeEach(() => {
         fs.unlink.mockImplementation(() => Promise.resolve());
         Profile.findByPk = jest
             .fn()
             .mockImplementation(() => ({ ...profileInclude }));
         Profile.update = jest.fn().mockImplementation(() => ({ ...profile }));
+        User.update = jest.fn().mockImplementation(() => ({ ...user }));
     });
     afterEach(() => {
         jest.clearAllMocks();
@@ -154,7 +154,7 @@ describe('PUT /api/v1/profile', () => {
                 cityId: 1,
                 address: 'Jl. Kebon Jeruk No. 1'
             },
-            query: { id: 1 },
+            params: { id: 1 },
             file: { filename: 'profilePicture.jpg' }
         });
         const res = mockResponse();
@@ -171,7 +171,7 @@ describe('PUT /api/v1/profile', () => {
             success: true,
             message: 'Update profile successful',
             data: {
-                id: req.query.id,
+                id: req.params.id,
                 ...req.body,
                 profilePicture: 'profilePicture.jpg'
             }
@@ -187,7 +187,7 @@ describe('PUT /api/v1/profile', () => {
                 value: '',
                 msg: 'Id must be an integer',
                 param: 'Id',
-                location: 'query'
+                location: 'params'
             }
         ];
 
@@ -207,9 +207,9 @@ describe('PUT /api/v1/profile', () => {
     });
     test('404 Not Found', async () => {
         const req = mockRequest({
-            query: { id: 1 },
+            params: { id: 1 },
             protocol: 'http',
-            path: '/api/v1/profile'
+            path: '/api/v1/user/profile'
         });
         const res = mockResponse();
 

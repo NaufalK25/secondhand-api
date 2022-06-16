@@ -20,10 +20,10 @@ module.exports = {
             data: null
         });
     },
-    notFound: (req, res) => {
+    notFound: (req, res, msg = '') => {
         res.status(404).json({
             success: false,
-            message: `Endpoint ${req.path} not found`,
+            message: msg ? msg : `Endpoint ${req.path} not found`,
             data: null
         });
     },
