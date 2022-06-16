@@ -33,6 +33,10 @@
         {
             "name": "Profile",
             "description": "User Profile Information"
+        },
+        {
+            "name": "Category",
+            "description": "Category Product Information"
         }
     ],
     "paths": {
@@ -245,6 +249,47 @@
                     }
                 ]
             }
+        },
+        "/category": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get Category",
+                "operationId": "info-category-get",
+                "responses": {
+                    "200": {
+                        "description": "Get Info Profile successful",
+                        "schema": {
+                            "$ref": "#/responses/Category"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                }
+            }
         }
     },
     "requestBodies": {
@@ -354,6 +399,25 @@
                 },
                 "data": {
                     "$ref": "#/definitions/ProfileInclude"
+                }
+            }
+        },
+        "Category": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "category": {
+                            "$ref": "#/definitions/Category"
+                        }
+                    }
                 }
             }
         },
@@ -487,6 +551,25 @@
                 },
                 "User": {
                     "$ref": "#/definitions/User"
+                }
+            }
+        },
+        "Category": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
                 }
             }
         }
