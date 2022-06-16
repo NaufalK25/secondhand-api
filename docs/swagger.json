@@ -35,6 +35,10 @@
             "description": "User Profile Information"
         },
         {
+            "name": "Product",
+            "description": "Product Operations"
+        },
+        {
             "name": "Category",
             "description": "Category Product Information"
         }
@@ -106,13 +110,30 @@
                 }
             }
         },
-        "/info-profile": {
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout user",
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "Logout successful",
+                        "schema": {
+                            "$ref": "#/responses/Logout"
+                        }
+                    }
+                }
+            }
+        },
+        "/profile": {
             "get": {
                 "tags": [
                     "Profile"
                 ],
                 "summary": "Get Profile By Id",
-                "operationId": "info-profile-get",
+                "operationId": "profile-get",
                 "parameters": [
                     {
                         "name": "id",
@@ -165,7 +186,7 @@
                     "Profile"
                 ],
                 "summary": "Update Profile By Id",
-                "operationId": "info-profile-update",
+                "operationId": "profile-update",
                 "parameters": [
                     {
                         "name": "id",
@@ -250,24 +271,18 @@
                 ]
             }
         },
-        "/category": {
+        "/products": {
             "get": {
                 "tags": [
-                    "Category"
+                    "Product"
                 ],
-                "summary": "Get Category",
-                "operationId": "info-category-get",
+                "summary": "Get All Products",
+                "operationId": "products-get",
                 "responses": {
                     "200": {
-                        "description": "Get Info Profile successful",
+                        "description": "Get Product successful",
                         "schema": {
-                            "$ref": "#/responses/Category"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "schema": {
-                            "$ref": "#/responses/Error"
+                            "$ref": "#/responses/Product"
                         }
                     },
                     "401": {
@@ -276,16 +291,32 @@
                             "$ref": "#/responses/Error"
                         }
                     },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
                             "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
+        "/products/categories": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get All Categories",
+                "operationId": "category-get",
+                "responses": {
+                    "200": {
+                        "description": "Get Product Category successful",
+                        "schema": {
+                            "$ref": "#/responses/Category"
                         }
                     }
                 }
@@ -376,15 +407,18 @@
                     "type": "string"
                 },
                 "data": {
-                    "type": "object",
-                    "properties": {
-                        "user": {
-                            "$ref": "#/definitions/User"
-                        },
-                        "token": {
-                            "type": "string"
-                        }
-                    }
+                    "$ref": "#/definitions/User"
+                }
+            }
+        },
+        "Logout": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
                 }
             }
         },
@@ -402,6 +436,23 @@
                 }
             }
         },
+        "Product": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Product"
+                    }
+                }
+            }
+        },
         "Category": {
             "type": "object",
             "properties": {
@@ -412,11 +463,9 @@
                     "type": "string"
                 },
                 "data": {
-                    "type": "object",
-                    "properties": {
-                        "category": {
-                            "$ref": "#/definitions/Category"
-                        }
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Category"
                     }
                 }
             }
@@ -551,6 +600,50 @@
                 },
                 "User": {
                     "$ref": "#/definitions/User"
+                }
+            }
+        },
+        "Product": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "sellerId": {
+                    "type": "integer"
+                },
+                "categoryId": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "publishDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "stock": {
+                    "type": "integer"
+                },
+                "sold": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
                 }
             }
         },

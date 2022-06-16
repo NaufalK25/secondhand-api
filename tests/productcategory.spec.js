@@ -1,10 +1,9 @@
-const { validationResult } = require('express-validator');
 const { findAll } = require('../controllers/productcategory');
 const { ProductCategory } = require('../models');
 
 process.env.NODE_ENV = 'test';
 
-const mockRequest = ({ body, params, originalUrl } = {}) => ({ body, params, originalUrl });
+const mockRequest = ({} = {}) => ({});
 const mockResponse = () => {
     const res = {};
     res.status = jest.fn().mockReturnValue(res);
@@ -13,18 +12,18 @@ const mockResponse = () => {
 };
 
 const date = new Date();
-const category = 
-    {
-        id: 1,
-        category: 'Fashion',
-        createdAt: date,
-        updatedAt: date
-    };
-jest.mock('express-validator');
+const category = {
+    id: 1,
+    category: 'Fashion',
+    createdAt: date,
+    updatedAt: date
+};
 
-describe('GET /api/v1/category', () => {
+describe('GET /api/v1/products/categories', () => {
     beforeEach(() => {
-        ProductCategory.findAll = jest.fn().mockImplementation(() => [{ ...category }]);
+        ProductCategory.findAll = jest
+            .fn()
+            .mockImplementation(() => [{ ...category }]);
     });
     afterEach(() => {
         jest.clearAllMocks();
@@ -33,18 +32,13 @@ describe('GET /api/v1/category', () => {
         const req = mockRequest();
         const res = mockResponse();
 
-        validationResult.mockImplementation(() => ({
-            isEmpty: () => true,
-            array: () => []
-        }));
-
         await findAll(req, res);
 
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'Category successful',
-            data: [category]
+            data: [{ ...category }]
         });
     });
 });
