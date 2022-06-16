@@ -10,7 +10,7 @@ module.exports = {
 
         const baseUrl = `${req.protocol}://${req.get('host')}`;
         const profilePicturePath = `${baseUrl}/images/profiles/`;
-        const profile = await Profile.findByPk(req.query.id, {
+        const profile = await Profile.findByPk(req.params.id, {
             include: [{ model: User }]
         });
         if (!profile) return notFound(req, res);
@@ -28,7 +28,7 @@ module.exports = {
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
         const unlinkProfilePicturePath = `${__dirname}/../uploads/profiles/`;
-        const profile = await Profile.findByPk(req.query.id, {
+        const profile = await Profile.findByPk(req.params.id, {
             include: [{ model: User }]
         });
         const updatedData = {};
@@ -46,19 +46,26 @@ module.exports = {
             updatedData.profilePicture = req.file.filename;
         }
 
-        if (req.body.userId) updatedData.userId = req.body.userId || profile.userId;
         if (req.body.name) updatedData.name = req.body.name || profile.name;
-        if (req.body.phoneNumber) updatedData.phoneNumber = req.body.phoneNumber || profile.phoneNumber;
-        if (req.body.cityId) updatedData.cityId = req.body.cityId || profile.cityId;
-        if (req.body.address) updatedData.address = req.body.address || profile.address;
+        if (req.body.userId)
+            updatedData.userId = req.body.userId || profile.userId;
+        if (req.body.name) updatedData.name = req.body.name || profile.name;
+        if (req.body.phoneNumber)
+            updatedData.phoneNumber =
+                req.body.phoneNumber || profile.phoneNumber;
+        if (req.body.cityId)
+            updatedData.cityId = req.body.cityId || profile.cityId;
+        if (req.body.address)
+            updatedData.address = req.body.address || profile.address;
 
-        await Profile.update(updatedData, { where: { id: req.query.id } });
+        await Profile.update(updatedData, { where: { id: req.params.id } });
+        await User.update({ roleId: 2 }, { where: { id: req.body.userId } }); // change to seller
 
         res.status(200).json({
             success: true,
             message: 'Update profile successful',
             data: {
-                id: req.query.id,
+                id: req.params.id,
                 ...updatedData
             }
         });

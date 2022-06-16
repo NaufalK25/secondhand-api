@@ -1,9 +1,3 @@
-// const express = require('express');
-// const controller = require('../controllers/city');
-
-
-
-// module.exports = router;
 const express = require('express');
 const { methodNotAllowed } = require('../controllers/error');
 const { getAll } = require('../controllers/city');
