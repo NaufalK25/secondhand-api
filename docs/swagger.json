@@ -41,6 +41,14 @@
         {
             "name": "Category",
             "description": "Category Product Information"
+        },
+        {
+            "name": "Product Resource",
+            "description": "Product Resource Information"
+        },
+        {
+            "name": "Wishlist",
+            "description": "Wishlist Buyer Information"
         }
     ],
     "paths": {
@@ -321,6 +329,119 @@
                     }
                 }
             }
+        },
+        "/wishlists": {
+            "get": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Get Profile By Id",
+                "operationId": "profile-get",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "description": "User Id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get Info Wishlist User successful",
+                        "schema": {
+                            "$ref": "#/responses/Wishlist"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Create wishlist product buyer",
+                "operationId": "wishlist-create",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "productId",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "infoProfile successful",
+                        "schema": {
+                            "$ref": "#/responses/Wishlist"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
         }
     },
     "requestBodies": {
@@ -470,6 +591,25 @@
                 }
             }
         },
+        "Wishlist": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "wishlist": {
+                            "$ref": "#/definitions/Wishlist"
+                        }
+                    }
+                }
+            }
+        },
         "Error": {
             "type": "object",
             "properties": {
@@ -483,11 +623,8 @@
                 "data": {
                     "type": "array",
                     "items": {
-                        "type:": "object",
-                        "properties": {},
-                        "nullable": true
-                    },
-                    "nullable": true
+                        "$ref": "#/definitions/Wishlist"
+                    }
                 }
             }
         }
@@ -655,6 +792,56 @@
                 },
                 "category": {
                     "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "ProductResource": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "productId": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "extension": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "Wishlist": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "userId": {
+                    "type": "integer"
+                },
+                "productId": {
+                    "type": "integer"
                 },
                 "createdAt": {
                     "type": "string",
