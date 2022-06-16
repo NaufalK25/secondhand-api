@@ -47,30 +47,4 @@ describe('GET /api/v1/category', () => {
             data: [category]
         });
     });
-    // test('400 Bad Request', async () => {
-    //     const req = mockRequest();
-    //     const res = mockResponse();
-    //     const errors = [
-    //         {
-    //             value: '',
-    //             msg: 'Email is required',
-    //             param: 'email',
-    //             location: 'body'
-    //         }
-    //     ];
-
-    //     validationResult.mockImplementation(() => ({
-    //         isEmpty: () => false,
-    //         array: () => errors
-    //     }));
-
-    //     await Category.findAll(req, res);
-
-    //     expect(res.status).toHaveBeenCalledWith(400);
-    //     expect(res.json).toHaveBeenCalledWith({
-    //         success: false,
-    //         message: 'Validation error',
-    //         data: errors
-    //     });
-    // });
 });
