@@ -60,6 +60,7 @@ describe('POST /api/v1/auth/login', () => {
         await login(req, res);
 
         expect(res.cookie).toHaveBeenCalledWith('token', 'token', {
+            httpOnly: false,
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
         expect(res.status).toHaveBeenCalledWith(200);

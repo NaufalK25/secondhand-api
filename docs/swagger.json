@@ -136,7 +136,12 @@
                             "$ref": "#/responses/Logout"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
             }
         },
         "/user/profile": {

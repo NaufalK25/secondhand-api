@@ -13,28 +13,19 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(
     cors({
-        allowedHeaders: [
-            'Content-Type',
-            'Authorization',
-            'X-Requested-With',
-            'Accept',
-            'Origin',
-            'Referer',
-            'User-Agent'
-        ],
+        allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true,
         origin: ['http://localhost:3000']
     })
 );
-app.use(cookieParser('secret'));
+app.use(cookieParser());
 app.use(
     session({
         secret: process.env.SESSION_SECRET || 'secret',
         resave: false,
         saveUninitialized: false,
         cookie: {
-            domain: 'localhost:3000',
-            httpOnly: true,
+            httpOnly: false,
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         }
     })
