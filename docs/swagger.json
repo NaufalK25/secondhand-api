@@ -305,8 +305,8 @@
         "/user/wishlists": {
             "get": {
                 "tags": ["Wishlist"],
-                "summary": "Get Profile By Id",
-                "operationId": "profile-get",
+                "summary": "Get Wishlist By Id User (Buyer)",
+                "operationId": "wishlist-get",
                 "responses": {
                     "200": {
                         "description": "Get user's wishlist successful",
@@ -419,7 +419,7 @@
                     "201": {
                         "description": "Transaction Offer created",
                         "schema": {
-                            "$ref": "#/responses/Offer/Post"
+                            "$ref": "#/responses/Offer"
                         }
                     },
                     "400": {
