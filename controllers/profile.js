@@ -4,13 +4,13 @@ const { User, Profile } = require('../models');
 const { badRequest, internalServerError, notFound } = require('./error');
 
 module.exports = {
-    findbyID: async (req, res) => {
+    findByUser: async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
         const baseUrl = `${req.protocol}://${req.get('host')}`;
         const profilePicturePath = `${baseUrl}/images/profiles/`;
-        const profile = await Profile.findByPk(req.params.id, {
+        const profile = await Profile.findByPk(req.user.id, {
             include: [{ model: User }]
         });
         if (!profile) return notFound(req, res);
@@ -28,7 +28,7 @@ module.exports = {
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
         const unlinkProfilePicturePath = `${__dirname}/../uploads/profiles/`;
-        const profile = await Profile.findByPk(req.params.id, {
+        const profile = await Profile.findByPk(req.user.id, {
             include: [{ model: User }]
         });
         const updatedData = {};
@@ -58,14 +58,14 @@ module.exports = {
         if (req.body.address)
             updatedData.address = req.body.address || profile.address;
 
-        await Profile.update(updatedData, { where: { id: req.params.id } });
-        await User.update({ roleId: 2 }, { where: { id: req.body.userId } }); // change to seller
+        await Profile.update(updatedData, { where: { id: req.user.id } });
+        await User.update({ roleId: 2 }, { where: { id: req.user.id } }); // change to seller
 
         res.status(200).json({
             success: true,
             message: 'Update profile successful',
             data: {
-                id: req.params.id,
+                id: req.user.id,
                 ...updatedData
             }
         });

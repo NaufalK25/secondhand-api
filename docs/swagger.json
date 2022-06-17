@@ -39,12 +39,16 @@
             "description": "Product Operations"
         },
         {
-            "name": "Category",
+            "name": "Product Category",
             "description": "Category Product Information"
         },
         {
             "name": "Product Resource",
             "description": "Product Resource Information"
+        },
+        {
+            "name": "Product Offer",
+            "description": "Product Offer Information"
         },
         {
             "name": "Wishlist",
@@ -135,22 +139,13 @@
                 }
             }
         },
-        "/user/profile/{id}": {
+        "/user/profile": {
             "get": {
                 "tags": [
                     "Profile"
                 ],
                 "summary": "Get Profile By Id",
                 "operationId": "profile-get",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Profile Id",
-                        "required": true,
-                        "type": "integer"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Get profile successful",
@@ -203,13 +198,6 @@
                 "operationId": "profile-update",
                 "parameters": [
                     {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Profile Id",
-                        "required": true,
-                        "type": "integer"
-                    },
-                    {
                         "name": "name",
                         "in": "formData",
                         "required": false,
@@ -238,12 +226,6 @@
                         "in": "formData",
                         "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "userId",
-                        "in": "formData",
-                        "required": true,
-                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -328,7 +310,7 @@
         "/products/categories": {
             "get": {
                 "tags": [
-                    "Category"
+                    "Product Category"
                 ],
                 "summary": "Get All Categories",
                 "operationId": "category-get",
@@ -342,13 +324,111 @@
                 }
             }
         },
+        "/products/offer": {
+            "post": {
+                "tags": [
+                    "Product Offer"
+                ],
+                "summary": "Create trancaction product offer buyer",
+                "operationId": "trancaction-offer-create",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "priceOffer",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Product Offer created",
+                        "schema": {
+                            "$ref": "#/responses/Offer/Post"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            },
+            "get": {
+                "tags": [
+                    "Product Offer"
+                ],
+                "summary": "Get Product Offer Seller",
+                "operationId": "product-offer-get",
+                "responses": {
+                    "200": {
+                        "description": "Get product offer successful",
+                        "schema": {
+                            "$ref": "#/responses/Offer/GetByUser"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
         "/user/wishlists": {
             "get": {
                 "tags": [
                     "Wishlist"
                 ],
-                "summary": "Get Profile By Id",
-                "operationId": "profile-get",
+                "summary": "Get Wishlist By Id User (Buyer)",
+                "operationId": "wishlist-get",
                 "responses": {
                     "200": {
                         "description": "Get user's wishlist successful",
@@ -637,6 +717,39 @@
                 }
             }
         },
+        "Offer": {
+            "GetByUser": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/ProductOffer"
+                        }
+                    }
+                }
+            },
+            "Post": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/definitions/ProductOffer"
+                    }
+                }
+            }
+        },
         "Error": {
             "type": "object",
             "properties": {
@@ -870,6 +983,31 @@
                 },
                 "productId": {
                     "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "ProductOffer": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "buyerId": {
+                    "type": "integer"
+                },
+                "priceOffer": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
                 },
                 "createdAt": {
                     "type": "string",
