@@ -35,6 +35,10 @@
             "description": "User Profile Information"
         },
         {
+            "name": "City",
+            "description": "All Cities and Regencies in Indonesia"
+        },
+        {
             "name": "Product",
             "description": "Product Operations"
         },
@@ -524,6 +528,23 @@
                     }
                 ]
             }
+        },
+        "/cities": {
+            "get": {
+                "tags": [
+                    "City"
+                ],
+                "summary": "Get All Cities",
+                "operationId": "city-get",
+                "responses": {
+                    "200": {
+                        "description": "Get city successful",
+                        "schema": {
+                            "$ref": "#/responses/City"
+                        }
+                    }
+                }
+            }
         }
     },
     "requestBodies": {
@@ -751,6 +772,23 @@
                     },
                     "data": {
                         "$ref": "#/definitions/ProductOffer"
+                    }
+                }
+            }
+        },
+        "City": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/City"
                     }
                 }
             }
@@ -1012,6 +1050,25 @@
                     "type": "integer"
                 },
                 "status": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "City": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "city": {
                     "type": "string"
                 },
                 "createdAt": {

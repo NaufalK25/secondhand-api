@@ -845,7 +845,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Bone Bolango',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -855,7 +855,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Boyolali',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -865,7 +865,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Buleleng',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -875,7 +875,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Bulungan',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -885,7 +885,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Buol',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -895,7 +895,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Buru Selatan',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -905,7 +905,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Buton Utara',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -915,7 +915,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Cianjur',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -925,7 +925,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Cirebon',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -935,7 +935,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Deiyai',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -945,7 +945,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Demak',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -955,7 +955,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Dogiyai',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -965,7 +965,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Donggala',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -975,7 +975,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Ende',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1015,7 +1015,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Gorontalo Utara',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1025,7 +1025,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Gresik',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1035,7 +1035,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Gunung Kidul',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1045,7 +1045,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Halmahera Barat',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1054,7 +1054,8 @@ module.exports = {
                     city: 'Kabupaten Halmahera Selatan',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                }, {
+                },
+                {
                     city: 'Kabupaten Halmahera Tengah',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1063,7 +1064,8 @@ module.exports = {
                     city: 'Kabupaten Halmahera Timur',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                }, {
+                },
+                {
                     city: 'Kabupaten Halmahera Utara',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1073,7 +1075,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Hulu Sungai Tengah',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1083,7 +1085,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Humbang Hasundutan',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1092,7 +1094,8 @@ module.exports = {
                     city: 'Kabupaten Indragiri Hilir',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                }, {
+                },
+                {
                     city: 'Kabupaten Indragiri Hulu"',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1102,7 +1105,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Intan Jaya',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1122,7 +1125,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Jembrana',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1132,7 +1135,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Jepara',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1142,7 +1145,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Kaimana',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1152,7 +1155,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Kapuas',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1167,7 +1170,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Karangasem',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1182,7 +1185,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Karo',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1197,7 +1200,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Kayong Utara',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1212,7 +1215,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Keerom',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1227,7 +1230,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Kepulauan Anambas',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1242,7 +1245,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Kepulauan Meranti',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1257,7 +1260,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Kepulauan Siau Tagulandang Biaro',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1272,7 +1275,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Kepulauan Yapen',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1287,7 +1290,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Klaten',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1302,7 +1305,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Kolaka Utara',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1317,7 +1320,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Konawe Utara',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1332,7 +1335,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Kotawaringin Timur',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1347,7 +1350,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Kudus',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1476,7 +1479,8 @@ module.exports = {
                     city: 'Kabupaten Lingga',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },{
+                },
+                {
                     city: 'Kabupaten Lombok Barat',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1666,7 +1670,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Minahasa',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1681,7 +1685,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Minahasa Utara',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1696,7 +1700,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Muara Enim',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1711,7 +1715,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Muna',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1726,7 +1730,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Musi Rawas',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1740,7 +1744,8 @@ module.exports = {
                     city: 'Kabupaten Nagan Raya',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },{
+                },
+                {
                     city: 'Kabupaten Nagekeo',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1754,7 +1759,8 @@ module.exports = {
                     city: 'Kabupaten Nduga',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },{
+                },
+                {
                     city: 'Kabupaten Ngada',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1768,7 +1774,8 @@ module.exports = {
                     city: 'Kabupaten Ngawi',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },{
+                },
+                {
                     city: 'Kabupaten Nias',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1778,11 +1785,12 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Nias Selatan',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },{
+                },
+                {
                     city: 'Kabupaten Nias Utara',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1792,11 +1800,12 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Ogan Ilir',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },{
+                },
+                {
                     city: 'Kabupaten Ogan Komering Ilir',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1806,11 +1815,12 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Ogan Komering Ulu Selatan',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },{
+                },
+                {
                     city: 'Kabupaten Ogan Komering Ulu Timur',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1820,11 +1830,12 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Padang Lawas',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },{
+                },
+                {
                     city: 'Kabupaten Padang Lawas Utara',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1834,11 +1845,12 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Pakpak Bharat',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },{
+                },
+                {
                     city: 'Kabupaten Pamekasan',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1848,11 +1860,12 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Pangkajene dan Kepulauan',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },{
+                },
+                {
                     city: 'Kabupaten Paniai',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1862,11 +1875,12 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Pasaman',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },{
+                },
+                {
                     city: 'Kabupaten Pasaman Barat',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1876,11 +1890,12 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Pasuruan',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },{
+                },
+                {
                     city: 'Kabupaten Pati',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -1889,11 +1904,13 @@ module.exports = {
                     city: 'Kabupaten Pegunungan Bintang',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                }, {
+                },
+                {
                     city: 'Kabupaten Pekalongan',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },{
+                },
+                {
                     city: 'Kabupaten Pelalawan',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -2298,7 +2315,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Tanah Laut',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -2313,7 +2330,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Tanjung Jabung Barat',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -2343,7 +2360,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Tasikmalaya',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -2358,7 +2375,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Teluk Bintuni',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -2373,7 +2390,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Timor Tengah Selatan',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -2388,7 +2405,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Tojo Una-Una ',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -2403,7 +2420,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Toraja Utara',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -2418,7 +2435,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Tulang Bawang',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -2433,7 +2450,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Wajo',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -2448,7 +2465,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Way Kanan',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -2463,7 +2480,7 @@ module.exports = {
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
-                 {
+                {
                     city: 'Kabupaten Yahukimo',
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -2472,7 +2489,7 @@ module.exports = {
                     city: 'Kabupaten Yalimo',
                     createdAt: new Date(),
                     updatedAt: new Date()
-                },   
+                }
             ],
             {}
         );

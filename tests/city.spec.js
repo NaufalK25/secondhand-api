@@ -1,5 +1,5 @@
-const { getAll } = require('../controllers/city');
-const { City} = require('../models');
+const { findAll } = require('../controllers/city');
+const { City } = require('../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -19,25 +19,21 @@ const city = {
     updatedAt: date
 };
 
-describe('GET /api/v1/city', () => {
+describe('GET /api/v1/cities', () => {
     beforeEach(() => {
-        City.findAll = jest
-            .fn()
-            .mockImplementation(() => [{ ...city }]);
+        City.findAll = jest.fn().mockImplementation(() => [{ ...city }]);
     });
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
+    afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
         const req = mockRequest();
         const res = mockResponse();
 
-        await getAll(req, res);
+        await findAll(req, res);
 
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            // message: 'Category successful',
+            message: 'City successful',
             data: [{ ...city }]
         });
     });

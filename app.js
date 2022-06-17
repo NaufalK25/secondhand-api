@@ -13,21 +13,27 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(
     cors({
-        allowedHeaders: ['Content-Type', 'Authorization'],
+        allowedHeaders: [
+            'Content-Type',
+            'Authorization',
+            'X-Requested-With',
+            'Accept'
+        ],
         credentials: true,
-        origin: ['http://localhost:3000']
+        origin: ['http://localhost:3000', 'https://secondhand-fe.herokuapp.com']
     })
 );
 app.use(cookieParser());
 app.use(
     session({
-        secret: process.env.SESSION_SECRET || 'secret',
+        cookie: {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            secure: true
+        },
         resave: false,
         saveUninitialized: false,
-        cookie: {
-            httpOnly: false,
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-        }
+        secret: process.env.SESSION_SECRET || 'secret'
     })
 );
 app.use(morgan('dev'));
