@@ -45,9 +45,7 @@ describe('POST /api/v1/auth/login', () => {
         jwt.sign.mockImplementation(() => 'token');
         User.findOne = jest.fn().mockImplementation(() => ({ ...user }));
     });
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
+    afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
         const req = mockRequest({
             body: { email: 'johndoe@gmail.com', password: '12345678' }
@@ -72,12 +70,7 @@ describe('POST /api/v1/auth/login', () => {
         });
     });
     test('400 Bad Request', async () => {
-        const req = mockRequest({
-            body: {
-                email: '',
-                password: '12345678'
-            }
-        });
+        const req = mockRequest({ body: { email: '', password: '12345678' } });
         const res = mockResponse();
         const errors = [
             {
@@ -127,9 +120,7 @@ describe('POST /api/v1/auth/register', () => {
         User.create = jest.fn().mockImplementation(() => ({ ...user }));
         Profile.create = jest.fn().mockImplementation(() => ({ ...profile }));
     });
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
+    afterEach(() => jest.clearAllMocks());
     test('201 Created', async () => {
         const req = mockRequest({
             body: {
@@ -156,11 +147,7 @@ describe('POST /api/v1/auth/register', () => {
     });
     test('400 Bad Request', async () => {
         const req = mockRequest({
-            body: {
-                name: '',
-                email: 'johndoe@gmail.com',
-                password: '12345678'
-            }
+            body: { name: '', email: 'johndoe@gmail.com', password: '12345678' }
         });
         const res = mockResponse();
         const errors = [

@@ -10,32 +10,20 @@ module.exports = {
             },
             userId: {
                 type: Sequelize.INTEGER,
-                references: {
-                    model: 'Users',
-                    key: 'id'
-                },
+                references: { model: 'Users', key: 'id' },
                 onUpdate: 'CASCADE',
                 onDelete: 'SET NULL',
                 allowNull: false
             },
             productId: {
                 type: Sequelize.INTEGER,
-                references: {
-                    model: 'Products',
-                    key: 'id'
-                },
+                references: { model: 'Products', key: 'id' },
                 onUpdate: 'CASCADE',
                 onDelete: 'SET NULL',
                 allowNull: false
             },
-            createdAt: {
-                allowNull: false,
-                type: Sequelize.DATE
-            },
-            updatedAt: {
-                allowNull: false,
-                type: Sequelize.DATE
-            }
+            createdAt: { allowNull: false, type: Sequelize.DATE },
+            updatedAt: { allowNull: false, type: Sequelize.DATE }
         });
     },
     async down(queryInterface, Sequelize) {

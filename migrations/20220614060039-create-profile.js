@@ -10,46 +10,26 @@ module.exports = {
             },
             userId: {
                 type: Sequelize.INTEGER,
-                references: {
-                    model: 'Users',
-                    key: 'id'
-                },
+                references: { model: 'Users', key: 'id' },
                 onUpdate: 'CASCADE',
                 onDelete: 'SET NULL',
                 allowNull: false
             },
-            name: {
-                type: Sequelize.STRING,
-                allowNull: false
-            },
+            name: { type: Sequelize.STRING, allowNull: false },
             profilePicture: {
                 type: Sequelize.STRING,
                 defaultValue: 'default.png'
             },
-            phoneNumber: {
-                type: Sequelize.STRING,
-                unique: true
-            },
+            phoneNumber: { type: Sequelize.STRING, unique: true },
             cityId: {
                 type: Sequelize.INTEGER,
-                references: {
-                    model: 'Cities',
-                    key: 'id'
-                },
+                references: { model: 'Cities', key: 'id' },
                 onUpdate: 'CASCADE',
                 onDelete: 'SET NULL'
             },
-            address: {
-                type: Sequelize.TEXT
-            },
-            createdAt: {
-                allowNull: false,
-                type: Sequelize.DATE
-            },
-            updatedAt: {
-                allowNull: false,
-                type: Sequelize.DATE
-            }
+            address: { type: Sequelize.TEXT },
+            createdAt: { allowNull: false, type: Sequelize.DATE },
+            updatedAt: { allowNull: false, type: Sequelize.DATE }
         });
     },
     async down(queryInterface, Sequelize) {

@@ -1,6 +1,8 @@
 {
   "name": "secondhand",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./bin/www",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
@@ -8,6 +10,9 @@
     "postinstall": "npx sequelize-cli db:migrate",
     "test": "jest"
   },
+  "keywords": [],
+  "author": "",
+  "license": "",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",

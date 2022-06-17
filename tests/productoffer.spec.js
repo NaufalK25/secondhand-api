@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 const { create, findByUser } = require('../controllers/productoffer');
-const { User, Product, ProductOffer } = require('../models');
+const { Product, ProductOffer } = require('../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -13,13 +13,6 @@ const mockResponse = () => {
 };
 
 const date = new Date();
-const user = {
-    id: 1,
-    email: 'johndoe@gmail.com',
-    password: '12345678',
-    createdAt: date,
-    updatedAt: date
-};
 const product = {
     id: 1,
     sellerId: 1,
@@ -52,9 +45,7 @@ describe('POST /api/v1/products/offer', () => {
             .fn()
             .mockImplementation(() => ({ ...productOffer }));
     });
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
+    afterEach(() => jest.clearAllMocks());
     test('201 Created', async () => {
         const req = mockRequest({
             user: { id: 1 },
@@ -134,9 +125,7 @@ describe('GET /api/v1/products/offer', () => {
             .fn()
             .mockImplementation(() => [{ ...productOffer }]);
     });
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
+    afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
         const req = mockRequest({ user: { id: 1 } });
         const res = mockResponse();

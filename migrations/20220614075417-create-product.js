@@ -10,61 +10,35 @@ module.exports = {
             },
             sellerId: {
                 type: Sequelize.INTEGER,
-                references: {
-                    model: 'Users',
-                    key: 'id'
-                },
+                references: { model: 'Users', key: 'id' },
                 onUpdate: 'CASCADE',
                 onDelete: 'SET NULL',
                 allowNull: false
             },
             categoryId: {
                 type: Sequelize.INTEGER,
-                references: {
-                    model: 'ProductCategories',
-                    key: 'id'
-                },
+                references: { model: 'ProductCategories', key: 'id' },
                 onUpdate: 'CASCADE',
                 onDelete: 'SET NULL',
                 allowNull: false
             },
-            name: {
-                type: Sequelize.STRING,
-                allowNull: false
-            },
-            price: {
-                type: Sequelize.INTEGER,
-                allowNull: false
-            },
+            name: { type: Sequelize.STRING, allowNull: false },
+            price: { type: Sequelize.INTEGER, allowNull: false },
             publishDate: {
                 type: Sequelize.DATE,
                 allowNull: false,
                 defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
             },
-            stock: {
-                type: Sequelize.INTEGER,
-                allowNull: false
-            },
+            stock: { type: Sequelize.INTEGER, allowNull: false },
             sold: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 defaultValue: 0
             },
-            description: {
-                type: Sequelize.STRING
-            },
-            status: {
-                type: Sequelize.STRING,
-                allowNull: false
-            },
-            createdAt: {
-                allowNull: false,
-                type: Sequelize.DATE
-            },
-            updatedAt: {
-                allowNull: false,
-                type: Sequelize.DATE
-            }
+            description: { type: Sequelize.STRING },
+            status: { type: Sequelize.STRING, allowNull: false },
+            createdAt: { allowNull: false, type: Sequelize.DATE },
+            updatedAt: { allowNull: false, type: Sequelize.DATE }
         });
     },
     async down(queryInterface, Sequelize) {

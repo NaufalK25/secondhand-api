@@ -17,9 +17,7 @@ module.exports = {
             { expiresIn: '7d' }
         );
 
-        res.cookie('token', token, {
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-        })
+        res.cookie('token', token, { maxAge: 7 * 24 * 60 * 60 * 1000 }) // 7 days
             .status(200)
             .json({
                 success: true,

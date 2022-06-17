@@ -50,9 +50,7 @@ describe('GET /api/v1/user/wishlists', () => {
             .fn()
             .mockImplementation(() => ({ ...wishlist }));
     });
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
+    afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
         const req = mockRequest({ user: { id: 1 } });
         const res = mockResponse();
@@ -105,9 +103,7 @@ describe('POST /api/v1/user/wishlists', () => {
         Product.findByPk = jest.fn().mockImplementation(() => ({ ...product }));
         Wishlist.create = jest.fn().mockImplementation(() => ({ ...wishlist }));
     });
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
+    afterEach(() => jest.clearAllMocks());
     test('201 Created', async () => {
         const req = mockRequest({ user: { id: 1 }, body: { productId: 1 } });
         const res = mockResponse();

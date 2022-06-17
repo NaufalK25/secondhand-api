@@ -33,9 +33,7 @@ describe('GET /api/v1/products', () => {
     beforeEach(() => {
         Product.findAll = jest.fn().mockImplementation(() => [{ ...product }]);
     });
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
+    afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
         const req = mockRequest({ user: { id: 1 } });
         const res = mockResponse();

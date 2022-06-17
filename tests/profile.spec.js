@@ -56,9 +56,7 @@ describe('GET /api/v1/user/profile', () => {
             .fn()
             .mockImplementation(() => ({ ...profileInclude }));
     });
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
+    afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
         const req = mockRequest({ user: { id: 1 }, protocol: 'http' });
         const res = mockResponse();
@@ -116,9 +114,7 @@ describe('PUT /api/v1/user/profile', () => {
         Profile.update = jest.fn().mockImplementation(() => ({ ...profile }));
         User.update = jest.fn().mockImplementation(() => ({ ...user }));
     });
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
+    afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
         const req = mockRequest({
             body: {
