@@ -16,7 +16,7 @@ const { Profile } = require('../../models');
 const router = express.Router();
 
 router
-    .route('/profile/:id')
+    .route('/profile')
     .get(
         (req, res, next) => {
             passport.authenticate(
@@ -25,17 +25,11 @@ router
                 async (err, user, info) => {
                     if (err) return internalServerError(err, req, res);
                     if (!user) return unAuthorized(req, res);
-                    if (+req.params.id) {
-                        const profile = await Profile.findByPk(+req.params.id);
-                        if (!profile || profile.userId !== user.id)
-                            return forbidden(req, res);
-                    }
                     req.user = user;
                     next();
                 }
             )(req, res, next);
         },
-        [param('id').isInt().withMessage('Id must be an integer')],
         findbyID
     )
     .put(
@@ -46,10 +40,6 @@ router
                 async (err, user, info) => {
                     if (err) return internalServerError(err, req, res);
                     if (!user) return unAuthorized(req, res);
-                    const profile = await Profile.findByPk(+req.params.id);
-                    if (!profile) return notFound(req, res);
-                    if (!profile || profile.userId !== user.id)
-                        return forbidden(req, res);
                     req.user = user;
                     next();
                 }
@@ -57,7 +47,6 @@ router
         },
         multer({ storage: profileStorage }).single('profilePicture'),
         [
-            param('id').isInt().withMessage('Id must be an integer'),
             body('name')
                 .optional()
                 .trim()
@@ -65,7 +54,15 @@ router
                 .withMessage('Name must be a string'),
             body('phoneNumber')
                 .notEmpty()
-                .withMessage('phoneNumber is required'),
+                .withMessage('phoneNumber is required')
+                .custom(async value => {
+                    const phone = await Profile.findOne({
+                        where: { phoneNumber: value }
+                    });
+                    if (phone) {
+                        throw new Error('phoneNumber already exists');
+                    }
+                }),
             body('cityId')
                 .notEmpty()
                 .withMessage('cityId is required')
@@ -77,12 +74,7 @@ router
                 .withMessage('address is required')
                 .trim()
                 .isString()
-                .withMessage('address must be a string'),
-            body('userId')
-                .notEmpty()
-                .withMessage('userId is required')
-                .isInt()
-                .withMessage('userId must be an integer')
+                .withMessage('address must be a string')
         ],
         update
     )
