@@ -10,14 +10,21 @@ const router = require('./routes');
 
 const app = express();
 
-app.use(cors({ credentials: true }));
-app.use(cookieParser());
+app.use(
+    cors({
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        credentials: true,
+        origin: 'http://localhost:3000'
+    })
+);
+app.use(cookieParser('secret'));
 app.use(
     session({
         secret: process.env.SESSION_SECRET || 'secret',
         resave: false,
         saveUninitialized: false,
         cookie: {
+            httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         }
     })
