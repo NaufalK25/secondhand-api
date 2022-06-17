@@ -5,9 +5,10 @@ const { User, Profile } = require('../models');
 
 process.env.NODE_ENV = 'test';
 
-const mockRequest = ({ body, params, file, protocol, path } = {}) => ({
+const mockRequest = ({ body, user,params, file, protocol, path } = {}) => ({
     body,
     params,
+    user,
     file,
     protocol,
     path,
@@ -60,7 +61,7 @@ describe('GET /api/v1/user/profile', () => {
         jest.clearAllMocks();
     });
     test('200 OK', async () => {
-        const req = mockRequest({ params: { id: 1 }, protocol: 'http' });
+        const req = mockRequest({ user: { id: 1 }, protocol: 'http' });
         const res = mockResponse();
 
         validationResult.mockImplementation(() => ({
@@ -83,7 +84,7 @@ describe('GET /api/v1/user/profile', () => {
         });
     });
     test('400 Bad Request', async () => {
-        const req = mockRequest({ params: { id: '' } });
+        const req = mockRequest({ user: { id: '' } });
         const res = mockResponse();
         const errors = [
             {
@@ -110,7 +111,7 @@ describe('GET /api/v1/user/profile', () => {
     });
     test('404 Not Found', async () => {
         const req = mockRequest({
-            params: { id: 1 },
+            user: { id: 1 },
             protocol: 'http',
             path: '/api/v1/user/profile'
         });
@@ -154,7 +155,7 @@ describe('PUT /api/v1/user/profile', () => {
                 cityId: 1,
                 address: 'Jl. Kebon Jeruk No. 1'
             },
-            params: { id: 1 },
+            user: { id: 1 },
             file: { filename: 'profilePicture.jpg' }
         });
         const res = mockResponse();
@@ -171,7 +172,7 @@ describe('PUT /api/v1/user/profile', () => {
             success: true,
             message: 'Update profile successful',
             data: {
-                id: req.params.id,
+                id: req.user.id,
                 ...req.body,
                 profilePicture: 'profilePicture.jpg'
             }
@@ -179,7 +180,7 @@ describe('PUT /api/v1/user/profile', () => {
     });
     test('400 Bad Request', async () => {
         const req = mockRequest({
-            params: { id: '' }
+            user: { id: '' }
         });
         const res = mockResponse();
         const errors = [
@@ -207,7 +208,7 @@ describe('PUT /api/v1/user/profile', () => {
     });
     test('404 Not Found', async () => {
         const req = mockRequest({
-            params: { id: 1 },
+            user: { id: 1 },
             protocol: 'http',
             path: '/api/v1/user/profile'
         });
