@@ -1,8 +1,13 @@
 const bcrypjs = require('bcryptjs');
 const { Router } = require('express');
 const { body } = require('express-validator');
+const passport = require('../../middlewares/passport');
 const { login, logout, register } = require('../../controllers/auth');
-const { methodNotAllowed } = require('../../controllers/error');
+const {
+    forbidden,
+    internalServerError,
+    methodNotAllowed
+} = require('../../controllers/error');
 const { User } = require('../../models');
 
 const router = Router();
@@ -10,6 +15,18 @@ const router = Router();
 router
     .route('/login')
     .post(
+        (req, res, next) => {
+            passport.authenticate(
+                'jwt',
+                { session: false },
+                async (err, user, info) => {
+                    if (err) return internalServerError(err, req, res);
+                    if (user) return forbidden(req, res);
+                    req.user = user;
+                    next();
+                }
+            )(req, res, next);
+        },
         [
             body('email')
                 .notEmpty()
@@ -46,13 +63,37 @@ router
     )
     .all(methodNotAllowed);
 
-router.route('/logout')
-    .post(logout)
+router
+    .route('/logout')
+    .post((req, res, next) => {
+        passport.authenticate(
+            'jwt',
+            { session: false },
+            async (err, user, info) => {
+                if (err) return internalServerError(err, req, res);
+                if (!user) return forbidden(req, res);
+                req.user = user;
+                next();
+            }
+        )(req, res, next);
+    }, logout)
     .all(methodNotAllowed);
 
 router
     .route('/register')
     .post(
+        (req, res, next) => {
+            passport.authenticate(
+                'jwt',
+                { session: false },
+                async (err, user, info) => {
+                    if (err) return internalServerError(err, req, res);
+                    if (user) return forbidden(req, res);
+                    req.user = user;
+                    next();
+                }
+            )(req, res, next);
+        },
         [
             body('name')
                 .notEmpty()

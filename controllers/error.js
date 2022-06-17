@@ -13,10 +13,10 @@ module.exports = {
             data: null
         });
     },
-    forbidden: (req, res) => {
+    forbidden: (req, res, msg = '') => {
         res.status(403).json({
             success: false,
-            message: 'Forbidden',
+            message: msg ? msg : 'Forbidden',
             data: null
         });
     },

@@ -5,7 +5,10 @@
         "description": "Backend API for SecondHnad website",
         "version": "1.0.0"
     },
-    "schemes": ["http", "https"],
+    "schemes": [
+        "http",
+        "https"
+    ],
     "basePath": "/api/v1",
     "securityDefinitions": {
         "jwt": {
@@ -15,8 +18,13 @@
             "description": "Example: Bearer [JWT TOKEN]"
         }
     },
-    "cosumes": ["application/json", "multipart/form-data"],
-    "produces": ["application/json"],
+    "cosumes": [
+        "application/json",
+        "multipart/form-data"
+    ],
+    "produces": [
+        "application/json"
+    ],
     "tags": [
         {
             "name": "Auth",
@@ -31,7 +39,7 @@
             "description": "Product Operations"
         },
         {
-            "name": "Category",
+            "name": "Product Category",
             "description": "Category Product Information"
         },
         {
@@ -39,18 +47,20 @@
             "description": "Product Resource Information"
         },
         {
-            "name": "Wishlist",
-            "description": "Wishlist Buyer Information"
+            "name": "Product Offer",
+            "description": "Product Offer Information"
         },
         {
-            "name": "Transaction Offer",
-            "description": "Transaction Offer Information"
+            "name": "Wishlist",
+            "description": "Wishlist Buyer Information"
         }
     ],
     "paths": {
         "/auth/register": {
             "post": {
-                "tags": ["Auth"],
+                "tags": [
+                    "Auth"
+                ],
                 "summary": "Register new user",
                 "operationId": "register",
                 "parameters": [
@@ -81,7 +91,9 @@
         },
         "/auth/login": {
             "post": {
-                "tags": ["Auth"],
+                "tags": [
+                    "Auth"
+                ],
                 "summary": "Login to existing user",
                 "operationId": "login",
                 "parameters": [
@@ -112,7 +124,9 @@
         },
         "/auth/logout": {
             "post": {
-                "tags": ["Auth"],
+                "tags": [
+                    "Auth"
+                ],
                 "summary": "Logout user",
                 "operationId": "logout",
                 "responses": {
@@ -127,7 +141,9 @@
         },
         "/user/profile": {
             "get": {
-                "tags": ["Profile"],
+                "tags": [
+                    "Profile"
+                ],
                 "summary": "Get Profile By Id",
                 "operationId": "profile-get",
                 "responses": {
@@ -175,7 +191,9 @@
                 ]
             },
             "put": {
-                "tags": ["Profile"],
+                "tags": [
+                    "Profile"
+                ],
                 "summary": "Update Profile By Id",
                 "operationId": "profile-update",
                 "parameters": [
@@ -257,7 +275,9 @@
         },
         "/products": {
             "get": {
-                "tags": ["Product"],
+                "tags": [
+                    "Product"
+                ],
                 "summary": "Get All Products",
                 "operationId": "products-get",
                 "responses": {
@@ -289,7 +309,9 @@
         },
         "/products/categories": {
             "get": {
-                "tags": ["Category"],
+                "tags": [
+                    "Product Category"
+                ],
                 "summary": "Get All Categories",
                 "operationId": "category-get",
                 "responses": {
@@ -302,9 +324,109 @@
                 }
             }
         },
+        "/products/offer": {
+            "post": {
+                "tags": [
+                    "Product Offer"
+                ],
+                "summary": "Create trancaction product offer buyer",
+                "operationId": "trancaction-offer-create",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "priceOffer",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Product Offer created",
+                        "schema": {
+                            "$ref": "#/responses/Offer/Post"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            },
+            "get": {
+                "tags": [
+                    "Product Offer"
+                ],
+                "summary": "Get Product Offer Seller",
+                "operationId": "product-offer-get",
+                "responses": {
+                    "200": {
+                        "description": "Get product offer successful",
+                        "schema": {
+                            "$ref": "#/responses/Offer/GetByUser"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
         "/user/wishlists": {
             "get": {
-                "tags": ["Wishlist"],
+                "tags": [
+                    "Wishlist"
+                ],
                 "summary": "Get Wishlist By Id User (Buyer)",
                 "operationId": "wishlist-get",
                 "responses": {
@@ -346,7 +468,9 @@
                 ]
             },
             "post": {
-                "tags": ["Wishlist"],
+                "tags": [
+                    "Wishlist"
+                ],
                 "summary": "Create wishlist product buyer",
                 "operationId": "wishlist-create",
                 "parameters": [
@@ -372,112 +496,6 @@
                     },
                     "401": {
                         "description": "Invalid credentials",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "jwt": []
-                    }
-                ]
-            }
-        },
-        "/transactions/offer": {
-            "post": {
-                "tags": ["Transaction Offer"],
-                "summary": "Create trancaction product offer buyer",
-                "operationId": "trancaction-offer-create",
-                "parameters": [
-                    {
-                        "name": "productId",
-                        "in": "formData",
-                        "required": true,
-                        "type": "integer"
-                    },
-                    {
-                        "name": "priceOffer",
-                        "in": "formData",
-                        "required": true,
-                        "type": "integer"
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Transaction Offer created",
-                        "schema": {
-                            "$ref": "#/responses/Offer"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "401": {
-                        "description": "Invalid credentials",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "jwt": []
-                    }
-                ]
-            },
-            "get": {
-                "tags": ["Transaction Offer"],
-                "summary": "Get Transaction Offer Seller",
-                "operationId": "transaction-offer-get",
-                "responses": {
-                    "200": {
-                        "description": "Get transaction offer successful",
-                        "schema": {
-                            "$ref": "#/responses/Offer"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "401": {
-                        "description": "Invalid credentials",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -700,16 +718,35 @@
             }
         },
         "Offer": {
-            "type": "object",
-            "properties": {
-                "success": {
-                    "type": "boolean"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "data": {
-                    "$ref": "#/definitions/ProductOffer"
+            "GetByUser": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/ProductOffer"
+                        }
+                    }
+                }
+            },
+            "Post": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "$ref": "#/definitions/ProductOffer"
+                    }
                 }
             }
         },

@@ -4,10 +4,10 @@ const { User, Profile } = require('../models');
 const { badRequest, internalServerError, notFound } = require('./error');
 
 module.exports = {
-    findbyID: async (req, res) => {
+    findByUser: async (req, res) => {
         const errors = validationResult(req);
-        console.log(req.user.id)
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+
         const baseUrl = `${req.protocol}://${req.get('host')}`;
         const profilePicturePath = `${baseUrl}/images/profiles/`;
         const profile = await Profile.findByPk(req.user.id, {
