@@ -9,7 +9,7 @@ const {
     notFound,
     unAuthorized
 } = require('../../controllers/error');
-const { findbyID, update } = require('../../controllers/profile');
+const { findByUser, update } = require('../../controllers/profile');
 const { profileStorage } = require('../../middlewares/file');
 const { Profile } = require('../../models');
 
@@ -30,7 +30,7 @@ router
                 }
             )(req, res, next);
         },
-        findbyID
+        findByUser
     )
     .put(
         (req, res, next) => {

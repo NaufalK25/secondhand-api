@@ -48,6 +48,19 @@ describe('errorController', () => {
             data: null
         });
     });
+    test('403 Forbidden (With Msg)', () => {
+        const req = mockRequest();
+        const res = mockResponse();
+
+        errorController.forbidden(req, res, 'Forbidden');
+
+        expect(res.status).toBeCalledWith(403);
+        expect(res.json).toBeCalledWith({
+            success: false,
+            message: 'Forbidden',
+            data: null
+        });
+    });
     test('404 Not Found', () => {
         const req = mockRequest({ path: '/api/v1/user/profile' });
         const res = mockResponse();
@@ -75,7 +88,10 @@ describe('errorController', () => {
         });
     });
     test('405 Method Not Allowed', () => {
-        const req = mockRequest({ method: 'POST', path: '/api/v1/user/profile' });
+        const req = mockRequest({
+            method: 'POST',
+            path: '/api/v1/user/profile'
+        });
         const res = mockResponse();
 
         errorController.methodNotAllowed(req, res);
