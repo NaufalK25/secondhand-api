@@ -1,12 +1,12 @@
 const express = require('express');
 const passport = require('../../middlewares/passport');
-const { body } = require('express-validator');
+const { body,query } = require('express-validator');
 const {
     internalServerError,
     methodNotAllowed,
     unAuthorized
 } = require('../../controllers/error');
-const { findByUser, create } = require('../../controllers/wishlist');
+const { findByUser, create, destroy } = require('../../controllers/wishlist');
 const { Wishlist } = require('../../models');
 
 const router = express.Router();
@@ -55,6 +55,22 @@ router
                 })
         ],
         create
+    )
+    .delete(
+        (req, res, next) => {
+            passport.authenticate(
+                'jwt',
+                { session: false },
+                async (err, user, info) => {
+                    if (err) return internalServerError(err, req, res);
+                    if (!user) return unAuthorized(req, res);
+                    req.user = user;
+                    next();
+                }
+            )(req, res, next);
+        },
+        query('id').isInt().withMessage('Id must be an integer'),
+        destroy
     )
     .all(methodNotAllowed);
 

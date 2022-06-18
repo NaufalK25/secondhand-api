@@ -38,5 +38,23 @@ module.exports = {
             message: 'Wishlist created',
             data: newWishlist
         });
+    },
+    destroy: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+
+        // const userLog=await Wishlist.findAll({ where: { id: req.user.id } });
+        // console.log(userLog);
+        
+        const wishlist = await Wishlist.findByPk(req.query.id);
+        if (!wishlist) return notFound(req, res, 'Wishlist not found');
+        if (wishlist.userId != req.user.id) return notFound(req, res, 'Wishlist not found for this user');
+
+        await Wishlist.destroy({ where: { id: req.query.id } });
+        res.status(201).json({
+            success: true,
+            message: 'Wishlist deleted',
+            data: wishlist
+        });
     }
 };
