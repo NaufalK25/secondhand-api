@@ -366,7 +366,7 @@
                 "operationId": "product-offer-get",
                 "responses": {
                     "200": {
-                        "description": "Offer found",
+                        "description": "ProductOffer found",
                         "schema": {
                             "$ref": "#/responses/Offer/GetByUser"
                         }
@@ -418,7 +418,7 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "Offer created",
+                        "description": "ProductOffer created",
                         "schema": {
                             "$ref": "#/responses/Offer/Post"
                         }
@@ -478,7 +478,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Offer updated",
+                        "description": "ProductOffer updated",
                         "schema": {
                             "$ref": "#/responses/Offer/Post"
                         }

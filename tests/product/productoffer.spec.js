@@ -88,7 +88,7 @@ describe('GET /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Offer found',
+            message: 'ProductOffer found',
             data: [{ ...productOffer }]
         });
     });
@@ -106,7 +106,7 @@ describe('GET /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Offer found',
+            message: 'ProductOffer found',
             data: [{ ...productOffer }]
         });
     });
@@ -125,7 +125,7 @@ describe('GET /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Offer not found',
+            message: 'ProductOffer not found',
             data: null
         });
     });
@@ -156,7 +156,7 @@ describe('POST /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Offer created',
+            message: 'ProductOffer created',
             data: { ...productOffer }
         });
     });
@@ -244,7 +244,7 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Offer updated',
+            message: 'ProductOffer updated',
             data: { id: 1, status: 'Pending' }
         });
     });
@@ -269,7 +269,7 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Offer updated',
+            message: 'ProductOffer updated',
             data: { id: 1, status: 'Accepted' }
         });
     });
@@ -322,7 +322,7 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Offer not found',
+            message: 'ProductOffer not found',
             data: null
         });
     });

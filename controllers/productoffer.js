@@ -24,11 +24,11 @@ module.exports = {
         }
 
         if (userProductOffer.length === 0)
-            return notFound(req, res, 'Offer not found');
+            return notFound(req, res, 'ProductOffer not found');
 
         res.status(200).json({
             success: true,
-            message: 'Offer found',
+            message: 'ProductOffer found',
             data: userProductOffer
         });
     },
@@ -47,7 +47,7 @@ module.exports = {
 
         res.status(201).json({
             success: true,
-            message: 'Offer created',
+            message: 'ProductOffer created',
             data: newProductOffer
         });
     },
@@ -59,7 +59,7 @@ module.exports = {
             include: [{ model: Product, include: [{ model: User }] }]
         });
         const updatedData = {};
-        if (!userProductOffer) return notFound(req, res, 'Offer not found');
+        if (!userProductOffer) return notFound(req, res, 'ProductOffer not found');
 
         updatedData.status = userProductOffer.status;
         if (req.body.status)
@@ -81,7 +81,7 @@ module.exports = {
 
         res.status(200).json({
             success: true,
-            message: 'Offer updated',
+            message: 'ProductOffer updated',
             data: {
                 id: req.user.id,
                 ...updatedData
