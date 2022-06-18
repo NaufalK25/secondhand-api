@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const { validationResult } = require('express-validator');
-const { User, Profile } = require('../models');
-const { badRequest, internalServerError, notFound } = require('./error');
+const { Profile, User } = require('../models');
+const { badRequest, internalServerError } = require('./error');
 
 module.exports = {
     findByUser: async (req, res) => {
@@ -10,12 +10,11 @@ module.exports = {
 
         const baseUrl = `${req.protocol}://${req.get('host')}`;
         const profilePicturePath = `${baseUrl}/images/profiles/`;
-        const profile = await Profile.findByPk(req.user.id, {
-            include: [{ model: User }]
-        });
-        if (!profile) return notFound(req, res);
-        if (profile)
-            profile.profilePicture = `${profilePicturePath}${profile.profilePicture}`;
+        const profile = await Profile.findOne(
+            { where: { userId: req.user.id } },
+            { include: [{ model: User }] }
+        );
+        profile.profilePicture = `${profilePicturePath}${profile.profilePicture}`;
 
         res.status(200).json({
             success: true,
@@ -28,11 +27,11 @@ module.exports = {
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
         const unlinkProfilePicturePath = `${__dirname}/../uploads/profiles/`;
-        const profile = await Profile.findByPk(req.user.id, {
-            include: [{ model: User }]
-        });
+        const profile = await Profile.findOne(
+            { where: { userId: req.user.id } },
+            { include: [{ model: User }] }
+        );
         const updatedData = {};
-        if (!profile) return notFound(req, res);
 
         if (req.file) {
             if (profile.profilePicture !== 'default.png') {
@@ -58,12 +57,12 @@ module.exports = {
         if (req.body.address)
             updatedData.address = req.body.address || profile.address;
 
-        await Profile.update(updatedData, { where: { id: req.user.id } });
+        await Profile.update(updatedData, { where: { userId: req.user.id } });
         await User.update({ roleId: 2 }, { where: { id: req.user.id } }); // change to seller
 
         res.status(200).json({
             success: true,
-            message: 'Update profile successful',
+            message: 'Profile updated',
             data: {
                 id: req.user.id,
                 ...updatedData

@@ -1,5 +1,5 @@
-const { findAll } = require('../controllers/productcategory');
-const { ProductCategory } = require('../models');
+const { findAll } = require('../../controllers/productcategory');
+const { ProductCategory } = require('../../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -35,8 +35,23 @@ describe('GET /api/v1/products/categories', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Category successful',
+            message: 'Category found',
             data: [{ ...category }]
+        });
+    });
+    test('404 Not Found', async () => {
+        const req = mockRequest();
+        const res = mockResponse();
+
+        ProductCategory.findAll = jest.fn().mockImplementation(() => []);
+
+        await findAll(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Category not found',
+            data: null
         });
     });
 });

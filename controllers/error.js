@@ -13,24 +13,31 @@ module.exports = {
             data: null
         });
     },
-    forbidden: (req, res, msg = '') => {
+    forbidden: (req, res, message = 'Forbidden') => {
         res.status(403).json({
             success: false,
-            message: msg ? msg : 'Forbidden',
+            message,
             data: null
         });
     },
-    notFound: (req, res, msg = '') => {
+    notFound: (req, res, message = `Endpoint ${req.originalUrl} not found`) => {
         res.status(404).json({
             success: false,
-            message: msg ? msg : `Endpoint ${req.path} not found`,
+            message,
+            data: null
+        });
+    },
+    notFoundDefault: (req, res) => {
+        res.status(404).json({
+            success: false,
+            message: `Endpoint ${req.originalUrl} not found`,
             data: null
         });
     },
     methodNotAllowed: (req, res) => {
         res.status(405).json({
             success: false,
-            message: `Method ${req.method} not allowed at endpoint ${req.path}`,
+            message: `Method ${req.method} not allowed at endpoint ${req.originalUrl}`,
             data: null
         });
     },

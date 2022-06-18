@@ -1,11 +1,11 @@
 const express = require('express');
-const passport = require('../../middlewares/passport');
+const passport = require('../../../middlewares/passport');
 const {
     internalServerError,
     methodNotAllowed,
     unAuthorized
-} = require('../../controllers/error');
-const { findAll } = require('../../controllers/product');
+} = require('../../../controllers/error');
+const { findAll } = require('../../../controllers/product');
 
 const router = express.Router();
 

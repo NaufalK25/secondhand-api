@@ -1,13 +1,17 @@
 const express = require('express');
-const passport = require('../../middlewares/passport');
-const { body,query } = require('express-validator');
+const { body, param } = require('express-validator');
+const passport = require('../../../middlewares/passport');
 const {
     internalServerError,
     methodNotAllowed,
     unAuthorized
-} = require('../../controllers/error');
-const { findByUser, create, destroy } = require('../../controllers/wishlist');
-const { Wishlist } = require('../../models');
+} = require('../../../controllers/error');
+const {
+    create,
+    destroy,
+    findByUser
+} = require('../../../controllers/wishlist');
+const { Wishlist } = require('../../../models');
 
 const router = express.Router();
 
@@ -56,6 +60,10 @@ router
         ],
         create
     )
+    .all(methodNotAllowed);
+
+router
+    .route('/wishlist/:id')
     .delete(
         (req, res, next) => {
             passport.authenticate(
@@ -69,7 +77,7 @@ router
                 }
             )(req, res, next);
         },
-        query('id').isInt().withMessage('Id must be an integer'),
+        param('id').isInt().withMessage('Id must be an integer'),
         destroy
     )
     .all(methodNotAllowed);

@@ -1,6 +1,6 @@
 const errorController = require('../controllers/error');
 
-const mockRequest = ({ method, path } = {}) => ({ method, path });
+const mockRequest = ({ method, originalUrl } = {}) => ({ method, originalUrl });
 const mockResponse = () => {
     const res = {};
     res.status = jest.fn().mockReturnValue(res);
@@ -62,7 +62,7 @@ describe('errorController', () => {
         });
     });
     test('404 Not Found', () => {
-        const req = mockRequest({ path: '/api/v1/user/profile' });
+        const req = mockRequest({ originalUrl: '/api/v1/user/profile' });
         const res = mockResponse();
 
         errorController.notFound(req, res);
@@ -70,12 +70,25 @@ describe('errorController', () => {
         expect(res.status).toBeCalledWith(404);
         expect(res.json).toBeCalledWith({
             success: false,
-            message: `Endpoint ${req.path} not found`,
+            message: `Endpoint ${req.originalUrl} not found`,
+            data: null
+        });
+    });
+    test('404 Not Found (Default)', () => {
+        const req = mockRequest({ originalUrl: '/api/v1/user/profile' });
+        const res = mockResponse();
+
+        errorController.notFoundDefault(req, res);
+
+        expect(res.status).toBeCalledWith(404);
+        expect(res.json).toBeCalledWith({
+            success: false,
+            message: `Endpoint ${req.originalUrl} not found`,
             data: null
         });
     });
     test('404 Not Found (With Msg)', () => {
-        const req = mockRequest({ path: '/api/v1/user/wishlists' });
+        const req = mockRequest({ originalUrl: '/api/v1/user/wishlists' });
         const res = mockResponse();
 
         errorController.notFound(req, res, 'Product Not Found');
@@ -90,7 +103,7 @@ describe('errorController', () => {
     test('405 Method Not Allowed', () => {
         const req = mockRequest({
             method: 'POST',
-            path: '/api/v1/user/profile'
+            originalUrl: '/api/v1/user/profile'
         });
         const res = mockResponse();
 
@@ -99,7 +112,7 @@ describe('errorController', () => {
         expect(res.status).toBeCalledWith(405);
         expect(res.json).toBeCalledWith({
             success: false,
-            message: `Method ${req.method} not allowed at endpoint ${req.path}`,
+            message: `Method ${req.method} not allowed at endpoint ${req.originalUrl}`,
             data: null
         });
     });

@@ -1,14 +1,14 @@
 const bcrypjs = require('bcryptjs');
 const { Router } = require('express');
 const { body } = require('express-validator');
-const passport = require('../../middlewares/passport');
-const { login, logout, register } = require('../../controllers/auth');
+const passport = require('../../../middlewares/passport');
+const { login, logout, register } = require('../../../controllers/auth');
 const {
     forbidden,
     internalServerError,
     methodNotAllowed
-} = require('../../controllers/error');
-const { User } = require('../../models');
+} = require('../../../controllers/error');
+const { User } = require('../../../models');
 
 const router = Router();
 

@@ -1,16 +1,16 @@
 const fs = require('fs/promises');
 const { validationResult } = require('express-validator');
-const { findByUser, update } = require('../controllers/profile');
-const { User, Profile } = require('../models');
+const { findByUser, update } = require('../../controllers/profile');
+const { Profile, User } = require('../../models');
 
 process.env.NODE_ENV = 'test';
 
-const mockRequest = ({ body, user, file, protocol, path } = {}) => ({
+const mockRequest = ({ body, user, file, protocol, originalUrl } = {}) => ({
     body,
     user,
     file,
     protocol,
-    path,
+    originalUrl,
     get: jest.fn().mockImplementation(header => {
         if (header === 'host') return 'localhost:8000';
     })
@@ -52,7 +52,7 @@ jest.mock('express-validator');
 
 describe('GET /api/v1/user/profile', () => {
     beforeEach(() => {
-        Profile.findByPk = jest
+        Profile.findOne = jest
             .fn()
             .mockImplementation(() => ({ ...profileInclude }));
     });
@@ -80,35 +80,12 @@ describe('GET /api/v1/user/profile', () => {
             }
         });
     });
-    test('404 Not Found', async () => {
-        const req = mockRequest({
-            user: { id: 1 },
-            protocol: 'http',
-            path: '/api/v1/user/profile'
-        });
-        const res = mockResponse();
-
-        validationResult.mockImplementation(() => ({
-            isEmpty: () => true,
-            array: () => []
-        }));
-        Profile.findByPk = jest.fn().mockImplementation(() => null);
-
-        await findByUser(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(404);
-        expect(res.json).toHaveBeenCalledWith({
-            success: false,
-            message: `Endpoint ${req.path} not found`,
-            data: null
-        });
-    });
 });
 
 describe('PUT /api/v1/user/profile', () => {
     beforeEach(() => {
         fs.unlink.mockImplementation(() => Promise.resolve());
-        Profile.findByPk = jest
+        Profile.findOne = jest
             .fn()
             .mockImplementation(() => ({ ...profileInclude }));
         Profile.update = jest.fn().mockImplementation(() => ({ ...profile }));
@@ -139,7 +116,7 @@ describe('PUT /api/v1/user/profile', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Update profile successful',
+            message: 'Profile updated',
             data: {
                 id: req.user.id,
                 ...req.body,
@@ -180,29 +157,6 @@ describe('PUT /api/v1/user/profile', () => {
             success: false,
             message: 'Validation error',
             data: errors
-        });
-    });
-    test('404 Not Found', async () => {
-        const req = mockRequest({
-            user: { id: 1 },
-            protocol: 'http',
-            path: '/api/v1/user/profile'
-        });
-        const res = mockResponse();
-
-        validationResult.mockImplementation(() => ({
-            isEmpty: () => true,
-            array: () => []
-        }));
-        Profile.findByPk = jest.fn().mockImplementation(() => null);
-
-        await update(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(404);
-        expect(res.json).toHaveBeenCalledWith({
-            success: false,
-            message: `Endpoint ${req.path} not found`,
-            data: null
         });
     });
 });

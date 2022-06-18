@@ -1,6 +1,6 @@
 const express = require('express');
-const { methodNotAllowed } = require('../controllers/error');
-const { findAll } = require('../controllers/city');
+const { findAll } = require('../../controllers/city');
+const { methodNotAllowed } = require('../../controllers/error');
 
 const router = express.Router();
 

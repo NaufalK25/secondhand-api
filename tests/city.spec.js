@@ -33,8 +33,23 @@ describe('GET /api/v1/cities', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'City successful',
+            message: 'City found',
             data: [{ ...city }]
+        });
+    });
+    test('404 Not Found', async () => {
+        const req = mockRequest();
+        const res = mockResponse();
+
+        City.findAll = jest.fn().mockImplementation(() => []);
+
+        await findAll(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'City not found',
+            data: null
         });
     });
 });

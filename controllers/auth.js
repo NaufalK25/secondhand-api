@@ -1,7 +1,7 @@
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
-const { User, Profile } = require('../models');
+const { Profile, User } = require('../models');
 const { badRequest } = require('./error');
 
 module.exports = {
@@ -25,14 +25,14 @@ module.exports = {
             .status(200)
             .json({
                 success: true,
-                message: 'Login successful',
+                message: 'Login success',
                 data: user
             });
     },
     logout: (req, res) => {
         res.clearCookie('token').status(200).json({
             success: true,
-            message: 'Logout successful',
+            message: 'Logout success',
             data: null
         });
     },
@@ -47,7 +47,7 @@ module.exports = {
 
         res.status(201).json({
             success: true,
-            message: 'Registration successful',
+            message: 'Register success',
             data: { user, profile }
         });
     }
