@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator');
-const { User, Product, ProductOffer } = require('../models');
+const { User, Product, ProductOffer, Transaction } = require('../models');
 const { badRequest, forbidden, notFound } = require('./error');
 
 module.exports = {
@@ -25,10 +25,12 @@ module.exports = {
     },
 
     findByUser: async (req, res) => {
-        const userProductOffer = await ProductOffer.findAll({
-            buyerId: req.user.id
-        });
-
+    let userProductOffer;
+    if(req.user.roleId == 2){ //kalo dia seller dia bakal nampilin penawaran yang diajuin buyer
+        userProductOffer = await ProductOffer.findAll({include: [{ model: Product, attributes: [], where: { sellerId: req.user.id }}]});
+    }else{ //kalo dia buyyer dia bakal nampilin produk yang lagi dia tawar
+        userProductOffer = await ProductOffer.findAll({ where: { buyerId: req.user.id } });
+    }
         res.status(200).json({
             success: true,
             message: 'Product Offer found',
@@ -40,34 +42,44 @@ module.exports = {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const userProductOffer = await ProductOffer.findOne({
-            buyerId: req.user.id
-        });
+        const userProductOffer = await ProductOffer.findByPk(req.query.id, {include: [{ model: Product,  include: [{ model: User }] }]});
         const updatedData = {};
-        if (!profile) return notFound(req, res);
+        if (!userProductOffer) return notFound(req, res);
 
-        if (req.body.name) updatedData.name = req.body.name || profile.name;
-        if (req.body.userId)
-            updatedData.userId = req.body.userId || profile.userId;
-        if (req.body.name) updatedData.name = req.body.name || profile.name;
-        if (req.body.phoneNumber)
-            updatedData.phoneNumber =
-                req.body.phoneNumber || profile.phoneNumber;
-        if (req.body.cityId)
-            updatedData.cityId = req.body.cityId || profile.cityId;
-        if (req.body.address)
-            updatedData.address = req.body.address || profile.address;
+        if (req.body.status)
+            updatedData.status = req.body.status || userProductOffer.status;
 
-        await Profile.update(updatedData, { where: { id: req.user.id } });
-        await User.update({ roleId: 2 }, { where: { id: req.user.id } }); // change to seller
-
-        res.status(200).json({
-            success: true,
-            message: 'Update profile successful',
-            data: {
-                id: req.user.id,
-                ...updatedData
+        if(req.user.id == userProductOffer.Product.sellerId){ //yang bisa update login yang sebagai seller produk itu)
+            await ProductOffer.update(updatedData, { where: { id: req.query.id } });
+            if(updatedData.status == "Accept"){
+                // TODO make transaction kalo diterima tawarannya sama seller dia langsung ke proses transaksi
+                await Transaction.create({
+                    productId: userProductOffer.productId,
+                    buyerId: userProductOffer.buyerId,
+                    transactionDate: new Date(),
+                    fixPrice: userProductOffer.priceOffer,
+                    status: "Pending"
+                });
             }
-        });
+
+            res.status(200).json({
+                success: true,
+                message: 'Update status successful',
+                data: {
+                    id: req.user.id,
+                    ...updatedData
+                }
+            });
+        }else{
+            res.status(200).json({
+                success: true,
+                message: 'You are not allowed to update this data',
+                data: {
+                    id: req.user.id,
+                    ...updatedData
+                }
+            });
+        }
+        
     }
 };

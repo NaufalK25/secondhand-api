@@ -42,9 +42,6 @@ module.exports = {
     destroy: async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
-
-        // const userLog=await Wishlist.findAll({ where: { id: req.user.id } });
-        // console.log(userLog);
         
         const wishlist = await Wishlist.findByPk(req.query.id);
         if (!wishlist) return notFound(req, res, 'Wishlist not found');
