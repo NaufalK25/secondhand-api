@@ -1,10 +1,10 @@
 const { validationResult } = require('express-validator');
-const { create, findByUser } = require('../controllers/wishlist');
+const { create, findByUser, destroy } = require('../controllers/wishlist');
 const { Wishlist, User, Product } = require('../models');
 
 process.env.NODE_ENV = 'test';
 
-const mockRequest = ({ user, body } = {}) => ({ user, body });
+const mockRequest = ({ user, body, query } = {}) => ({ user, body, query });
 const mockResponse = () => {
     const res = {};
     res.status = jest.fn().mockReturnValue(res);
@@ -183,6 +183,79 @@ describe('POST /api/v1/user/wishlists', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: false,
             message: 'Product not found',
+            data: null
+        });
+    });
+});
+
+describe('DELETE /api/v1/user/wishlists', () => {
+    beforeEach(() => {
+        User.findByPk = jest.fn().mockImplementation(() => ({ ...user }));
+        Product.findByPk = jest.fn().mockImplementation(() => ({ ...product }));
+        Wishlist.create = jest.fn().mockImplementation(() => ({ ...wishlist }));
+        Wishlist.destroy = jest.fn().mockImplementation(() => ({ ...wishlist }));
+    });
+    afterEach(() => jest.clearAllMocks());
+    test('201 Deleted', async () => {
+        const req = mockRequest({ user: { id: 1 }, query: { id : 1 } });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+
+        await destroy(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(201);
+        expect(res.json).toHaveBeenCalledWith({
+            success: true,
+            message: 'Wishlist deleted',
+            data: { ...wishlist }
+        });
+    });
+    test('400 Bad Request', async () => {
+        const req = mockRequest({ user: { id: 1 }, query: { id: 'abc' } });
+        const res = mockResponse();
+        const errors = [
+            {
+                valuue: '',
+                msg: 'Id must be an integer',
+                param: 'id',
+                location: 'body'
+            }
+        ];
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => false,
+            array: () => errors
+        }));
+
+        await destroy(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Validation error',
+            data: errors
+        });
+    });
+    test('404 Not Found (Wishlist)', async () => {
+        const req = mockRequest({ user: { id: 1 }, query: { id: 3 } });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+        Wishlist.findByPk = jest.fn().mockImplementation(() => null);
+
+        await destroy(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Wishlist not found',
             data: null
         });
     });
