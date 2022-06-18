@@ -2,7 +2,7 @@ const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 const { login, logout, register } = require('../controllers/auth');
-const { User, Profile } = require('../models');
+const { Profile, User } = require('../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -67,7 +67,7 @@ describe('POST /api/v1/auth/login', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Login successful',
+            message: 'Login success',
             data: { ...user }
         });
     });
@@ -110,7 +110,7 @@ describe('POST /api/v1/auth/logout', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Logout successful',
+            message: 'Logout success',
             data: null
         });
     });
@@ -143,7 +143,7 @@ describe('POST /api/v1/auth/register', () => {
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Registration successful',
+            message: 'Register success',
             data: { user, profile }
         });
     });

@@ -79,13 +79,25 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "Registration successful",
+                        "description": "Register success",
                         "schema": {
                             "$ref": "#/responses/Register"
                         }
                     },
                     "400": {
                         "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -112,13 +124,25 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Login successful",
+                        "description": "Login success",
                         "schema": {
                             "$ref": "#/responses/Login"
                         }
                     },
                     "400": {
                         "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -135,9 +159,21 @@
                 "operationId": "logout",
                 "responses": {
                     "200": {
-                        "description": "Logout successful",
+                        "description": "Logout success",
                         "schema": {
                             "$ref": "#/responses/Logout"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
                         }
                     }
                 },
@@ -157,7 +193,7 @@
                 "operationId": "profile-get",
                 "responses": {
                     "200": {
-                        "description": "Get profile successful",
+                        "description": "Profile found",
                         "schema": {
                             "$ref": "#/responses/Profile/GetById"
                         }
@@ -169,19 +205,7 @@
                         }
                     },
                     "401": {
-                        "description": "Invalid credentials",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -251,19 +275,7 @@
                         }
                     },
                     "401": {
-                        "description": "Invalid credentials",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -291,13 +303,19 @@
                 "operationId": "products-get",
                 "responses": {
                     "200": {
-                        "description": "Get product successful",
+                        "description": "Product found",
                         "schema": {
                             "$ref": "#/responses/Product"
                         }
                     },
                     "401": {
-                        "description": "Invalid credentials",
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -325,50 +343,36 @@
                 "operationId": "category-get",
                 "responses": {
                     "200": {
-                        "description": "Get product category successful",
+                        "description": "Category found",
                         "schema": {
                             "$ref": "#/responses/Category"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
                         }
                     }
                 }
             }
         },
-        "/products/offer": {
-            "post": {
+        "/products/offers": {
+            "get": {
                 "tags": [
                     "Product Offer"
                 ],
-                "summary": "Create trancaction product offer buyer",
-                "operationId": "trancaction-offer-create",
-                "parameters": [
-                    {
-                        "name": "productId",
-                        "in": "formData",
-                        "required": true,
-                        "type": "integer"
-                    },
-                    {
-                        "name": "priceOffer",
-                        "in": "formData",
-                        "required": true,
-                        "type": "integer"
-                    }
-                ],
+                "summary": "Get Product Offer as Seller Or Buyyer",
+                "operationId": "product-offer-get",
                 "responses": {
-                    "201": {
-                        "description": "Product Offer created",
+                    "200": {
+                        "description": "Offer found",
                         "schema": {
-                            "$ref": "#/responses/Offer/Post"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "schema": {
-                            "$ref": "#/responses/Error"
+                            "$ref": "#/responses/Offer/GetByUser"
                         }
                     },
                     "401": {
-                        "description": "Invalid credentials",
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -392,17 +396,31 @@
                     }
                 ]
             },
-            "get": {
+            "post": {
                 "tags": [
                     "Product Offer"
                 ],
-                "summary": "Get Product Offer as Seller Or Buyyer",
-                "operationId": "product-offer-get",
+                "summary": "Create trancaction product offer buyer",
+                "operationId": "trancaction-offer-create",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "priceOffer",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
                 "responses": {
-                    "200": {
-                        "description": "Get product offer successful",
+                    "201": {
+                        "description": "Offer created",
                         "schema": {
-                            "$ref": "#/responses/Offer/GetByUser"
+                            "$ref": "#/responses/Offer/Post"
                         }
                     },
                     "400": {
@@ -412,7 +430,13 @@
                         }
                     },
                     "401": {
-                        "description": "Invalid credentials",
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -429,7 +453,9 @@
                         "jwt": []
                     }
                 ]
-            },
+            }
+        },
+        "/products/offer/{id}": {
             "put": {
                 "tags": [
                     "Product Offer"
@@ -439,7 +465,7 @@
                 "parameters": [
                     {
                         "name": "id",
-                        "in": "query",
+                        "in": "path",
                         "required": true,
                         "type": "integer"
                     },
@@ -451,8 +477,8 @@
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Product Offer created",
+                    "200": {
+                        "description": "Offer updated",
                         "schema": {
                             "$ref": "#/responses/Offer/Post"
                         }
@@ -464,7 +490,7 @@
                         }
                     },
                     "401": {
-                        "description": "Invalid credentials",
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -498,19 +524,13 @@
                 "operationId": "wishlist-get",
                 "responses": {
                     "200": {
-                        "description": "Get user's wishlist successful",
+                        "description": "Wishlist found",
                         "schema": {
                             "$ref": "#/responses/Wishlist/GetByUser"
                         }
                     },
-                    "400": {
-                        "description": "Validation error",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
                     "401": {
-                        "description": "Invalid credentials",
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -562,7 +582,7 @@
                         }
                     },
                     "401": {
-                        "description": "Invalid credentials",
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -585,7 +605,9 @@
                         "jwt": []
                     }
                 ]
-            },
+            }
+        },
+        "/user/wishlist/{id}": {
             "delete": {
                 "tags": [
                     "Wishlist"
@@ -595,14 +617,14 @@
                 "parameters": [
                     {
                         "name": "id",
-                        "in": "query",
+                        "in": "path",
                         "required": true,
                         "type": "integer"
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Wishlist created",
+                    "200": {
+                        "description": "Wishlist deleted",
                         "schema": {
                             "$ref": "#/responses/Wishlist/Delete"
                         }
@@ -614,7 +636,7 @@
                         }
                     },
                     "401": {
-                        "description": "Invalid credentials",
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -648,9 +670,15 @@
                 "operationId": "city-get",
                 "responses": {
                     "200": {
-                        "description": "Get city successful",
+                        "description": "City found",
                         "schema": {
                             "$ref": "#/responses/City"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
                         }
                     }
                 }
@@ -866,7 +894,6 @@
                     }
                 }
             }
-
         },
         "Offer": {
             "GetByUser": {

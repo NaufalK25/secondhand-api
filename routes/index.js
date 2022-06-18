@@ -1,14 +1,18 @@
+const swaggerUi = require('swagger-ui-express');
 const { Router } = require('express');
-const authRouter = require('./auth');
-const productRouter = require('./product');
-const userController = require('./user');
-const city = require('./city');
+const swaggerDocument = require('../docs/swagger.json');
+const {
+    internalServerError,
+    notFoundDefault
+} = require('../controllers/error');
+const apiRouter = require('./api');
 
 const router = Router();
 
-router.use('/auth', authRouter);
-router.use('/products', productRouter);
-router.use('/user', userController);
-router.use('/cities', city);
+router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+router.use('/api/v1', apiRouter);
+
+router.use(notFoundDefault);
+router.use(internalServerError);
 
 module.exports = router;

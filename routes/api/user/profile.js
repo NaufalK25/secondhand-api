@@ -1,37 +1,32 @@
 const express = require('express');
 const multer = require('multer');
-const { body, param } = require('express-validator');
-const passport = require('../../middlewares/passport');
+const { body } = require('express-validator');
+const passport = require('../../../middlewares/passport');
 const {
-    forbidden,
     internalServerError,
     methodNotAllowed,
-    notFound,
     unAuthorized
-} = require('../../controllers/error');
-const { findByUser, update } = require('../../controllers/profile');
-const { profileStorage } = require('../../middlewares/file');
-const { Profile } = require('../../models');
+} = require('../../../controllers/error');
+const { findByUser, update } = require('../../../controllers/profile');
+const { profileStorage } = require('../../../middlewares/file');
+const { Profile } = require('../../../models');
 
 const router = express.Router();
 
 router
     .route('/profile')
-    .get(
-        (req, res, next) => {
-            passport.authenticate(
-                'jwt',
-                { session: false },
-                async (err, user, info) => {
-                    if (err) return internalServerError(err, req, res);
-                    if (!user) return unAuthorized(req, res);
-                    req.user = user;
-                    next();
-                }
-            )(req, res, next);
-        },
-        findByUser
-    )
+    .get((req, res, next) => {
+        passport.authenticate(
+            'jwt',
+            { session: false },
+            async (err, user, info) => {
+                if (err) return internalServerError(err, req, res);
+                if (!user) return unAuthorized(req, res);
+                req.user = user;
+                next();
+            }
+        )(req, res, next);
+    }, findByUser)
     .put(
         (req, res, next) => {
             passport.authenticate(

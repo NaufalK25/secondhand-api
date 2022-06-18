@@ -1,16 +1,17 @@
 const { validationResult } = require('express-validator');
-const { Wishlist, User, Product } = require('../models');
+const { Product, User, Wishlist } = require('../models');
 const { badRequest, notFound } = require('./error');
 
 module.exports = {
     findByUser: async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
-
         const wishlist = await Wishlist.findAll(
             { where: { userId: req.user.id } },
             { include: [{ model: User }, { model: Product }] }
         );
+
+        if (wishlist.length === 0) {
+            return notFound(req, res, 'Wishlist not found');
+        }
 
         res.status(200).json({
             success: true,
@@ -42,16 +43,16 @@ module.exports = {
     destroy: async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
-        
-        const wishlist = await Wishlist.findByPk(req.query.id);
-        if (!wishlist) return notFound(req, res, 'Wishlist not found');
-        if (wishlist.userId != req.user.id) return notFound(req, res, 'Wishlist not found for this user');
 
-        await Wishlist.destroy({ where: { id: req.query.id } });
-        res.status(201).json({
+        const wishlist = await Wishlist.findByPk(req.params.id);
+        if (!wishlist) return notFound(req, res, 'Wishlist not found');
+
+        const deletedWishlist = await Wishlist.destroy({ where: { id: req.params.id } });
+
+        res.status(200).json({
             success: true,
             message: 'Wishlist deleted',
-            data: wishlist
+            data: deletedWishlist
         });
     }
 };

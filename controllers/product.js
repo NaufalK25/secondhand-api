@@ -1,3 +1,4 @@
+const { notFound } = require('../controllers/error');
 const { Product } = require('../models');
 
 module.exports = {
@@ -6,9 +7,12 @@ module.exports = {
             where: { sellerId: req.user.id }
         });
 
+        if (products.length === 0)
+            return notFound(req, res, 'Product not found');
+
         res.status(200).json({
             success: true,
-            message: 'Product successful',
+            message: 'Product found',
             data: products
         });
     }

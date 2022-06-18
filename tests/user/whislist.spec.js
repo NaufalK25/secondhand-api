@@ -1,10 +1,10 @@
 const { validationResult } = require('express-validator');
-const { create, findByUser, destroy } = require('../controllers/wishlist');
-const { Wishlist, User, Product } = require('../models');
+const { create, destroy, findByUser } = require('../../controllers/wishlist');
+const { Product, User, Wishlist } = require('../../models');
 
 process.env.NODE_ENV = 'test';
 
-const mockRequest = ({ user, body, query } = {}) => ({ user, body, query });
+const mockRequest = ({ user, body, params } = {}) => ({ user, body, params });
 const mockResponse = () => {
     const res = {};
     res.status = jest.fn().mockReturnValue(res);
@@ -69,30 +69,23 @@ describe('GET /api/v1/user/wishlists', () => {
             data: { ...wishlist }
         });
     });
-    test('400 Bad Request', async () => {
-        const req = mockRequest({ user: { id: 1 }, body: { productId: '' } });
+    test('404 Not Found', async () => {
+        const req = mockRequest({ user: { id: 1 } });
         const res = mockResponse();
-        const errors = [
-            {
-                valuue: '',
-                msg: 'Product id is required',
-                param: 'productId',
-                location: 'body'
-            }
-        ];
 
         validationResult.mockImplementation(() => ({
-            isEmpty: () => false,
-            array: () => errors
+            isEmpty: () => true,
+            array: () => []
         }));
+        Wishlist.findAll = jest.fn().mockImplementation(() => []);
 
         await findByUser(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
-            data: errors
+            message: 'Wishlist not found',
+            data: null
         });
     });
 });
@@ -188,16 +181,18 @@ describe('POST /api/v1/user/wishlists', () => {
     });
 });
 
-describe('DELETE /api/v1/user/wishlists', () => {
+describe('DELETE /api/v1/user/wishlist/:id', () => {
     beforeEach(() => {
         User.findByPk = jest.fn().mockImplementation(() => ({ ...user }));
         Product.findByPk = jest.fn().mockImplementation(() => ({ ...product }));
         Wishlist.create = jest.fn().mockImplementation(() => ({ ...wishlist }));
-        Wishlist.destroy = jest.fn().mockImplementation(() => ({ ...wishlist }));
+        Wishlist.destroy = jest
+            .fn()
+            .mockImplementation(() => ({ ...wishlist }));
     });
     afterEach(() => jest.clearAllMocks());
-    test('201 Deleted', async () => {
-        const req = mockRequest({ user: { id: 1 }, query: { id : 1 } });
+    test('200 OK', async () => {
+        const req = mockRequest({ user: { id: 1 }, params: { id: 1 } });
         const res = mockResponse();
 
         validationResult.mockImplementation(() => ({
@@ -207,7 +202,7 @@ describe('DELETE /api/v1/user/wishlists', () => {
 
         await destroy(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(201);
+        expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'Wishlist deleted',
@@ -215,14 +210,14 @@ describe('DELETE /api/v1/user/wishlists', () => {
         });
     });
     test('400 Bad Request', async () => {
-        const req = mockRequest({ user: { id: 1 }, query: { id: 'abc' } });
+        const req = mockRequest({ user: { id: 1 }, params: { id: 'abc' } });
         const res = mockResponse();
         const errors = [
             {
                 valuue: '',
                 msg: 'Id must be an integer',
                 param: 'id',
-                location: 'body'
+                location: 'params'
             }
         ];
 
@@ -240,8 +235,8 @@ describe('DELETE /api/v1/user/wishlists', () => {
             data: errors
         });
     });
-    test('404 Not Found (Wishlist)', async () => {
-        const req = mockRequest({ user: { id: 1 }, query: { id: 3 } });
+    test('404 Not Found', async () => {
+        const req = mockRequest({ user: { id: 1 }, params: { id: 3 } });
         const res = mockResponse();
 
         validationResult.mockImplementation(() => ({

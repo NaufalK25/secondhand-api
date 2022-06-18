@@ -23,7 +23,11 @@ module.exports = {
                 allowNull: false
             },
             priceOffer: { type: Sequelize.INTEGER, allowNull: false },
-            status: { type: Sequelize.STRING, allowNull: false },
+            status: {
+                type: Sequelize.STRING,
+                allowNull: false,
+                defaultValue: 'Pending'
+            },
             createdAt: { allowNull: false, type: Sequelize.DATE }
         });
     },
