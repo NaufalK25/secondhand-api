@@ -1,20 +1,27 @@
 {
   "name": "secondhand",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./bin/www",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
+    "postinstall": "npx sequelize-cli db:migrate",
     "test": "jest"
   },
+  "keywords": [],
+  "author": "",
+  "license": "",
   "dependencies": {
-    "@faker-js/faker": "^7.2.0",
     "bcryptjs": "^2.4.3",
-    "cookie-parser": "~1.4.4",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "dotenv": "^16.0.1",
     "express": "~4.16.1",
+    "express-session": "^1.17.3",
+    "express-validator": "^6.14.1",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",
     "morgan": "~1.9.1",
@@ -29,6 +36,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.2.0",
     "jest": "^28.1.1",
     "nodemon": "^2.0.16",
     "sequelize-cli": "^6.4.1",

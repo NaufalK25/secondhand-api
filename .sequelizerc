@@ -1,5 +1,3 @@
 const { resolve } = require('path');
 
-module.exports = {
-    'config': resolve('config', 'config.js'),
-}
+module.exports = { config: resolve('config', 'config.js') };

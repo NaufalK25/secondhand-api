@@ -3,17 +3,17 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.bulkInsert(
-            'RoleUsers',
+            'Wishlists',
             [
                 {
-                    role: 'buyer',
-                    description: 'Buyer as default',
+                    userId: 2,
+                    productId: 1,
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
                 {
-                    role: 'seller',
-                    description: 'Seller',
+                    userId: 2,
+                    productId: 2,
                     createdAt: new Date(),
                     updatedAt: new Date()
                 }
@@ -23,12 +23,6 @@ module.exports = {
     },
 
     async down(queryInterface, Sequelize) {
-        /**
-         * Add commands to revert seed here.
-         *
-         * Example:
-         * await queryInterface.bulkDelete('People', null, {});
-         */
-        await queryInterface.bulkDelete('RoleUsers', null, {});
+        await queryInterface.bulkDelete('Wishlists', null, {});
     }
 };
