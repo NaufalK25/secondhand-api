@@ -57,6 +57,14 @@
         {
             "name": "Wishlist",
             "description": "Wishlist Buyer Information"
+        },
+        {
+            "name": "Transaction",
+            "description": "Transaction Information"
+        },
+        {
+            "name": "Transaction History",
+            "description": "Transaction History Information"
         }
     ],
     "paths": {
@@ -683,7 +691,108 @@
                     }
                 }
             }
+        },
+        "/transactions": {
+            "get": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Get All Transactions",
+                "operationId": "transactions-get",
+                "responses": {
+                    "200": {
+                        "description": "Transactions found",
+                        "schema": {
+                            "$ref": "#/responses/Transaction"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
+        "/transactions/{id}": {
+            "put": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Update trancaction offer buyer(Success or Canceled)",
+                "operationId": "transaction-update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "status",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ProductOffer updated",
+                        "schema": {
+                            "$ref": "#/responses/Offer/Post"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
         }
+        
     },
     "requestBodies": {
         "Register": {
@@ -941,6 +1050,23 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/City"
+                    }
+                }
+            }
+        },
+        "Transaction": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Transaction"
                     }
                 }
             }
@@ -1221,6 +1347,38 @@
                     "type": "integer"
                 },
                 "city": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "Transaction": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "productId": {
+                    "type": "integer"
+                },
+                "buyerId": {
+                    "type": "integer"
+                },
+                "transactionDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "fixPrice": {
+                    "type": "integer"
+                },
+                "status": {
                     "type": "string"
                 },
                 "createdAt": {

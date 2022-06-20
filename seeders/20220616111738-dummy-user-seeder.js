@@ -14,7 +14,7 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    roleId: 2,
+                    roleId: 1,
                     email: 'userbdo@gmail.com',
                     password: hashedPassword,
                     createdAt: new Date(),
