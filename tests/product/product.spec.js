@@ -24,7 +24,7 @@ const product = {
     stock: 10,
     sold: 0,
     description: 'Product description',
-    status: 'available',
+    status: true,
     createdAt: date,
     updatedAt: date
 };

@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
             buyerId: DataTypes.INTEGER,
             transactionDate: DataTypes.DATE,
             fixPrice: DataTypes.INTEGER,
-            status: DataTypes.STRING
+            status: DataTypes.BOOLEAN
         },
         { sequelize, modelName: 'Transaction' }
     );

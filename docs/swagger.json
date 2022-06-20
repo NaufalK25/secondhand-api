@@ -35,6 +35,10 @@
             "description": "User Profile Information"
         },
         {
+            "name": "Wishlist",
+            "description": "Wishlist Buyer Information"
+        },
+        {
             "name": "City",
             "description": "All Cities and Regencies in Indonesia"
         },
@@ -47,16 +51,8 @@
             "description": "Category Product Information"
         },
         {
-            "name": "Product Resource",
-            "description": "Product Resource Information"
-        },
-        {
             "name": "Product Offer",
             "description": "Product Offer Information"
-        },
-        {
-            "name": "Wishlist",
-            "description": "Wishlist Buyer Information"
         },
         {
             "name": "Transaction",
@@ -77,12 +73,25 @@
                 "operationId": "register",
                 "parameters": [
                     {
-                        "name": "body",
-                        "in": "body",
+                        "name": "name",
+                        "in": "formData",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/requestBodies/Register"
-                        }
+                        "type": "string",
+                        "default": "secondhand"
+                    },
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string",
+                        "default": "secondhand@gmail.com"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string",
+                        "default": "Secondhand06"
                     }
                 ],
                 "responses": {
@@ -122,12 +131,18 @@
                 "operationId": "login",
                 "parameters": [
                     {
-                        "name": "body",
-                        "in": "body",
+                        "name": "email",
+                        "in": "formData",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/requestBodies/Login"
-                        }
+                        "type": "string",
+                        "default": "secondhand@gmail.com"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string",
+                        "default": "Secondhand06"
                     }
                 ],
                 "responses": {
@@ -302,6 +317,181 @@
                 ]
             }
         },
+        "/user/wishlists": {
+            "get": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Get Wishlist By Id User (Buyer)",
+                "operationId": "wishlist-get",
+                "responses": {
+                    "200": {
+                        "description": "Wishlist found",
+                        "schema": {
+                            "$ref": "#/responses/Wishlist/GetByUser"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Create wishlist product buyer",
+                "operationId": "wishlist-create",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Wishlist created",
+                        "schema": {
+                            "$ref": "#/responses/Wishlist/Post"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
+        "/user/wishlist/{id}": {
+            "delete": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Delete wishlist product buyer",
+                "operationId": "wishlist-delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Wishlist deleted",
+                        "schema": {
+                            "$ref": "#/responses/Wishlist/Delete"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
+        "/cities": {
+            "get": {
+                "tags": [
+                    "City"
+                ],
+                "summary": "Get All Cities",
+                "operationId": "city-get",
+                "responses": {
+                    "200": {
+                        "description": "City found",
+                        "schema": {
+                            "$ref": "#/responses/City"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                }
+            }
+        },
         "/products": {
             "get": {
                 "tags": [
@@ -313,11 +503,256 @@
                     "200": {
                         "description": "Product found",
                         "schema": {
-                            "$ref": "#/responses/Product"
+                            "$ref": "#/responses/Product/GetByUser"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Create Product",
+                "operationId": "products-post",
+                "parameters": [
+                    {
+                        "name": "categories",
+                        "in": "formData",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "price",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "stock",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "description",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "status",
+                        "in": "formData",
+                        "required": true,
+                        "type": "boolean",
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "description": "true = available, false = sold out"
+                    },
+                    {
+                        "name": "images",
+                        "in": "formData",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "binary"
+                        },
+                        "minItems": 1,
+                        "maxItems": 4
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Product created",
+                        "schema": {
+                            "$ref": "#/responses/Product/Post"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
+        "/products/{id}": {
+            "put": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Update Product By Id",
+                "operationId": "products-put",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "categories",
+                        "in": "formData",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "type": "string"
+                    },
+                    {
+                        "name": "price",
+                        "in": "formData",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "stock",
+                        "in": "formData",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "description",
+                        "in": "formData",
+                        "type": "string"
+                    },
+                    {
+                        "name": "status",
+                        "in": "formData",
+                        "type": "boolean",
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "description": "true = available, false = sold out"
+                    },
+                    {
+                        "name": "images",
+                        "in": "formData",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "binary"
+                        },
+                        "minItems": 1,
+                        "maxItems": 4
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product updated",
+                        "schema": {
+                            "$ref": "#/responses/Product/Put"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Delete Product By Id",
+                "operationId": "products-delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product deleted",
+                        "schema": {
+                            "$ref": "#/responses/Product/Delete"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -481,7 +916,12 @@
                         "name": "status",
                         "in": "formData",
                         "required": true,
-                        "type": "string"
+                        "type": "boolean",
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "description": "true = accept, false = reject"
                     }
                 ],
                 "responses": {
@@ -503,42 +943,8 @@
                             "$ref": "#/responses/Error"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "jwt": []
-                    }
-                ]
-            }
-        },
-        "/user/wishlists": {
-            "get": {
-                "tags": [
-                    "Wishlist"
-                ],
-                "summary": "Get Wishlist By Id User (Buyer)",
-                "operationId": "wishlist-get",
-                "responses": {
-                    "200": {
-                        "description": "Wishlist found",
-                        "schema": {
-                            "$ref": "#/responses/Wishlist/GetByUser"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -561,135 +967,6 @@
                         "jwt": []
                     }
                 ]
-            },
-            "post": {
-                "tags": [
-                    "Wishlist"
-                ],
-                "summary": "Create wishlist product buyer",
-                "operationId": "wishlist-create",
-                "parameters": [
-                    {
-                        "name": "productId",
-                        "in": "formData",
-                        "required": true,
-                        "type": "integer"
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Wishlist created",
-                        "schema": {
-                            "$ref": "#/responses/Wishlist/Post"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "jwt": []
-                    }
-                ]
-            }
-        },
-        "/user/wishlist/{id}": {
-            "delete": {
-                "tags": [
-                    "Wishlist"
-                ],
-                "summary": "Delete wishlist product buyer",
-                "operationId": "wishlist-delete",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "type": "integer"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Wishlist deleted",
-                        "schema": {
-                            "$ref": "#/responses/Wishlist/Delete"
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "jwt": []
-                    }
-                ]
-            }
-        },
-        "/cities": {
-            "get": {
-                "tags": [
-                    "City"
-                ],
-                "summary": "Get All Cities",
-                "operationId": "city-get",
-                "responses": {
-                    "200": {
-                        "description": "City found",
-                        "schema": {
-                            "$ref": "#/responses/City"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    }
-                }
             }
         },
         "/transactions": {
@@ -750,7 +1027,12 @@
                         "name": "status",
                         "in": "formData",
                         "required": true,
-                        "type": "string"
+                        "type": "boolean",
+                        "enum": [
+                            true,
+                            false
+                        ],
+                        "description": "true = complete, false = cancel"
                     }
                 ],
                 "responses": {
@@ -792,7 +1074,6 @@
                 ]
             }
         }
-        
     },
     "requestBodies": {
         "Register": {
@@ -923,40 +1204,6 @@
                 }
             }
         },
-        "Product": {
-            "type": "object",
-            "properties": {
-                "success": {
-                    "type": "boolean"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Product"
-                    }
-                }
-            }
-        },
-        "Category": {
-            "type": "object",
-            "properties": {
-                "success": {
-                    "type": "boolean"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Category"
-                    }
-                }
-            }
-        },
         "Wishlist": {
             "GetByUser": {
                 "type": "object",
@@ -1004,6 +1251,110 @@
                 }
             }
         },
+        "City": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/City"
+                    }
+                }
+            }
+        },
+        "Product": {
+            "GetByUser": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Product"
+                        }
+                    }
+                }
+            },
+            "Post": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Product"
+                        }
+                    }
+                }
+            },
+            "Put": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Product"
+                        }
+                    }
+                }
+            },
+            "Delete": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Product"
+                        }
+                    }
+                }
+            }
+        },
+        "Category": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Category"
+                    }
+                }
+            }
+        },
         "Offer": {
             "GetByUser": {
                 "type": "object",
@@ -1033,23 +1384,6 @@
                     },
                     "data": {
                         "$ref": "#/definitions/ProductOffer"
-                    }
-                }
-            }
-        },
-        "City": {
-            "type": "object",
-            "properties": {
-                "success": {
-                    "type": "boolean"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/City"
                     }
                 }
             }
@@ -1202,6 +1536,47 @@
                 }
             }
         },
+        "Wishlist": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "userId": {
+                    "type": "integer"
+                },
+                "productId": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "City": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "city": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
         "Product": {
             "type": "object",
             "properties": {
@@ -1293,28 +1668,6 @@
                 }
             }
         },
-        "Wishlist": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "userId": {
-                    "type": "integer"
-                },
-                "productId": {
-                    "type": "integer"
-                },
-                "createdAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "updatedAt": {
-                    "type": "string",
-                    "format": "date-time"
-                }
-            }
-        },
         "ProductOffer": {
             "type": "object",
             "properties": {
@@ -1328,25 +1681,6 @@
                     "type": "integer"
                 },
                 "status": {
-                    "type": "string"
-                },
-                "createdAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "updatedAt": {
-                    "type": "string",
-                    "format": "date-time"
-                }
-            }
-        },
-        "City": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "city": {
                     "type": "string"
                 },
                 "createdAt": {

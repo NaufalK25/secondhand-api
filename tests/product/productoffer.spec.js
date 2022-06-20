@@ -34,7 +34,7 @@ const product = {
     stock: 10,
     sold: 0,
     description: 'Product description',
-    status: 'available',
+    status: true,
     createdAt: date,
     updatedAt: date
 };
@@ -43,7 +43,7 @@ const productOffer = {
     productId: 1,
     buyerId: 1,
     priceOffer: 100,
-    status: 'Pending',
+    status: null,
     createdAt: date,
     updatedAt: date
 };
@@ -53,7 +53,7 @@ const transaction = {
     buyerId: 1,
     transactionDate: date,
     fixPrice: 100,
-    status: 'Pending',
+    status: null,
     createdAt: date,
     updatedAt: date
 };
@@ -220,7 +220,7 @@ describe('PUT /api/v1/products/offer/:id', () => {
         }));
         ProductOffer.update = jest
             .fn()
-            .mockImplementation(() => ({ status: 'Pending' }));
+            .mockImplementation(() => ({ status: null }));
         Transaction.create = jest
             .fn()
             .mockImplementation(() => ({ ...transaction }));
@@ -245,14 +245,14 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'ProductOffer updated',
-            data: { id: 1, status: 'Pending' }
+            data: { id: 1, status: null }
         });
     });
     test('200 OK (Accepted)', async () => {
         const req = mockRequest({
             user: { id: 1 },
             params: { id: 1 },
-            body: { status: 'Accepted' }
+            body: { status: true }
         });
         const res = mockResponse();
 
@@ -262,7 +262,7 @@ describe('PUT /api/v1/products/offer/:id', () => {
         }));
         ProductOffer.update = jest
             .fn()
-            .mockImplementation(() => ({ status: 'Accepted' }));
+            .mockImplementation(() => ({ status: true }));
 
         await update(req, res);
 
@@ -270,20 +270,20 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'ProductOffer updated',
-            data: { id: 1, status: 'Accepted' }
+            data: { id: 1, status: true }
         });
     });
     test('400 Bad Request', async () => {
         const req = mockRequest({
             user: { id: 1 },
             params: { id: 1 },
-            body: { status: '' }
+            body: { status: 'test' }
         });
         const res = mockResponse();
         const errors = [
             {
-                value: '',
-                msg: 'Status is required',
+                value: 'test',
+                msg: 'Status must be a boolean',
                 param: 'status',
                 location: 'body'
             }
@@ -303,11 +303,32 @@ describe('PUT /api/v1/products/offer/:id', () => {
             data: errors
         });
     });
+    test('403 Forbidden', async () => {
+        const req = mockRequest({
+            user: { id: 2 },
+            params: { id: 1 }
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+
+        await update(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(403);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'You are not allowed to update this product offer',
+            data: null
+        });
+    });
     test('404 Not Found', async () => {
         const req = mockRequest({
             user: { id: 1 },
             params: { id: 1 },
-            body: { status: 'Pending' }
+            body: { status: null }
         });
         const res = mockResponse();
 

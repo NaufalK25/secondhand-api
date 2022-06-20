@@ -65,7 +65,7 @@ module.exports = {
             return forbidden(
                 req,
                 res,
-                'You are not allowed to update this data'
+                'You are not allowed to update this product offer'
             );
 
         updatedData.status = userProductOffer.status;
@@ -74,14 +74,12 @@ module.exports = {
         await ProductOffer.update(updatedData, {
             where: { id: req.params.id }
         });
-        if (updatedData.status == 'Accepted') {
+        if (updatedData.status === true) {
             // TODO make transaction kalo diterima tawarannya sama seller dia langsung ke proses transaksi
             await Transaction.create({
                 productId: userProductOffer.productId,
                 buyerId: userProductOffer.buyerId,
-                transactionDate: new Date(),
                 fixPrice: userProductOffer.priceOffer,
-                status: 'Pending'
             });
         }
 

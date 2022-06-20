@@ -45,8 +45,8 @@ router
                 .notEmpty()
                 .withMessage('status is required')
                 .trim()
-                .isString()
-                .withMessage('status must be a string')
+                .isBoolean()
+                .withMessage('status must be a boolean')
         ],
         update
     )
