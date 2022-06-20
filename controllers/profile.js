@@ -26,7 +26,6 @@ module.exports = {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const unlinkProfilePicturePath = `${__dirname}/../uploads/profiles/`;
         const profile = await Profile.findOne(
             { where: { userId: req.user.id } },
             { include: [{ model: User }] }
@@ -36,7 +35,7 @@ module.exports = {
         if (req.file) {
             if (profile.profilePicture !== 'default.png') {
                 fs.unlink(
-                    `${unlinkProfilePicturePath}${profile.profilePicture}`,
+                    `${__dirname}/../uploads/profiles/${profile.profilePicture}`,
                     err => {
                         if (err) return internalServerError(err, req, res);
                     }

@@ -48,19 +48,6 @@ describe('errorController', () => {
             data: null
         });
     });
-    test('403 Forbidden (With Msg)', () => {
-        const req = mockRequest();
-        const res = mockResponse();
-
-        errorController.forbidden(req, res, 'Forbidden');
-
-        expect(res.status).toBeCalledWith(403);
-        expect(res.json).toBeCalledWith({
-            success: false,
-            message: 'Forbidden',
-            data: null
-        });
-    });
     test('404 Not Found', () => {
         const req = mockRequest({ originalUrl: '/api/v1/user/profile' });
         const res = mockResponse();
@@ -84,19 +71,6 @@ describe('errorController', () => {
         expect(res.json).toBeCalledWith({
             success: false,
             message: `Endpoint ${req.originalUrl} not found`,
-            data: null
-        });
-    });
-    test('404 Not Found (With Msg)', () => {
-        const req = mockRequest({ originalUrl: '/api/v1/user/wishlists' });
-        const res = mockResponse();
-
-        errorController.notFound(req, res, 'Product Not Found');
-
-        expect(res.status).toBeCalledWith(404);
-        expect(res.json).toBeCalledWith({
-            success: false,
-            message: 'Product Not Found',
             data: null
         });
     });

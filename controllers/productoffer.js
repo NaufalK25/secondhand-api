@@ -59,11 +59,17 @@ module.exports = {
             include: [{ model: Product, include: [{ model: User }] }]
         });
         const updatedData = {};
-        if (!userProductOffer) return notFound(req, res, 'ProductOffer not found');
+        if (!userProductOffer)
+            return notFound(req, res, 'ProductOffer not found');
+        if (userProductOffer.Product.sellerId !== req.user.id)
+            return forbidden(
+                req,
+                res,
+                'You are not allowed to update this data'
+            );
 
         updatedData.status = userProductOffer.status;
-        if (req.body.status)
-            updatedData.status = req.body.status;
+        if (req.body.status) updatedData.status = req.body.status;
 
         await ProductOffer.update(updatedData, {
             where: { id: req.params.id }

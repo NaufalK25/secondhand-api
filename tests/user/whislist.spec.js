@@ -185,7 +185,7 @@ describe('DELETE /api/v1/user/wishlist/:id', () => {
     beforeEach(() => {
         User.findByPk = jest.fn().mockImplementation(() => ({ ...user }));
         Product.findByPk = jest.fn().mockImplementation(() => ({ ...product }));
-        Wishlist.create = jest.fn().mockImplementation(() => ({ ...wishlist }));
+        Wishlist.findByPk = jest.fn().mockImplementation(() => ({ ...wishlist }));
         Wishlist.destroy = jest
             .fn()
             .mockImplementation(() => ({ ...wishlist }));
