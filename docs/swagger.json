@@ -757,7 +757,61 @@
                     "200": {
                         "description": "ProductOffer updated",
                         "schema": {
-                            "$ref": "#/responses/Offer/Post"
+                            "$ref": "#/responses/Transaction"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
+        "/transactions/history/{id}": {
+            "get": {
+                "tags": [
+                    "Transaction History"
+                ],
+                "summary": "Update trancaction offer buyer(Success or Canceled)",
+                "operationId": "transaction-history-get",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TransactionHistory updated",
+                        "schema": {
+                            "$ref": "#/responses/TransactionHistory"
                         }
                     },
                     "400": {
@@ -1071,6 +1125,23 @@
                 }
             }
         },
+        "TransactionHistory": {
+            "type": "object",
+            "properties": {
+                "success": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TransactionHistory"
+                    }
+                }
+            }
+        },
         "Error": {
             "type": "object",
             "properties": {
@@ -1380,6 +1451,28 @@
                 },
                 "status": {
                     "type": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "TransactionHistory": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "userId": {
+                    "type": "integer"
+                },
+                "transactionId": {
+                    "type": "integer"
                 },
                 "createdAt": {
                     "type": "string",

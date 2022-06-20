@@ -6,12 +6,12 @@ module.exports = {
     findByUser: async (req, res) => {
         let transaction;
         if (req.user.roleId == 2) {
-            //kalo dia seller dia bakal nampilin penawaran yang diajuin buyer
+            //kalo dia seller dia bakal nampilin transaksi barang seller
             transaction = await Transaction.findAll({
                 include: [{ model: Product, where: { sellerId: req.user.id } }]
             });
         } else {
-            //kalo dia buyer dia bakal nampilin produk yang lagi dia tawar
+            //kalo dia buyer dia bakal nampilin transaksi yang dia ajukan
             transaction = await Transaction.findAll(
                 { include: { model: Product}},
                 { where: { buyerId: req.user.id } }
