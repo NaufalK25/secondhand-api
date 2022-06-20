@@ -7,7 +7,7 @@ module.exports = {
         if (req.user.roleId == 2) {
             //kalo dia seller dia bakal nampilin transaksi barang seller
             transaction = await TransactionHistory.findAll({
-                include: [{ model: Transaction, include: { model: User} }] });
+                include: [{ model: Transaction }] }, { include: { model: User}});
         } else {
             //kalo dia buyer dia bakal nampilin transaksi yang dia ajukan
             transaction = await TransactionHistory.findAll(

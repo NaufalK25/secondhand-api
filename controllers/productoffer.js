@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator');
-const { Product, ProductOffer, Transaction, User } = require('../models');
+const { Product, ProductOffer, Transaction, TransactionHistory, User } = require('../models');
 const { badRequest, forbidden, notFound } = require('./error');
 
 module.exports = {
@@ -77,6 +77,12 @@ module.exports = {
                 fixPrice: userProductOffer.priceOffer,
                 status: 'Pending'
             });
+
+            // await TransactionHistory.create({
+            //     userId: userProductOffer.buyerId,
+            //     transactionId: userProductOffer.transactionId,
+            //     status: 'Pending'
+            // });
         }
 
         res.status(200).json({
