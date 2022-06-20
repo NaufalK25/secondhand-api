@@ -69,20 +69,6 @@ router
                 async (err, user, info) => {
                     if (err) return internalServerError(err, req, res);
                     if (!user) return unAuthorized(req, res);
-                    const userProductOffer = await ProductOffer.findByPk(
-                        req.params.id,
-                        {
-                            include: [
-                                { model: Product, include: [{ model: User }] }
-                            ]
-                        }
-                    );
-                    if (user.id !== userProductOffer.Product.sellerId)
-                        return forbidden(
-                            req,
-                            res,
-                            'You are not allowed to update this data'
-                        );
                     req.user = user;
                     next();
                 }

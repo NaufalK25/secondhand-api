@@ -7,7 +7,6 @@ const {
     unAuthorized
 } = require('../../../controllers/error');
 const { findByUser, update } = require('../../../controllers/transaction');
-const { Product, Transaction } = require('../../../models');
 const router = express.Router();
 
 router
@@ -35,20 +34,6 @@ router
                 async (err, user, info) => {
                     if (err) return internalServerError(err, req, res);
                     if (!user) return unAuthorized(req, res);
-                    const userTransaction = await Transaction.findByPk(
-                        req.params.id,
-                        {
-                            include: [
-                                { model: Product }
-                            ]
-                        }
-                    );
-                    if (user.id !== userTransaction.Product.sellerId)
-                        return forbidden(
-                            req,
-                            res,
-                            'You are not allowed to update this data'
-                        );
                     req.user = user;
                     next();
                 }

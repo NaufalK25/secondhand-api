@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator');
-const {  badRequest, forbidden, notFound } = require('../controllers/error');
+const { badRequest, forbidden, notFound } = require('../controllers/error');
 const { Product, Transaction, User } = require('../models');
 
 module.exports = {
@@ -13,7 +13,7 @@ module.exports = {
         } else {
             //kalo dia buyer dia bakal nampilin transaksi yang dia ajukan
             transaction = await Transaction.findAll(
-                { include: { model: Product}},
+                { include: { model: Product } },
                 { where: { buyerId: req.user.id } }
             );
         }
@@ -36,6 +36,12 @@ module.exports = {
         });
         const updatedData = {};
         if (!transaction) return notFound(req, res, 'Transaction not found');
+        if (userTransaction.Product.sellerId !== req.user.id)
+            return forbidden(
+                req,
+                res,
+                'You are not allowed to update this data'
+            );
 
         updatedData.status = transaction.status;
         if (req.body.status) updatedData.status = req.body.status;
