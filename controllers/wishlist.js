@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
 const { Product, User, Wishlist } = require('../models');
-const { badRequest, notFound } = require('./error');
+const { badRequest, forbidden, notFound } = require('./error');
 
 module.exports = {
     findByUser: async (req, res) => {
@@ -9,9 +9,8 @@ module.exports = {
             { include: [{ model: User }, { model: Product }] }
         );
 
-        if (wishlist.length === 0) {
+        if (wishlist.length === 0)
             return notFound(req, res, 'Wishlist not found');
-        }
 
         res.status(200).json({
             success: true,
@@ -46,8 +45,16 @@ module.exports = {
 
         const wishlist = await Wishlist.findByPk(req.params.id);
         if (!wishlist) return notFound(req, res, 'Wishlist not found');
+        if (wishlist.userId !== req.user.id)
+            return forbidden(
+                req,
+                res,
+                'You are not allowed to delete this wishlist'
+            );
 
-        const deletedWishlist = await Wishlist.destroy({ where: { id: req.params.id } });
+        const deletedWishlist = await Wishlist.destroy({
+            where: { id: req.params.id }
+        });
 
         res.status(200).json({
             success: true,

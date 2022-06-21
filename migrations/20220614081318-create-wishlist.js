@@ -22,6 +22,10 @@ module.exports = {
                 onDelete: 'SET NULL',
                 allowNull: false
             },
+            status: {
+                type: Sequelize.BOOLEAN,
+                defaultValue: true // true = available, false = unavailable / sold out
+            },
             createdAt: { allowNull: false, type: Sequelize.DATE },
             updatedAt: { allowNull: false, type: Sequelize.DATE }
         });

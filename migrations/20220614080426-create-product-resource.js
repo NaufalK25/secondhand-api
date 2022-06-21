@@ -15,9 +15,7 @@ module.exports = {
                 onDelete: 'SET NULL',
                 allowNull: false
             },
-            name: { type: Sequelize.STRING, allowNull: false },
-            extension: { type: Sequelize.STRING, allowNull: false },
-            path: { type: Sequelize.STRING, allowNull: false },
+            filename: { type: Sequelize.STRING, allowNull: false },
             createdAt: { allowNull: false, type: Sequelize.DATE },
             updatedAt: { allowNull: false, type: Sequelize.DATE }
         });

@@ -30,7 +30,7 @@ const product = {
     stock: 10,
     sold: 0,
     description: 'Product description',
-    status: 'available',
+    status: true,
     createdAt: date,
     updatedAt: date
 };
@@ -185,7 +185,7 @@ describe('DELETE /api/v1/user/wishlist/:id', () => {
     beforeEach(() => {
         User.findByPk = jest.fn().mockImplementation(() => ({ ...user }));
         Product.findByPk = jest.fn().mockImplementation(() => ({ ...product }));
-        Wishlist.create = jest.fn().mockImplementation(() => ({ ...wishlist }));
+        Wishlist.findByPk = jest.fn().mockImplementation(() => ({ ...wishlist }));
         Wishlist.destroy = jest
             .fn()
             .mockImplementation(() => ({ ...wishlist }));
@@ -233,6 +233,24 @@ describe('DELETE /api/v1/user/wishlist/:id', () => {
             success: false,
             message: 'Validation error',
             data: errors
+        });
+    });
+    test('403 Forbidden', async () => {
+        const req = mockRequest({ user: { id: 2 }, params: { id: 1 } });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+
+        await destroy(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(403);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'You are not allowed to delete this wishlist',
+            data: null
         });
     });
     test('404 Not Found', async () => {

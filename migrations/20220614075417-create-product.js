@@ -15,13 +15,6 @@ module.exports = {
                 onDelete: 'SET NULL',
                 allowNull: false
             },
-            categoryId: {
-                type: Sequelize.INTEGER,
-                references: { model: 'ProductCategories', key: 'id' },
-                onUpdate: 'CASCADE',
-                onDelete: 'SET NULL',
-                allowNull: false
-            },
             name: { type: Sequelize.STRING, allowNull: false },
             price: { type: Sequelize.INTEGER, allowNull: false },
             publishDate: {
@@ -36,7 +29,10 @@ module.exports = {
                 defaultValue: 0
             },
             description: { type: Sequelize.STRING },
-            status: { type: Sequelize.STRING, allowNull: false },
+            status: {
+                type: Sequelize.BOOLEAN,
+                defaultValue: true // true = available, false = unavailable / sold out
+            },
             createdAt: { allowNull: false, type: Sequelize.DATE },
             updatedAt: { allowNull: false, type: Sequelize.DATE }
         });

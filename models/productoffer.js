@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
             productId: DataTypes.INTEGER,
             buyerId: DataTypes.INTEGER,
             priceOffer: DataTypes.INTEGER,
-            status: DataTypes.STRING
+            status: DataTypes.BOOLEAN
         },
         { sequelize, modelName: 'ProductOffer' }
     );

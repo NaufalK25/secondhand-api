@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
-const { Product, ProductOffer, Transaction, User } = require('../models');
+const { Product, ProductOffer, Transaction, TransactionHistory, User } = require('../models');
 const { badRequest, forbidden, notFound } = require('./error');
+const transaction = require('./transaction');
 
 module.exports = {
     findByUser: async (req, res) => {
@@ -59,23 +60,31 @@ module.exports = {
             include: [{ model: Product, include: [{ model: User }] }]
         });
         const updatedData = {};
-        if (!userProductOffer) return notFound(req, res, 'ProductOffer not found');
+        if (!userProductOffer)
+            return notFound(req, res, 'ProductOffer not found');
+        if (userProductOffer.Product.sellerId !== req.user.id)
+            return forbidden(
+                req,
+                res,
+                'You are not allowed to update this product offer'
+            );
 
         updatedData.status = userProductOffer.status;
-        if (req.body.status)
-            updatedData.status = req.body.status;
+        if (req.body.status) updatedData.status = req.body.status;
 
         await ProductOffer.update(updatedData, {
             where: { id: req.params.id }
         });
-        if (updatedData.status == 'Accepted') {
+        if (updatedData.status == "true") {
             // TODO make transaction kalo diterima tawarannya sama seller dia langsung ke proses transaksi
-            await Transaction.create({
+            const transaction = await Transaction.create({
                 productId: userProductOffer.productId,
                 buyerId: userProductOffer.buyerId,
-                transactionDate: new Date(),
-                fixPrice: userProductOffer.priceOffer,
-                status: 'Pending'
+                fixPrice: userProductOffer.priceOffer
+            });
+            await TransactionHistory.create({
+                userId: userProductOffer.buyerId,
+                transactionId: transaction.id,
             });
         }
 
