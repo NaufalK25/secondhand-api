@@ -72,7 +72,7 @@ module.exports = {
             categories.forEach(async categoryId => {
                 await ProductCategoryThrough.create({
                     productId: product.id,
-                    productCategoryId: categoryId
+                    productCategoryId: +categoryId
                 });
             });
         }

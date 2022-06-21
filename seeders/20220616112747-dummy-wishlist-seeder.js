@@ -8,14 +8,14 @@ module.exports = {
                 {
                     userId: 2,
                     productId: 1,
-                    status:true,
+                    status: true,
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
                 {
                     userId: 2,
                     productId: 2,
-                    status:true,
+                    status: true,
                     createdAt: new Date(),
                     updatedAt: new Date()
                 }

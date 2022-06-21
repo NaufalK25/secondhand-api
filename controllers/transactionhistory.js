@@ -1,4 +1,5 @@
-const {  notFound } = require('../controllers/error');
+const { validationResult } = require('express-validator');
+const { badRequest, notFound } = require('../controllers/error');
 const { Product, Transaction, TransactionHistory } = require('../models');
 
 module.exports = {
@@ -6,13 +7,20 @@ module.exports = {
         let transaction;
         if (req.user.roleId == 2) {
             //kalo dia seller dia bakal nampilin transaksi barang seller
-            transaction = await TransactionHistory.findAll({
-                include: [{ model: Transaction }] }, { include: { model: Product, where: {sellerId: req.user.id }}});
+            transaction = await TransactionHistory.findAll(
+                { include: [{ model: Transaction }] },
+                {
+                    include: {
+                        model: Product,
+                        where: { sellerId: req.user.id }
+                    }
+                }
+            );
         } else {
             //kalo dia buyer dia bakal nampilin transaksi yang dia ajukan
-            transaction = await TransactionHistory.findAll(
-                { include: { model: Transaction, where: {buyerId: req.user.id }}}
-            );
+            transaction = await TransactionHistory.findAll({
+                include: { model: Transaction, where: { buyerId: req.user.id } }
+            });
         }
 
         if (transaction.length === 0)
@@ -25,15 +33,32 @@ module.exports = {
         });
     },
     findById: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+
         let transaction;
         if (req.user.roleId == 2) {
             //kalo dia seller dia bakal nampilin transaksi barang seller
-            transaction = await TransactionHistory.findAll({where: {id: req.params.id }},
-                {include: [{ model: Transaction }] }, { include: { model: Product, where: {sellerId: req.user.id }}});
+            transaction = await TransactionHistory.findAll(
+                { where: { id: req.params.id } },
+                { include: [{ model: Transaction }] },
+                {
+                    include: {
+                        model: Product,
+                        where: { sellerId: req.user.id }
+                    }
+                }
+            );
         } else {
             //kalo dia buyer dia bakal nampilin transaksi yang dia ajukan
-            transaction = await TransactionHistory.findAll({where: {id: req.params.id }},
-                { include: { model: Transaction, where: {buyerId: req.user.id }}}
+            transaction = await TransactionHistory.findAll(
+                { where: { id: req.params.id } },
+                {
+                    include: {
+                        model: Transaction,
+                        where: { buyerId: req.user.id }
+                    }
+                }
             );
         }
 
@@ -45,5 +70,5 @@ module.exports = {
             message: 'Transction history found',
             data: transaction
         });
-    },
+    }
 };

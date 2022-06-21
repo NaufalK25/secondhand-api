@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
-const { findByUser, update } = require('../controllers/transaction');
-const { Product, Transaction, User } = require('../models');
+const { findByUser, update } = require('../../controllers/transaction');
+const { Product, Transaction, Wishlist } = require('../../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -36,11 +36,11 @@ const product = {
     createdAt: date,
     updatedAt: date
 };
-const seller = {
+const wishlist = {
     id: 1,
-    email: 'seller@gmail.com',
-    roleId: 2,
-    password: '12345678',
+    userId: 2,
+    productId: 1,
+    status: true,
     createdAt: date,
     updatedAt: date
 };
@@ -119,6 +119,8 @@ describe('PUT /api/v1/transactions/:id', () => {
         Transaction.findByPk = jest.fn().mockImplementation(() => ({
             ...transactionIncludeProductIncludeUser
         }));
+        Product.update = jest.fn().mockImplementation(() => ({ ...product }));
+        Wishlist.update = jest.fn().mockImplementation(() => ({ ...wishlist }));
         Transaction.update = jest
             .fn()
             .mockImplementation(() => ({ ...transaction }));

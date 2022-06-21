@@ -1,5 +1,11 @@
 const { validationResult } = require('express-validator');
-const { Product, ProductOffer, Transaction, TransactionHistory, User } = require('../models');
+const {
+    Product,
+    ProductOffer,
+    Transaction,
+    TransactionHistory,
+    User
+} = require('../models');
 const { badRequest, forbidden, notFound } = require('./error');
 const transaction = require('./transaction');
 
@@ -75,7 +81,7 @@ module.exports = {
         await ProductOffer.update(updatedData, {
             where: { id: req.params.id }
         });
-        if (updatedData.status == "true") {
+        if (updatedData.status === 'true' || updatedData.status === true) {
             // TODO make transaction kalo diterima tawarannya sama seller dia langsung ke proses transaksi
             const transaction = await Transaction.create({
                 productId: userProductOffer.productId,
@@ -84,7 +90,7 @@ module.exports = {
             });
             await TransactionHistory.create({
                 userId: userProductOffer.buyerId,
-                transactionId: transaction.id,
+                transactionId: transaction.id
             });
         }
 

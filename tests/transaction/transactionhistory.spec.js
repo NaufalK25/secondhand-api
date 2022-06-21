@@ -1,5 +1,8 @@
 const { validationResult } = require('express-validator');
-const { findByUser, findById } = require('../../controllers/transactionhistory');
+const {
+    findByUser,
+    findById
+} = require('../../controllers/transactionhistory');
 const { Product, TransactionHistory, User } = require('../../models');
 
 process.env.NODE_ENV = 'test';
@@ -115,8 +118,7 @@ describe('GET /api/v1/transactions/history', () => {
     });
 });
 
-
-describe('GET /api/v1/transactions/history/:{id}', () => {
+describe('GET /api/v1/transactions/history/:id', () => {
     beforeEach(() => {
         TransactionHistory.findAll = jest
             .fn()
@@ -126,9 +128,14 @@ describe('GET /api/v1/transactions/history/:{id}', () => {
     test('200 OK (Seller)', async () => {
         const req = mockRequest({
             user: { id: 1, roleId: 2 },
-            params: { id: 1}
+            params: { id: 1 }
         });
         const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
 
         await findById(req, res);
 
@@ -142,9 +149,14 @@ describe('GET /api/v1/transactions/history/:{id}', () => {
     test('200 OK (Buyer)', async () => {
         const req = mockRequest({
             user: { id: 2, roleId: 1 },
-            params: { id: 1}
+            params: { id: 1 }
         });
         const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
 
         await findById(req, res);
 
@@ -155,13 +167,46 @@ describe('GET /api/v1/transactions/history/:{id}', () => {
             data: [{ ...userIncludeTransactions }]
         });
     });
+    test('400 Bad Request', async () => {
+        const req = mockRequest({
+            user: { id: 2, roleId: 1 },
+            params: { id: '' }
+        });
+        const res = mockResponse();
+        const errors = [
+            {
+                value: '',
+                msg: 'Id must be an integer',
+                param: 'id',
+                location: 'params'
+            }
+        ];
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => false,
+            array: () => errors
+        }));
+
+        await findById(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Validation error',
+            data: errors
+        });
+    });
     test('404 Not Found', async () => {
         const req = mockRequest({
             user: { id: 2, roleId: 1 },
-            params: { id: 10}
+            params: { id: 10 }
         });
         const res = mockResponse();
 
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
         TransactionHistory.findAll = jest.fn().mockImplementation(() => []);
 
         await findById(req, res);

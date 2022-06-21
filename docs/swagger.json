@@ -222,7 +222,7 @@
                 "tags": [
                     "Profile"
                 ],
-                "summary": "Get Profile By Id",
+                "summary": "Get profile by logged in user",
                 "operationId": "profile-get",
                 "responses": {
                     "200": {
@@ -260,7 +260,7 @@
                 "tags": [
                     "Profile"
                 ],
-                "summary": "Update Profile By Id",
+                "summary": "Update profile by logged in user",
                 "operationId": "profile-update",
                 "parameters": [
                     {
@@ -332,7 +332,7 @@
                 "tags": [
                     "Wishlist"
                 ],
-                "summary": "Get Wishlist By Id User (Buyer)",
+                "summary": "Get wishlists by logged in user (buyer)",
                 "operationId": "wishlist-get",
                 "responses": {
                     "200": {
@@ -370,7 +370,7 @@
                 "tags": [
                     "Wishlist"
                 ],
-                "summary": "Create wishlist product buyer",
+                "summary": "Create new wishlist (buyer)",
                 "operationId": "wishlist-create",
                 "parameters": [
                     {
@@ -424,7 +424,7 @@
                 "tags": [
                     "Wishlist"
                 ],
-                "summary": "Delete wishlist product buyer",
+                "summary": "Delete wishlist by wishlist id (buyer)",
                 "operationId": "wishlist-delete",
                 "parameters": [
                     {
@@ -484,7 +484,7 @@
                 "tags": [
                     "City"
                 ],
-                "summary": "Get All Cities",
+                "summary": "Get all cities",
                 "operationId": "city-get",
                 "responses": {
                     "200": {
@@ -507,7 +507,7 @@
                 "tags": [
                     "Product"
                 ],
-                "summary": "Get All Products",
+                "summary": "Get all products",
                 "operationId": "products-get",
                 "responses": {
                     "200": {
@@ -540,8 +540,8 @@
                 "tags": [
                     "Product"
                 ],
-                "summary": "Create Product",
-                "operationId": "products-post",
+                "summary": "Create new product",
+                "operationId": "products-create",
                 "parameters": [
                     {
                         "name": "categories",
@@ -609,6 +609,12 @@
                             "$ref": "#/responses/Product/GetOne"
                         }
                     },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -640,7 +646,7 @@
                 "tags": [
                     "Product"
                 ],
-                "summary": "Search Products",
+                "summary": "Search product",
                 "operationId": "products-search",
                 "parameters": [
                     {
@@ -655,6 +661,12 @@
                         "description": "Product found",
                         "schema": {
                             "$ref": "#/responses/Product/GetAll"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
                         }
                     },
                     "401": {
@@ -683,7 +695,7 @@
                 "tags": [
                     "Product"
                 ],
-                "summary": "Get All Products By Seller",
+                "summary": "Get all products by seller",
                 "operationId": "products-get-by-seller",
                 "parameters": [
                     {
@@ -703,6 +715,12 @@
                         "description": "Product found",
                         "schema": {
                             "$ref": "#/responses/Product/GetAll"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
                         }
                     },
                     "401": {
@@ -736,7 +754,7 @@
                 "tags": [
                     "Product"
                 ],
-                "summary": "Get Product By Id",
+                "summary": "Get product by id (buyer)",
                 "operationId": "products-get-by-id",
                 "parameters": [
                     {
@@ -751,6 +769,12 @@
                         "description": "Product found",
                         "schema": {
                             "$ref": "#/responses/Product/GetOne"
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
                         }
                     },
                     "401": {
@@ -784,7 +808,7 @@
                 "tags": [
                     "Product Category"
                 ],
-                "summary": "Get All Categories",
+                "summary": "Get all product categories",
                 "operationId": "category-get",
                 "responses": {
                     "200": {
@@ -807,7 +831,7 @@
                 "tags": [
                     "Product Offer"
                 ],
-                "summary": "Get Product Offer as Seller Or Buyyer",
+                "summary": "Get product offer as seller or buyyer",
                 "operationId": "product-offer-get",
                 "responses": {
                     "200": {
@@ -845,7 +869,7 @@
                 "tags": [
                     "Product Offer"
                 ],
-                "summary": "Create trancaction product offer buyer",
+                "summary": "Create new trancaction for product offer (buyer)",
                 "operationId": "trancaction-offer-create",
                 "parameters": [
                     {
@@ -905,7 +929,7 @@
                 "tags": [
                     "Product Offer"
                 ],
-                "summary": "Update trancaction product offer buyer(Accept or reject)",
+                "summary": "Update trancaction for product offer (buyer)",
                 "operationId": "trancaction-offer-update",
                 "parameters": [
                     {
@@ -976,7 +1000,7 @@
                 "tags": [
                     "Transaction"
                 ],
-                "summary": "Get All Transactions",
+                "summary": "Get all transactions",
                 "operationId": "transactions-get",
                 "responses": {
                     "200": {
@@ -1016,7 +1040,7 @@
                 "tags": [
                     "Transaction"
                 ],
-                "summary": "Update trancaction offer buyer(Success or Canceled)",
+                "summary": "Update trancaction for offer (buyer)",
                 "operationId": "transaction-update",
                 "parameters": [
                     {
@@ -1081,7 +1105,7 @@
                 "tags": [
                     "Transaction History"
                 ],
-                "summary": "Get All Transactions History",
+                "summary": "Get all transactions histories",
                 "operationId": "transactions-history-get",
                 "responses": {
                     "200": {
@@ -1121,8 +1145,8 @@
                 "tags": [
                     "Transaction History"
                 ],
-                "summary": "Get transaction history",
-                "operationId": "transaction-history-get",
+                "summary": "Get transaction history by id",
+                "operationId": "transaction-history-get-by-id",
                 "parameters": [
                     {
                         "name": "id",
@@ -1533,6 +1557,9 @@
                 "productId": {
                     "type": "integer"
                 },
+                "status": {
+                    "type": "boolean"
+                },
                 "createdAt": {
                     "type": "string",
                     "format": "date-time"
@@ -1666,7 +1693,7 @@
                     "type": "integer"
                 },
                 "status": {
-                    "type": "string"
+                    "type": "boolean"
                 },
                 "createdAt": {
                     "type": "string",
@@ -1698,7 +1725,7 @@
                     "type": "integer"
                 },
                 "status": {
-                    "type": "string"
+                    "type": "boolean"
                 },
                 "createdAt": {
                     "type": "string",
