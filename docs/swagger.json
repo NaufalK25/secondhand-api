@@ -1076,6 +1076,46 @@
                 ]
             }
         },
+        "/transactions/history": {
+            "get": {
+                "tags": [
+                    "Transaction History"
+                ],
+                "summary": "Get All Transactions History",
+                "operationId": "transactions-history-get",
+                "responses": {
+                    "200": {
+                        "description": "Transaction History found",
+                        "schema": {
+                            "$ref": "#/responses/TransactionHistory"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
         "/transactions/history/{id}": {
             "get": {
                 "tags": [
@@ -1083,6 +1123,14 @@
                 ],
                 "summary": "Get transaction history",
                 "operationId": "transaction-history-get",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "TransactionHistory found",
