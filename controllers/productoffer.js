@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const { Product, ProductOffer, Transaction, TransactionHistory, User } = require('../models');
 const { badRequest, forbidden, notFound } = require('./error');
+const transaction = require('./transaction');
 
 module.exports = {
     findByUser: async (req, res) => {
@@ -74,19 +75,17 @@ module.exports = {
         await ProductOffer.update(updatedData, {
             where: { id: req.params.id }
         });
-        if (updatedData.status === true) {
+        if (updatedData.status == "true") {
             // TODO make transaction kalo diterima tawarannya sama seller dia langsung ke proses transaksi
-            await Transaction.create({
+            const transaction = await Transaction.create({
                 productId: userProductOffer.productId,
                 buyerId: userProductOffer.buyerId,
                 fixPrice: userProductOffer.priceOffer,
             });
-
-            // await TransactionHistory.create({
-            //     userId: userProductOffer.buyerId,
-            //     transactionId: userProductOffer.transactionId,
-            //     status: 'Pending'
-            // });
+            await TransactionHistory.create({
+                userId: userProductOffer.buyerId,
+                transactionId: transaction.id,
+            });
         }
 
         res.status(200).json({

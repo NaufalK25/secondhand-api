@@ -1,5 +1,5 @@
 const {  notFound } = require('../controllers/error');
-const { User, Transaction, TransactionHistory } = require('../models');
+const { Product, Transaction, TransactionHistory } = require('../models');
 
 module.exports = {
     findByUser: async (req, res) => {
@@ -7,12 +7,11 @@ module.exports = {
         if (req.user.roleId == 2) {
             //kalo dia seller dia bakal nampilin transaksi barang seller
             transaction = await TransactionHistory.findAll({
-                include: [{ model: Transaction }] }, { include: { model: User}});
+                include: [{ model: Transaction }] }, { include: { model: Product, where: {sellerId: req.user.id }}});
         } else {
             //kalo dia buyer dia bakal nampilin transaksi yang dia ajukan
             transaction = await TransactionHistory.findAll(
-                { include: { model: User}},
-                { where: { userId: req.user.id } }
+                { include: { model: Transaction, where: {buyerId: req.user.id }}}
             );
         }
 

@@ -4,7 +4,7 @@ const {
     findByUser,
     update
 } = require('../../controllers/productoffer');
-const { Product, ProductOffer, Transaction } = require('../../models');
+const { Product, ProductOffer, Transaction, TransactionHistory } = require('../../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -54,6 +54,13 @@ const transaction = {
     transactionDate: date,
     fixPrice: 100,
     status: null,
+    createdAt: date,
+    updatedAt: date
+};
+const transactionhistory = {
+    id: 1,
+    userId: 1,
+    transactionId: 1,
     createdAt: date,
     updatedAt: date
 };
@@ -224,6 +231,9 @@ describe('PUT /api/v1/products/offer/:id', () => {
         Transaction.create = jest
             .fn()
             .mockImplementation(() => ({ ...transaction }));
+        TransactionHistory.create = jest
+            .fn()
+            .mockImplementation(() => ({ ...transactionhistory }));
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK (Pending)', async () => {

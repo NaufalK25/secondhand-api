@@ -24,7 +24,6 @@ router
                 }
             )(req, res, next);
         },
-        [param('id').isInt().withMessage('Id must be an integer')],
         findByUser
     )
     .all(methodNotAllowed);

@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const { badRequest, forbidden, notFound } = require('../controllers/error');
-const { Product, Transaction, User } = require('../models');
+const { Product, Transaction, User, Wishlist } = require('../models');
+const wishlist = require('../models/wishlist');
 
 module.exports = {
     findByUser: async (req, res) => {
@@ -50,6 +51,15 @@ module.exports = {
             where: { id: req.params.id }
         });
 
+        if (updatedData.status == "true") {
+            // TODO kalo status selesai/true maka product akan terjual(false) dan di wishlist juga akan false
+            await Product.update({status: false}, {
+                where: { id: transaction.productId }
+            });
+            await Wishlist.update({status: false}, {
+                where: { productId: transaction.productId }
+            });
+        }
         res.status(200).json({
             success: true,
             message: 'Transaction updated',

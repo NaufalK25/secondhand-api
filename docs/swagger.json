@@ -1079,19 +1079,11 @@
                 "tags": [
                     "Transaction History"
                 ],
-                "summary": "Update trancaction offer buyer(Success or Canceled)",
+                "summary": "Get transaction history",
                 "operationId": "transaction-history-get",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "type": "integer"
-                    }
-                ],
                 "responses": {
                     "200": {
-                        "description": "TransactionHistory updated",
+                        "description": "TransactionHistory found",
                         "schema": {
                             "$ref": "#/responses/TransactionHistory"
                         }
