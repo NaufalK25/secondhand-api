@@ -80,7 +80,7 @@ module.exports = {
             const transaction = await Transaction.create({
                 productId: userProductOffer.productId,
                 buyerId: userProductOffer.buyerId,
-                fixPrice: userProductOffer.priceOffer,
+                fixPrice: userProductOffer.priceOffer
             });
             await TransactionHistory.create({
                 userId: userProductOffer.buyerId,

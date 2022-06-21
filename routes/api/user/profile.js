@@ -51,12 +51,10 @@ router
                 .notEmpty()
                 .withMessage('phoneNumber is required')
                 .custom(async value => {
-                    const phone = await Profile.findOne({
+                    const user = await Profile.findOne({
                         where: { phoneNumber: value }
                     });
-                    if (phone) {
-                        throw new Error('phoneNumber already exists');
-                    }
+                    if (user) throw new Error('phoneNumber already exists');
                 }),
             body('cityId')
                 .notEmpty()

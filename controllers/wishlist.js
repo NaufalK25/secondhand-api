@@ -9,9 +9,8 @@ module.exports = {
             { include: [{ model: User }, { model: Product }] }
         );
 
-        if (wishlist.length === 0) {
+        if (wishlist.length === 0)
             return notFound(req, res, 'Wishlist not found');
-        }
 
         res.status(200).json({
             success: true,

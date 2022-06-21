@@ -119,7 +119,12 @@
                             "$ref": "#/responses/Error"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
             }
         },
         "/auth/login": {
@@ -170,7 +175,12 @@
                             "$ref": "#/responses/Error"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
             }
         },
         "/auth/logout": {
@@ -503,7 +513,7 @@
                     "200": {
                         "description": "Product found",
                         "schema": {
-                            "$ref": "#/responses/Product/GetByUser"
+                            "$ref": "#/responses/Product/GetAll"
                         }
                     },
                     "401": {
@@ -524,12 +534,7 @@
                             "$ref": "#/responses/Error"
                         }
                     }
-                },
-                "security": [
-                    {
-                        "jwt": []
-                    }
-                ]
+                }
             },
             "post": {
                 "tags": [
@@ -545,7 +550,9 @@
                         "type": "array",
                         "items": {
                             "type": "integer"
-                        }
+                        },
+                        "minItems": 1,
+                        "maxItems": 5
                     },
                     {
                         "name": "name",
@@ -599,7 +606,7 @@
                     "201": {
                         "description": "Product created",
                         "schema": {
-                            "$ref": "#/responses/Product/Post"
+                            "$ref": "#/responses/Product/GetOne"
                         }
                     },
                     "401": {
@@ -628,75 +635,74 @@
                 ]
             }
         },
-        "/products/{id}": {
-            "put": {
+        "/products/search": {
+            "get": {
                 "tags": [
                     "Product"
                 ],
-                "summary": "Update Product By Id",
-                "operationId": "products-put",
+                "summary": "Search Products",
+                "operationId": "products-search",
                 "parameters": [
                     {
-                        "name": "id",
-                        "in": "path",
+                        "name": "keyword",
+                        "in": "query",
                         "required": true,
-                        "type": "integer"
-                    },
-                    {
-                        "name": "categories",
-                        "in": "formData",
-                        "type": "array",
-                        "items": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "name",
-                        "in": "formData",
                         "type": "string"
-                    },
-                    {
-                        "name": "price",
-                        "in": "formData",
-                        "type": "integer"
-                    },
-                    {
-                        "name": "stock",
-                        "in": "formData",
-                        "type": "integer"
-                    },
-                    {
-                        "name": "description",
-                        "in": "formData",
-                        "type": "string"
-                    },
-                    {
-                        "name": "status",
-                        "in": "formData",
-                        "type": "boolean",
-                        "enum": [
-                            true,
-                            false
-                        ],
-                        "description": "true = available, false = sold out"
-                    },
-                    {
-                        "name": "images",
-                        "in": "formData",
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "format": "binary"
-                        },
-                        "minItems": 1,
-                        "maxItems": 4
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Product updated",
+                        "description": "Product found",
                         "schema": {
-                            "$ref": "#/responses/Product/Put"
+                            "$ref": "#/responses/Product/GetAll"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/products": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get All Products By Seller",
+                "operationId": "products-get-by-seller",
+                "parameters": [
+                    {
+                        "name": "sortBy",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "enum": [
+                            "sold",
+                            "wishlist"
+                        ],
+                        "description": "sort by sold or wishlist, default is createdAt"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product found",
+                        "schema": {
+                            "$ref": "#/responses/Product/GetAll"
                         }
                     },
                     "401": {
@@ -723,13 +729,15 @@
                         "jwt": []
                     }
                 ]
-            },
-            "delete": {
+            }
+        },
+        "/user/products/{id}": {
+            "get": {
                 "tags": [
                     "Product"
                 ],
-                "summary": "Delete Product By Id",
-                "operationId": "products-delete",
+                "summary": "Get Product By Id",
+                "operationId": "products-get-by-id",
                 "parameters": [
                     {
                         "name": "id",
@@ -740,19 +748,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Product deleted",
+                        "description": "Product found",
                         "schema": {
-                            "$ref": "#/responses/Product/Delete"
+                            "$ref": "#/responses/Product/GetOne"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/responses/Error"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/responses/Error"
                         }
@@ -1121,57 +1123,6 @@
             }
         }
     },
-    "requestBodies": {
-        "Register": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "example": "secondhand"
-                },
-                "email": {
-                    "type": "string",
-                    "example": "secondhand@gmail.com"
-                },
-                "password": {
-                    "type": "string",
-                    "minLength": 8,
-                    "example": "Secondhand06"
-                }
-            }
-        },
-        "Login": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "secondhand@gmail.com"
-                },
-                "password": {
-                    "type": "string",
-                    "minLength": 8,
-                    "example": "Secondhand06"
-                }
-            }
-        },
-        "InfoProfile": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "phoneNumber": {
-                    "type": "string"
-                },
-                "cityId": {
-                    "type": "integer"
-                },
-                "address": {
-                    "type": "string"
-                }
-            }
-        }
-    },
     "responses": {
         "Register": {
             "type": "object",
@@ -1231,7 +1182,7 @@
                         "type": "string"
                     },
                     "data": {
-                        "$ref": "#/definitions/ProfileInclude"
+                        "$ref": "#/definitions/Profile"
                     }
                 }
             },
@@ -1315,7 +1266,7 @@
             }
         },
         "Product": {
-            "GetByUser": {
+            "GetAll": {
                 "type": "object",
                 "properties": {
                     "success": {
@@ -1332,7 +1283,7 @@
                     }
                 }
             },
-            "Post": {
+            "GetOne": {
                 "type": "object",
                 "properties": {
                     "success": {
@@ -1342,44 +1293,7 @@
                         "type": "string"
                     },
                     "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/definitions/Product"
-                        }
-                    }
-                }
-            },
-            "Put": {
-                "type": "object",
-                "properties": {
-                    "success": {
-                        "type": "boolean"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/definitions/Product"
-                        }
-                    }
-                }
-            },
-            "Delete": {
-                "type": "object",
-                "properties": {
-                    "success": {
-                        "type": "boolean"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/definitions/Product"
-                        }
+                        "$ref": "#/definitions/Product"
                     }
                 }
             }
@@ -1556,46 +1470,6 @@
                 "updatedAt": {
                     "type": "string",
                     "format": "date-time"
-                }
-            }
-        },
-        "ProfileInclude": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "userId": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "profilePicture": {
-                    "type": "string",
-                    "nullable": true
-                },
-                "phoneNumber": {
-                    "type": "string",
-                    "nullable": true
-                },
-                "cityId": {
-                    "type": "integer"
-                },
-                "address": {
-                    "type": "string",
-                    "nullable": true
-                },
-                "createdAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "updatedAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "User": {
-                    "$ref": "#/definitions/User"
                 }
             }
         },

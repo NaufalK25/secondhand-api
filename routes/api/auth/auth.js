@@ -38,9 +38,7 @@ router
                     const user = await User.findOne({
                         where: { email: value }
                     });
-                    if (!user) {
-                        throw new Error('Email not found');
-                    }
+                    if (!user) throw new Error('Email not found');
                 }),
             body('password')
                 .notEmpty()
@@ -54,9 +52,8 @@ router
                     const user = await User.findOne({
                         where: { email: req.body.email }
                     });
-                    if (!(await bcrypjs.compare(value, user.password))) {
+                    if (!(await bcrypjs.compare(value, user.password)))
                         throw new Error('Password is incorrect');
-                    }
                 })
         ],
         login
@@ -111,9 +108,7 @@ router
                     const user = await User.findOne({
                         where: { email: value }
                     });
-                    if (user) {
-                        throw new Error('Email already exists');
-                    }
+                    if (user) throw new Error('Email already exists');
                 }),
             body('password')
                 .notEmpty()
