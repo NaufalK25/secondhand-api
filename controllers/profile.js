@@ -24,7 +24,11 @@ module.exports = {
     },
     update: async (req, res) => {
         const errors = validationResult(req);
-        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+        if (!errors.isEmpty()) {
+            if (req.file) await fs.unlink(req.file.path);
+            
+            return badRequest(errors.array(), req, res);
+        }
 
         const profile = await Profile.findOne(
             { where: { userId: req.user.id } },
@@ -35,10 +39,7 @@ module.exports = {
         if (req.file) {
             if (profile.profilePicture !== 'default.png') {
                 fs.unlink(
-                    `${__dirname}/../uploads/profiles/${profile.profilePicture}`,
-                    err => {
-                        if (err) return internalServerError(err, req, res);
-                    }
+                    `${__dirname}/../uploads/profiles/${profile.profilePicture}`
                 );
             }
             updatedData.profilePicture = req.file.filename;

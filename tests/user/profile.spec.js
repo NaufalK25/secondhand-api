@@ -1,4 +1,3 @@
-const fs = require('fs/promises');
 const { validationResult } = require('express-validator');
 const { findByUser, update } = require('../../controllers/profile');
 const { Profile, User } = require('../../models');
@@ -47,7 +46,6 @@ const profileInclude = {
     User: { ...user }
 };
 
-jest.mock('fs/promises');
 jest.mock('express-validator');
 
 describe('GET /api/v1/user/profile', () => {
@@ -84,7 +82,6 @@ describe('GET /api/v1/user/profile', () => {
 
 describe('PUT /api/v1/user/profile', () => {
     beforeEach(() => {
-        fs.unlink.mockImplementation(() => Promise.resolve());
         Profile.findOne = jest
             .fn()
             .mockImplementation(() => ({ ...profileInclude }));

@@ -1,25 +1,25 @@
 const fs = require('fs/promises');
+const { Op } = require('sequelize');
 const { validationResult } = require('express-validator');
 const { badRequest, forbidden, notFound } = require('../controllers/error');
 const {
+    City,
+    Profile,
     Product,
     ProductCategory,
     ProductCategoryThrough,
     ProductResource,
-    User
+    User,
+    Wishlist,
+    sequelize
 } = require('../models');
 
 module.exports = {
     findAll: async (req, res) => {
         const products = await Product.findAll({
-            where: { sellerId: req.user.id },
             include: [
-                {
-                    model: ProductCategory,
-                    through: { attributes: [] }
-                },
-                { model: ProductResource },
-                { model: User }
+                { model: ProductCategory, through: { attributes: [] } },
+                { model: ProductResource }
             ]
         });
 
@@ -34,10 +34,18 @@ module.exports = {
     },
     create: async (req, res) => {
         const errors = validationResult(req);
-        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+        if (!errors.isEmpty()) {
+            if (req.files) {
+                req.files.forEach(async file => {
+                    await fs.unlink(file.path);
+                });
+            }
 
-        const { categories, name, price, stock, description, status } =
-            req.body;
+            return badRequest(errors.array(), req, res);
+        }
+
+        const { categories, name, price, stock, description, status } = req.body;
+
         const productResources = req.files;
 
         const product = await Product.create({
@@ -49,15 +57,17 @@ module.exports = {
             status
         });
 
-        categories.map(async categoryId => {
-            await ProductCategoryThrough.create({
-                productId: product.id,
-                productCategoryId: categoryId
+        if (categories.length > 0) {
+            categories.forEach(async categoryId => {
+                await ProductCategoryThrough.create({
+                    productId: product.id,
+                    productCategoryId: categoryId
+                });
             });
-        });
+        }
 
         if (productResources.length > 0) {
-            productResources.map(async productResource => {
+            productResources.forEach(async productResource => {
                 await ProductResource.create({
                     productId: product.id,
                     filename: productResource.filename
@@ -71,103 +81,97 @@ module.exports = {
             data: product
         });
     },
-    update: async (req, res) => {
+    findBySeller: async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const { categories, name, price, stock, description, status } =
-            req.body;
-        const productResources = req.files;
-
-        const product = await Product.findOne({
-            where: { id: req.params.id, sellerId: req.user.id }
-        });
-        if (!product) return notFound(req, res, 'Product not found');
-
-        await Product.update(
-            {
-                name,
-                price,
-                stock,
-                description,
-                status
-            },
-            { where: { id: req.params.id, sellerId: req.user.id } }
-        );
-
-        categories.map(async categoryId => {
-            await ProductCategoryThrough.destroy({
-                where: {
-                    productId: product.id,
-                    productCategoryId: categoryId
-                }
-            });
-            await ProductCategoryThrough.create({
-                productId: product.id,
-                productCategoryId: categoryId
-            });
-        });
-
-        if (productResources.length > 0) {
-            const sellerProductResources = await ProductResource.findALl({
-                where: { productId: product.id }
-            });
-
-            if (sellerProductResources.length < 4) {
-                productResources.map(async productResource => {
-                    await ProductResource.create({
-                        productId: product.id,
-                        filename: productResource.filename
-                    });
-                });
-            } else {
-                return forbidden(
-                    req,
-                    res,
-                    'You can only upload 4 images per product'
-                );
+        let orders = [['createdAt', 'DESC']];
+        if (req.query.sortBy) {
+            const sortBy = req.query.sortBy;
+            if (sortBy === 'sold') {
+                orders.unshift(['sold', 'DESC']);
+            } else if (sortBy === 'wishlist') {
+                orders.unshift([
+                    sequelize.fn('count', sequelize.col('Wishlists.id')),
+                    'DESC'
+                ]);
             }
         }
 
+        const products = await Product.findAll({
+            where: { sellerId: req.user.id },
+            include: [
+                { model: ProductCategory, through: { attributes: [] } },
+                { model: ProductResource },
+                { model: Wishlist, attributes: [] }
+            ],
+            group: [
+                'ProductResources.id',
+                'ProductCategories.id',
+                'Product.id',
+                'Wishlists.id',
+                'Wishlists.productId'
+            ],
+            order: orders
+        });
+
+        if (products.length === 0)
+            return notFound(req, res, 'Product not found');
+
         res.status(200).json({
             success: true,
-            message: 'Product updated',
-            data: product
+            message: 'Product found',
+            data: products
         });
     },
-    destroy: async (req, res) => {
+    findById: async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const product = await Product.findByPk(req.params.id);
-        if (!product) return notFound(req, res, 'Product not found');
-        if (product.sellerId !== req.user.id)
-            return forbidden(
-                req,
-                res,
-                'You are not allowed to delete this product'
-            );
-
-        const productResources = await ProductResource.findAll({
-            where: { productId: product.id }
+        const product = await Product.findByPk(req.params.id, {
+            include: [
+                { model: ProductCategory, through: { attributes: [] } },
+                { model: ProductResource },
+                {
+                    model: User,
+                    include: [{ model: Profile, include: [{ model: City }] }]
+                }
+            ]
         });
 
-        if (productResources.length > 0) {
-            productResources.map(async productResource => {
-                await fs.unlink(
-                    `${__dirname}/../uploads/products/${productResource.filename}`
-                );
-                await ProductResource.destroy({
-                    where: { id: productResource.id }
-                });
+        if (!product) return notFound(req, res, 'Product not found');
+
+        if (product.ProductResources) {
+            product.ProductResources.forEach(resource => {
+                resource.filename = `${req.protocol}://${req.get(
+                    'host'
+                )}/images/products/${resource.filename}`;
             });
         }
-        await Product.destroy({ where: { id: req.params.id } });
 
         res.status(200).json({
             success: true,
-            message: 'Product deleted',
+            message: 'Product found',
             data: product
+        });
+    },
+    search: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+
+        const { keyword } = req.query;
+
+        const products = await Product.findAll({
+            where: { name: { [Op.like]: `%${keyword}%` } }
+        });
+
+        if (products.length === 0)
+            return notFound(req, res, 'Product not found');
+
+        res.status(200).json({
+            success: true,
+            message: 'Product found',
+            data: products
         });
     }
 };
