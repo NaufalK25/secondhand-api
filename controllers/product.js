@@ -26,6 +26,16 @@ module.exports = {
         if (products.length === 0)
             return notFound(req, res, 'Product not found');
 
+        products.forEach(product => {
+            if (product.ProductResources) {
+                product.ProductResources.forEach(resource => {
+                    resource.filename = `${req.protocol}://${req.get(
+                        'host'
+                    )}/images/products/${resource.filename}`;
+                });
+            }
+        });
+
         res.status(200).json({
             success: true,
             message: 'Product found',
@@ -44,7 +54,8 @@ module.exports = {
             return badRequest(errors.array(), req, res);
         }
 
-        const { categories, name, price, stock, description, status } = req.body;
+        const { categories, name, price, stock, description, status } =
+            req.body;
 
         const productResources = req.files;
 
@@ -117,6 +128,16 @@ module.exports = {
 
         if (products.length === 0)
             return notFound(req, res, 'Product not found');
+
+        products.forEach(product => {
+            if (product.ProductResources) {
+                product.ProductResources.forEach(resource => {
+                    resource.filename = `${req.protocol}://${req.get(
+                        'host'
+                    )}/images/products/${resource.filename}`;
+                });
+            }
+        });
 
         res.status(200).json({
             success: true,
