@@ -7,27 +7,25 @@ module.exports = {
             [
                 {
                     sellerId: 1,
-                    categoryId: 3,
                     name: 'Scarlett',
                     price: 1,
                     publishDate: new Date(),
                     stock: 10,
                     sold: 0,
                     description: 'Bodylotion',
-                    status: 'ready stock',
+                    status: true,
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
                 {
                     sellerId: 1,
-                    categoryId: 5,
                     name: 'Gucci',
                     price: 1,
                     publishDate: new Date(),
                     stock: 5,
                     sold: 0,
                     description: 'Barang branded',
-                    status: 'ready stock',
+                    status: true,
                     createdAt: new Date(),
                     updatedAt: new Date()
                 }

@@ -46,7 +46,12 @@ module.exports = {
 
         const wishlist = await Wishlist.findByPk(req.params.id);
         if (!wishlist) return notFound(req, res, 'Wishlist not found');
-        if (wishlist.userId !== req.user.id) return forbidden(req, res);
+        if (wishlist.userId !== req.user.id)
+            return forbidden(
+                req,
+                res,
+                'You are not allowed to delete this wishlist'
+            );
 
         const deletedWishlist = await Wishlist.destroy({
             where: { id: req.params.id }

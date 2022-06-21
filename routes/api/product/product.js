@@ -14,7 +14,6 @@ const {
     update
 } = require('../../../controllers/product');
 const { productStorage } = require('../../../middlewares/file');
-const { Product, User } = require('../../../models');
 
 const router = express.Router();
 
@@ -47,11 +46,6 @@ router
         },
         multer({ storage: productStorage }).array('images', 4),
         [
-            body('sellerId')
-                .notEmpty()
-                .withMessage('sellerId is required')
-                .isInt()
-                .withMessage('sellerId must be an integer'),
             body('categoryId')
                 .notEmpty()
                 .withMessage('sellerId is required')
@@ -83,8 +77,8 @@ router
                 .notEmpty()
                 .withMessage('status is required')
                 .trim()
-                .isString()
-                .withMessage('status must be a string')
+                .isBoolean()
+                .withMessage('status must be a boolean'),
         ],
         create
     )
@@ -108,11 +102,6 @@ router
         multer({ storage: productStorage }).array('images', 4),
         [
             param('id').isInt().withMessage('id must be an integer'),
-            body('sellerId')
-                .notEmpty()
-                .withMessage('sellerId is required')
-                .isInt()
-                .withMessage('sellerId must be an integer'),
             body('categoryId')
                 .optional()
                 .isInt()
@@ -138,8 +127,8 @@ router
             body('status')
                 .optional()
                 .trim()
-                .isString()
-                .withMessage('status must be a string')
+                .isBoolean()
+                .withMessage('status must be a boolean'),
         ],
         update
     )

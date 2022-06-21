@@ -36,11 +36,11 @@ module.exports = {
         });
         const updatedData = {};
         if (!transaction) return notFound(req, res, 'Transaction not found');
-        if (userTransaction.Product.sellerId !== req.user.id)
+        if (transaction.Product.sellerId !== req.user.id)
             return forbidden(
                 req,
                 res,
-                'You are not allowed to update this data'
+                'You are not allowed to update this transaction'
             );
 
         updatedData.status = transaction.status;

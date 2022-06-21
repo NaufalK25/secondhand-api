@@ -4,6 +4,7 @@ const { badRequest, forbidden, notFound } = require('../controllers/error');
 const {
     Product,
     ProductCategory,
+    ProductCategoryThrough,
     ProductResource,
     User
 } = require('../models');
@@ -13,7 +14,10 @@ module.exports = {
         const products = await Product.findAll({
             where: { sellerId: req.user.id },
             include: [
-                { model: ProductCategory },
+                {
+                    model: ProductCategory,
+                    through: { attributes: [] }
+                },
                 { model: ProductResource },
                 { model: User }
             ]
@@ -32,25 +36,24 @@ module.exports = {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const {
-            sellerId,
-            categoryId,
-            name,
-            price,
-            stock,
-            description,
-            status
-        } = req.body;
+        const { categories, name, price, stock, description, status } =
+            req.body;
         const productResources = req.files;
 
         const product = await Product.create({
-            sellerId,
-            categoryId,
+            sellerId: req.user.id,
             name,
             price,
             stock,
             description,
             status
+        });
+
+        categories.map(async categoryId => {
+            await ProductCategoryThrough.create({
+                productId: product.id,
+                productCategoryId: categoryId
+            });
         });
 
         if (productResources.length > 0) {
@@ -72,34 +75,38 @@ module.exports = {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const { id } = req.params;
-        const {
-            sellerId,
-            categoryId,
-            name,
-            price,
-            stock,
-            description,
-            status
-        } = req.body;
+        const { categories, name, price, stock, description, status } =
+            req.body;
         const productResources = req.files;
 
         const product = await Product.findOne({
-            where: { id, sellerId }
+            where: { id: req.params.id, sellerId: req.user.id }
         });
         if (!product) return notFound(req, res, 'Product not found');
 
         await Product.update(
             {
-                categoryId,
                 name,
                 price,
                 stock,
                 description,
                 status
             },
-            { where: { id, sellerId } }
+            { where: { id: req.params.id, sellerId: req.user.id } }
         );
+
+        categories.map(async categoryId => {
+            await ProductCategoryThrough.destroy({
+                where: {
+                    productId: product.id,
+                    productCategoryId: categoryId
+                }
+            });
+            await ProductCategoryThrough.create({
+                productId: product.id,
+                productCategoryId: categoryId
+            });
+        });
 
         if (productResources.length > 0) {
             const sellerProductResources = await ProductResource.findALl({
@@ -134,7 +141,12 @@ module.exports = {
 
         const product = await Product.findByPk(req.params.id);
         if (!product) return notFound(req, res, 'Product not found');
-        if (product.sellerId !== req.user.id) return forbidden(req, res);
+        if (product.sellerId !== req.user.id)
+            return forbidden(
+                req,
+                res,
+                'You are not allowed to delete this product'
+            );
 
         const productResources = await ProductResource.findAll({
             where: { productId: product.id }
