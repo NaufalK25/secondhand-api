@@ -41,10 +41,13 @@ const profile = {
     createdAt: date,
     updatedAt: date
 };
-const profileInclude = {
-    ...profile,
-    User: { ...user }
+const city = {
+    id: 1,
+    city: 'Kota Surabaya',
+    createdAt: date,
+    updatedAt: date
 };
+const profileGetById = { ...profile, City: { ...city } };
 
 jest.mock('fs/promises');
 jest.mock('express-validator');
@@ -53,7 +56,7 @@ describe('GET /api/v1/user/profile', () => {
     beforeEach(() => {
         Profile.findOne = jest
             .fn()
-            .mockImplementation(() => ({ ...profileInclude }));
+            .mockImplementation(() => ({ ...profileGetById }));
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
@@ -72,7 +75,7 @@ describe('GET /api/v1/user/profile', () => {
             success: true,
             message: 'Profile found',
             data: {
-                ...profileInclude,
+                ...profileGetById,
                 profilePicture: `${req.protocol}://${req.get(
                     'host'
                 )}/images/profiles/profilePicture.jpg`
@@ -86,7 +89,7 @@ describe('PUT /api/v1/user/profile', () => {
         fs.unlink.mockImplementation(() => Promise.resolve());
         Profile.findOne = jest
             .fn()
-            .mockImplementation(() => ({ ...profileInclude }));
+            .mockImplementation(() => ({ ...profile }));
         Profile.update = jest.fn().mockImplementation(() => ({ ...profile }));
         User.update = jest.fn().mockImplementation(() => ({ ...user }));
     });

@@ -1,16 +1,28 @@
 const { notFound } = require('../controllers/error');
-const { notification } = require('../models');
+const {
+    Notification,
+    Product,
+    ProductOffer,
+    ProductResources
+} = require('../models');
 
 module.exports = {
-    findAll: async (req, res) => {
-        const Notification = await notification.findAll();
+    findByUser: async (req, res) => {
+        const notification = await Notification.findAll({
+            where: { userId: req.user.id },
+            include: [
+                { model: Product, include: [{ model: ProductResources }] },
+                { model: ProductOffer }
+            ]
+        });
 
-        if (Notification.length === 0) return notFound(req, res, 'Notification not found');
+        if (notification.length === 0)
+            return notFound(req, res, 'Notification not found');
 
         res.status(200).json({
             success: true,
             message: 'Notification found',
-            data: Notification
+            data: notification
         });
     }
 };

@@ -1,9 +1,10 @@
 const fs = require('fs/promises');
 const { Op } = require('sequelize');
 const { validationResult } = require('express-validator');
-const { badRequest, forbidden, notFound } = require('../controllers/error');
+const { badRequest, notFound } = require('../controllers/error');
 const {
     City,
+    Notification,
     Profile,
     Product,
     ProductCategory,
@@ -54,9 +55,8 @@ module.exports = {
             return badRequest(errors.array(), req, res);
         }
 
-        const { categories, name, price, stock, description, status } =
-            req.body;
-
+        const { name, price, stock, description, status } = req.body;
+        let { categories } = req.body;
         const productResources = req.files;
 
         const product = await Product.create({
@@ -68,6 +68,7 @@ module.exports = {
             status
         });
 
+        if (typeof categories === 'string') categories = categories.split(',');
         if (categories.length > 0) {
             categories.forEach(async categoryId => {
                 await ProductCategoryThrough.create({
@@ -86,6 +87,12 @@ module.exports = {
             });
         }
 
+        await Notification.create({
+            userId: req.user.id,
+            productId: product.id,
+            type: 'Berhasil di terbitkan'
+        });
+
         res.status(201).json({
             success: true,
             message: 'Product created',
@@ -96,25 +103,23 @@ module.exports = {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        let orders = [['createdAt', 'DESC']];
-        if (req.query.sortBy) {
-            const sortBy = req.query.sortBy;
-            if (sortBy === 'sold') {
-                orders.unshift(['sold', 'DESC']);
-            } else if (sortBy === 'wishlist') {
-                orders.unshift([
-                    sequelize.fn('count', sequelize.col('Wishlists.id')),
-                    'DESC'
-                ]);
-            }
+        const sortBy = req.query.sortBy;
+        const orders = [['createdAt', 'DESC']];
+        if (sortBy === 'sold') {
+            orders.unshift(['sold', 'DESC']);
+        } else if (sortBy === 'wishlist') {
+            orders.unshift([
+                sequelize.fn('count', sequelize.col('Wishlists.id')),
+                'DESC'
+            ]);
         }
 
-        const products = await Product.findAll({
+        let products = await Product.findAll({
             where: { sellerId: req.user.id },
             include: [
                 { model: ProductCategory, through: { attributes: [] } },
                 { model: ProductResource },
-                { model: Wishlist, attributes: [] }
+                { model: Wishlist }
             ],
             group: [
                 'ProductResources.id',
@@ -125,6 +130,12 @@ module.exports = {
             ],
             order: orders
         });
+
+        if (sortBy === 'sold') {
+            products = products.filter(product => product.sold > 0);
+        } else if (sortBy === 'wishlist') {
+            products = products.filter(product => product.Wishlists.length > 0);
+        }
 
         if (products.length === 0)
             return notFound(req, res, 'Product not found');

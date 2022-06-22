@@ -12,10 +12,10 @@ module.exports = {
             });
         } else {
             //kalo dia buyer dia bakal nampilin transaksi yang dia ajukan
-            transaction = await Transaction.findAll(
-                { include: { model: Product } },
-                { where: { buyerId: req.user.id } }
-            );
+            transaction = await Transaction.findAll({
+                where: { buyerId: req.user.id },
+                include: [{ model: Product }]
+            });
         }
 
         if (transaction.length === 0)
@@ -56,6 +56,7 @@ module.exports = {
                 { status: false },
                 { where: { id: transaction.productId } }
             );
+
             await Wishlist.update(
                 { status: false },
                 { where: { productId: transaction.productId } }

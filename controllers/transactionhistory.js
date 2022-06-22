@@ -7,28 +7,27 @@ module.exports = {
         let transaction;
         if (req.user.roleId == 2) {
             //kalo dia seller dia bakal nampilin transaksi barang seller
-            transaction = await TransactionHistory.findAll(
-                { include: [{ model: Transaction }] },
-                {
-                    include: {
-                        model: Product,
-                        where: { sellerId: req.user.id }
-                    }
-                }
-            );
+            transaction = await TransactionHistory.findAll({
+                include: [
+                    { model: Transaction },
+                    { model: Product, where: { sellerId: req.user.id } }
+                ]
+            });
         } else {
             //kalo dia buyer dia bakal nampilin transaksi yang dia ajukan
             transaction = await TransactionHistory.findAll({
-                include: { model: Transaction, where: { buyerId: req.user.id } }
+                include: [
+                    { model: Transaction, where: { buyerId: req.user.id } }
+                ]
             });
         }
 
         if (transaction.length === 0)
-            return notFound(req, res, 'Transction history not found');
+            return notFound(req, res, 'TransctionHistory not found');
 
         res.status(200).json({
             success: true,
-            message: 'Transction history found',
+            message: 'TransctionHistory found',
             data: transaction
         });
     },
@@ -39,35 +38,27 @@ module.exports = {
         let transaction;
         if (req.user.roleId == 2) {
             //kalo dia seller dia bakal nampilin transaksi barang seller
-            transaction = await TransactionHistory.findAll(
-                { where: { id: req.params.id } },
-                { include: [{ model: Transaction }] },
-                {
-                    include: {
-                        model: Product,
-                        where: { sellerId: req.user.id }
-                    }
-                }
-            );
+            transaction = await TransactionHistory.findByPk(req.params.id, {
+                include: [
+                    { model: Transaction },
+                    { model: Product, where: { sellerId: req.user.id } }
+                ]
+            });
         } else {
             //kalo dia buyer dia bakal nampilin transaksi yang dia ajukan
-            transaction = await TransactionHistory.findAll(
-                { where: { id: req.params.id } },
-                {
-                    include: {
-                        model: Transaction,
-                        where: { buyerId: req.user.id }
-                    }
-                }
-            );
+            transaction = await TransactionHistory.findByPk(req.params.id, {
+                include: [
+                    { model: Transaction, where: { buyerId: req.user.id } }
+                ]
+            });
         }
 
-        if (transaction.length === 0)
-            return notFound(req, res, 'Transction history not found');
+        if (!transaction)
+            return notFound(req, res, 'TransctionHistory not found');
 
         res.status(200).json({
             success: true,
-            message: 'Transction history found',
+            message: 'TransctionHistory found',
             data: transaction
         });
     }

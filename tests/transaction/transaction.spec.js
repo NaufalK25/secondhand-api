@@ -51,8 +51,8 @@ const buyer = {
     createdAt: date,
     updatedAt: date
 };
-const transactionIncludeProduct = { ...transaction, Product: { ...product } };
-const transactionIncludeProductIncludeUser = {
+const transactionGet = { ...transaction, Product: { ...product } };
+const transactionPut = {
     ...transaction,
     Product: { ...product, User: { ...buyer } }
 };
@@ -62,7 +62,7 @@ describe('GET /api/v1/transactions', () => {
     beforeEach(() => {
         Transaction.findAll = jest
             .fn()
-            .mockImplementation(() => [{ ...transactionIncludeProduct }]);
+            .mockImplementation(() => [{ ...transactionGet }]);
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK (Seller)', async () => {
@@ -77,7 +77,7 @@ describe('GET /api/v1/transactions', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'Transction found',
-            data: [{ ...transactionIncludeProduct }]
+            data: [{ ...transactionGet }]
         });
     });
     test('200 OK (Buyer)', async () => {
@@ -92,7 +92,7 @@ describe('GET /api/v1/transactions', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'Transction found',
-            data: [{ ...transactionIncludeProduct }]
+            data: [{ ...transactionGet }]
         });
     });
     test('404 Not Found', async () => {
@@ -117,7 +117,7 @@ describe('GET /api/v1/transactions', () => {
 describe('PUT /api/v1/transactions/:id', () => {
     beforeEach(() => {
         Transaction.findByPk = jest.fn().mockImplementation(() => ({
-            ...transactionIncludeProductIncludeUser
+            ...transactionPut
         }));
         Product.update = jest.fn().mockImplementation(() => ({ ...product }));
         Wishlist.update = jest.fn().mockImplementation(() => ({ ...wishlist }));

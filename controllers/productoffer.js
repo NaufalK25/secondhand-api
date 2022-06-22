@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator');
 const {
+    Notification,
     Product,
     ProductOffer,
     Transaction,
@@ -7,7 +8,6 @@ const {
     User
 } = require('../models');
 const { badRequest, forbidden, notFound } = require('./error');
-const transaction = require('./transaction');
 
 module.exports = {
     findByUser: async (req, res) => {
@@ -18,7 +18,6 @@ module.exports = {
                 include: [
                     {
                         model: Product,
-                        attributes: [],
                         where: { sellerId: req.user.id }
                     }
                 ]
@@ -52,6 +51,14 @@ module.exports = {
             priceOffer: req.body.priceOffer
         });
 
+        // notify seller if their product is being offered
+        await Notification.create({
+            userId: product.sellerId,
+            productId: product.id,
+            productOfferId: newProductOffer.id,
+            type: 'Penawaran produk'
+        });
+
         res.status(201).json({
             success: true,
             message: 'ProductOffer created',
@@ -81,6 +88,8 @@ module.exports = {
         await ProductOffer.update(updatedData, {
             where: { id: req.params.id }
         });
+
+        // product offer accepted
         if (updatedData.status === 'true' || updatedData.status === true) {
             // TODO make transaction kalo diterima tawarannya sama seller dia langsung ke proses transaksi
             const transaction = await Transaction.create({
@@ -88,9 +97,19 @@ module.exports = {
                 buyerId: userProductOffer.buyerId,
                 fixPrice: userProductOffer.priceOffer
             });
+
             await TransactionHistory.create({
                 userId: userProductOffer.buyerId,
                 transactionId: transaction.id
+            });
+
+            // notify buyer if product offer accepted by seller
+            await Notification.create({
+                userId: userProductOffer.buyerId,
+                productId: userProductOffer.productId,
+                productOfferId: userProductOffer.id,
+                type: 'Penawaran produk',
+                description: 'Kamu akan segera dihubungi penjual via whatsapp'
             });
         }
 
