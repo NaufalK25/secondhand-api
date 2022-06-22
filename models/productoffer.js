@@ -5,6 +5,8 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             this.belongsTo(models.Product, { foreignKey: 'productId' });
             this.belongsTo(models.User, { foreignKey: 'buyerId' });
+            this.hasMany(models.notification, { foreignKey: 'productOffer_Id' });
+            //this.hasMany(models.notification, { foreignKey: 'productOffer_Id' });
         }
     }
     ProductOffer.init(

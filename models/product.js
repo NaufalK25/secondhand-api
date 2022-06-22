@@ -8,10 +8,12 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'productId',
                 through: 'ProductCategoryThrough'
             });
+            this.hasMany(models.notification, { foreignKey: 'product_Id' });
             this.hasMany(models.ProductResource, { foreignKey: 'productId' });
             this.hasMany(models.Wishlist, { foreignKey: 'productId' });
             this.hasMany(models.ProductOffer, { foreignKey: 'productId' });
             this.hasMany(models.Transaction, { foreignKey: 'productId' });
+           
         }
     }
     Product.init(

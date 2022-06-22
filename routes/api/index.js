@@ -8,6 +8,7 @@ const productRouter = require('./product');
 const transactionRouter = require('./transaction');
 const userRouter = require('./user');
 const cityRouter = require('./city');
+const notifRouter = require('./notification');
 
 const router = Router();
 
@@ -16,6 +17,7 @@ router.use('/products', productRouter);
 router.use('/transactions', transactionRouter);
 router.use('/user', userRouter);
 router.use('/cities', cityRouter);
+router.use('/notification', notifRouter);
 
 router.use(notFoundDefault);
 router.use(internalServerError);
