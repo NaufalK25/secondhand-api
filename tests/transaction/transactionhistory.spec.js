@@ -3,7 +3,7 @@ const {
     findByUser,
     findById
 } = require('../../controllers/transactionhistory');
-const { Product, TransactionHistory, User } = require('../../models');
+const { TransactionHistory } = require('../../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -16,6 +16,20 @@ const mockResponse = () => {
 };
 
 const date = new Date();
+const product = {
+    id: 1,
+    sellerId: 1,
+    categoryId: 1,
+    name: 'Product',
+    price: 100,
+    publishDate: date,
+    stock: 10,
+    sold: 0,
+    description: 'Product description',
+    status: true,
+    createdAt: date,
+    updatedAt: date
+};
 const transaction = {
     id: 1,
     productId: 1,
@@ -26,47 +40,30 @@ const transaction = {
     createdAt: date,
     updatedAt: date
 };
-const product = {
+const transactionHistory = {
     id: 1,
-    sellerId: 1,
-    name: 'Product 1',
-    price: 100000,
-    publishDate: date,
-    stock: 10,
-    sold: 0,
-    description: 'Product 1',
-    status: true,
+    productId: 1,
+    transactionId: 1,
     createdAt: date,
     updatedAt: date
 };
-const seller = {
-    id: 1,
-    email: 'seller@gmail.com',
-    roleId: 2,
-    password: '12345678',
-    createdAt: date,
-    updatedAt: date
+const transactionHistoryBuyer = {
+    ...transactionHistory,
+    Transaction: { ...transaction },
+    Product: { ...product }
 };
-const buyer = {
-    id: 2,
-    email: 'buyer@gmail.com',
-    password: '12345678',
-    createdAt: date,
-    updatedAt: date
+const transactionHistorySeller = {
+    ...transactionHistory,
+    Transaction: { ...transaction }
 };
-const userIncludeTransactions = { ...seller, Transaction: { ...transaction } };
-const transactionIncludeProduct = { ...transaction, Product: { ...product } };
-const transactionIncludeProductIncludeUser = {
-    ...transaction,
-    Product: { ...product, User: { ...buyer } }
-};
+
 jest.mock('express-validator');
 
 describe('GET /api/v1/transactions/history', () => {
     beforeEach(() => {
         TransactionHistory.findAll = jest
             .fn()
-            .mockImplementation(() => [{ ...userIncludeTransactions }]);
+            .mockImplementation(() => [{ ...transactionHistoryBuyer }]);
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK (Seller)', async () => {
@@ -75,13 +72,17 @@ describe('GET /api/v1/transactions/history', () => {
         });
         const res = mockResponse();
 
+        TransactionHistory.findAll = jest
+            .fn()
+            .mockImplementation(() => [{ ...transactionHistorySeller }]);
+
         await findByUser(req, res);
 
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Transction history found',
-            data: [{ ...userIncludeTransactions }]
+            message: 'TransctionHistory found',
+            data: [{ ...transactionHistorySeller }]
         });
     });
     test('200 OK (Buyer)', async () => {
@@ -95,8 +96,8 @@ describe('GET /api/v1/transactions/history', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Transction history found',
-            data: [{ ...userIncludeTransactions }]
+            message: 'TransctionHistory found',
+            data: [{ ...transactionHistoryBuyer }]
         });
     });
     test('404 Not Found', async () => {
@@ -112,7 +113,7 @@ describe('GET /api/v1/transactions/history', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Transction history not found',
+            message: 'TransctionHistory not found',
             data: null
         });
     });
@@ -122,7 +123,7 @@ describe('GET /api/v1/transactions/history/:id', () => {
     beforeEach(() => {
         TransactionHistory.findAll = jest
             .fn()
-            .mockImplementation(() => [{ ...userIncludeTransactions }]);
+            .mockImplementation(() => ({ ...transactionHistoryBuyer }));
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK (Seller)', async () => {
@@ -136,14 +137,17 @@ describe('GET /api/v1/transactions/history/:id', () => {
             isEmpty: () => true,
             array: () => []
         }));
+        TransactionHistory.findAll = jest
+        .fn()
+        .mockImplementation(() => ({ ...transactionHistorySeller }));
 
         await findById(req, res);
 
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Transction history found',
-            data: [{ ...userIncludeTransactions }]
+            message: 'TransctionHistory found',
+            data: { ...transactionHistorySeller }
         });
     });
     test('200 OK (Buyer)', async () => {
@@ -163,8 +167,8 @@ describe('GET /api/v1/transactions/history/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Transction history found',
-            data: [{ ...userIncludeTransactions }]
+            message: 'TransctionHistory found',
+            data: { ...transactionHistoryBuyer }
         });
     });
     test('400 Bad Request', async () => {
@@ -207,14 +211,14 @@ describe('GET /api/v1/transactions/history/:id', () => {
             isEmpty: () => true,
             array: () => []
         }));
-        TransactionHistory.findAll = jest.fn().mockImplementation(() => []);
+        TransactionHistory.findAll = jest.fn().mockImplementation(() => null);
 
         await findById(req, res);
 
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Transction history not found',
+            message: 'TransctionHistory not found',
             data: null
         });
     });

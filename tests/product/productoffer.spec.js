@@ -5,6 +5,7 @@ const {
     update
 } = require('../../controllers/productoffer');
 const {
+    Notification,
     Product,
     ProductOffer,
     Transaction,
@@ -69,7 +70,17 @@ const transactionhistory = {
     createdAt: date,
     updatedAt: date
 };
-const productOfferIncludeProductIncludeUser = {
+const notification = {
+    id: 1,
+    userId: 1,
+    productId: 1,
+    productOfferId: null,
+    type: 'Berhasil di terbitkan',
+    description: null,
+    createdAt: date,
+    updatedAt: date
+};
+const productOfferPut = {
     ...productOffer,
     Product: { ...product, User: { ...user } }
 };
@@ -145,6 +156,9 @@ describe('GET /api/v1/products/offers', () => {
 
 describe('POST /api/v1/products/offers', () => {
     beforeEach(() => {
+        Notification.create = jest.fn().mockImplementation(() => ({
+            ...notification
+        }));
         Product.findByPk = jest.fn().mockImplementation(() => ({ ...product }));
         ProductOffer.create = jest
             .fn()
@@ -227,8 +241,11 @@ describe('POST /api/v1/products/offers', () => {
 
 describe('PUT /api/v1/products/offer/:id', () => {
     beforeEach(() => {
+        Notification.create = jest.fn().mockImplementation(() => ({
+            ...notification
+        }));
         ProductOffer.findByPk = jest.fn().mockImplementation(() => ({
-            ...productOfferIncludeProductIncludeUser
+            ...productOfferPut
         }));
         ProductOffer.update = jest
             .fn()

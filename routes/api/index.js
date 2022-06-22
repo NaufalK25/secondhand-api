@@ -17,7 +17,7 @@ router.use('/products', productRouter);
 router.use('/transactions', transactionRouter);
 router.use('/user', userRouter);
 router.use('/cities', cityRouter);
-router.use('/notification', notifRouter);
+router.use('/notifications', notifRouter);
 
 router.use(notFoundDefault);
 router.use(internalServerError);

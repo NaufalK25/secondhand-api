@@ -4,10 +4,10 @@ const { badRequest, forbidden, notFound } = require('./error');
 
 module.exports = {
     findByUser: async (req, res) => {
-        const wishlist = await Wishlist.findAll(
-            { where: { userId: req.user.id } },
-            { include: [{ model: User }, { model: Product }] }
-        );
+        const wishlist = await Wishlist.findAll({
+            where: { userId: req.user.id },
+            include: [{ model: User }, { model: Product }]
+        });
 
         if (wishlist.length === 0)
             return notFound(req, res, 'Wishlist not found');
