@@ -44,25 +44,24 @@ router
                 }
             )(req, res, next);
         },
-        multer({ storage: productStorage }).array('images', 4),
+        multer({ storage: productStorage }).array('images'),
         [
+            body('categories').custom(value => {
+                if (!value) throw new Error('categories is required');
+                if (typeof value === 'string') value = value.split(',');
+                if (value.length < 1) throw new Error('categories is required');
+                if (value.length > 5)
+                    throw new Error(
+                        'categories must be less than or equal to 5'
+                    );
+                return true;
+            }),
             body('categories.*')
                 .notEmpty()
                 .withMessage('categories is required')
+                .trim()
                 .isInt()
-                .withMessage('categories must be an integer')
-                .custom((value, { req }) => {
-                    if (typeof req.body.categories === 'string') {
-                        req.body.categories = req.body.categories.split(',');
-                    }
-                    const categories = req.body.categories;
-                    if (categories.length < 1)
-                        throw new Error('categories must be more than 1');
-                    if (categories.length >= 5)
-                        throw new Error(
-                            'categories must be less than or equal to 5'
-                        );
-                }),
+                .withMessage('categories must be an integer'),
             body('name')
                 .notEmpty()
                 .withMessage('name is required')
@@ -92,9 +91,12 @@ router
                 .isBoolean()
                 .withMessage('status must be a boolean'),
             body('images').custom((value, { req }) => {
-                if (!req.files) throw new Error('images is required');
-                if (req.files.length >= 4)
+                if (req.files.length < 1) {
+                    throw new Error('images is required');
+                }
+                if (req.files.length > 4)
                     throw new Error('images must be less than or equal to 4');
+                return true;
             })
         ],
         create

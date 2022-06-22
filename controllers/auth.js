@@ -1,5 +1,8 @@
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const mustache = require('mustache');
+const nodemailer = require('nodemailer');
 const { validationResult } = require('express-validator');
 const { Profile, User } = require('../models');
 const { badRequest } = require('./error');
@@ -33,6 +36,8 @@ module.exports = {
         });
     },
     register: async (req, res) => {
+        const template = fs.readFileSync(`${__dirname}/../controllers/helper/welcome_mail.html`, 'utf8');
+        const payload = { ...req.body };
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
@@ -40,6 +45,29 @@ module.exports = {
         const hashedPassword = await bcryptjs.hash(password, 10);
         const user = await User.create({ email, password: hashedPassword });
         const profile = await Profile.create({ userId: user.id, name });
+
+        //Step 1: Creating the transporter
+        const transporter = await nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: '587',
+            service: "Gmail",
+            auth: {
+                user: process.env.MAILAPP,
+                pass: process.env.PASSWORD_MAILAPP
+                }
+            });
+
+            //Step 2: Setting up message options
+            const messageOptions = {
+                from: process.env.MAILAPP,
+                to: email,
+                subject: `Welcome to Secondhand, ${name}`,
+                //html: htmlmail
+                html:mustache.render(template, { ...payload })
+            }
+
+            //Step 3: Sending email
+            transporter.sendMail(messageOptions);
 
         res.status(201).json({
             success: true,

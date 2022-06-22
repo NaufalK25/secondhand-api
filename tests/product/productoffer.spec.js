@@ -4,7 +4,12 @@ const {
     findByUser,
     update
 } = require('../../controllers/productoffer');
-const { Product, ProductOffer, Transaction, TransactionHistory } = require('../../models');
+const {
+    Product,
+    ProductOffer,
+    Transaction,
+    TransactionHistory
+} = require('../../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -240,7 +245,7 @@ describe('PUT /api/v1/products/offer/:id', () => {
         const req = mockRequest({
             user: { id: 1 },
             params: { id: 1 },
-            body: { }
+            body: {}
         });
         const res = mockResponse();
 
