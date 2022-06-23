@@ -9,7 +9,7 @@ const {
 } = require('../../../controllers/error');
 const {
     create,
-    filterByCategoryy,
+    filterByCategory,
     findAll,
     search
 } = require('../../../controllers/product');
@@ -28,7 +28,7 @@ router
                 .isString()
                 .withMessage('Category must be a string')
         ],
-        filterByCategoryy
+        filterByCategory
     )
     .all(methodNotAllowed);
 

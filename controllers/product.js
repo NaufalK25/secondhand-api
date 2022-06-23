@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const { Op } = require('sequelize');
 const { validationResult } = require('express-validator');
-const { badRequest, notFound } = require('../controllers/error');
+const { badRequest, forbidden, notFound } = require('../controllers/error');
 const {
     City,
     Notification,
@@ -59,22 +59,12 @@ module.exports = {
         let { categories } = req.body;
         const productResources = req.files;
 
-        let products = await Product.findAll({
-            where: { sellerId: req.user.id },
-            include: [
-                { model: ProductCategory, through: { attributes: [] } },
-                { model: ProductResource },
-                { model: Wishlist }
-            ]
+        const products = await Product.findAll({
+            where: { sellerId: req.user.id }
         });
-        if(products.length>3){
-            return res.status(403).json({
-                success: false,
-                message: 'Produk melebihi batas',
-                data: null
-            });
-        }
-        
+        if (products.length > 4)
+            return forbidden(req, res, 'You can only post 4 products');
+
         const product = await Product.create({
             sellerId: req.user.id,
             name,
@@ -235,7 +225,7 @@ module.exports = {
             data: products
         });
     },
-    filterByCategoryy: async (req, res) => {
+    filterByCategory: async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 

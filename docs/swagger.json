@@ -871,6 +871,16 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "Not Found",
                         "content": {
@@ -973,7 +983,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/responses/Product/GetAll"
+                                    "$ref": "#/components/responses/Product/Filter"
                                 }
                             }
                         }
@@ -2450,6 +2460,65 @@
                     }
                 }
             },
+            "ProductFilter": {
+                "type": "object",
+                "properties": {
+                    "Product": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "sellerId": {
+                                "type": "integer"
+                            },
+                            "categoryId": {
+                                "type": "integer"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "price": {
+                                "type": "integer"
+                            },
+                            "publishDate": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "stock": {
+                                "type": "integer"
+                            },
+                            "sold": {
+                                "type": "integer"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "type": "string"
+                            },
+                            "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "ProductResources": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ProductResource"
+                                }
+                            }
+                        }
+                    },
+                    "ProductCategory": {
+                        "$ref": "#/components/schemas/Category"
+                    }
+
+                }
+            },
             "NotificationGetByUser": {
                 "type": "object",
                 "properties": {
@@ -2695,6 +2764,23 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/components/includes/ProductGetAll"
+                            }
+                        }
+                    }
+                },
+                "Filter": {
+                    "type": "object",
+                    "properties": {
+                        "success": {
+                            "type": "boolean"
+                        },
+                        "message": {
+                            "type": "string"
+                        },
+                        "data": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/includes/ProductFilter"
                             }
                         }
                     }

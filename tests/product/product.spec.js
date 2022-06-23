@@ -1,8 +1,8 @@
 const fs = require('fs/promises');
-const { Op } = require('sequelize');
 const { validationResult } = require('express-validator');
 const {
     create,
+    filterByCategory,
     findAll,
     findById,
     findBySeller,
@@ -11,6 +11,7 @@ const {
 const {
     Notification,
     Product,
+    ProductCategory,
     ProductCategoryThrough,
     ProductResource
 } = require('../../models');
@@ -76,7 +77,7 @@ const product = {
 };
 const category = {
     id: 1,
-    category: 'Fashion',
+    category: 'Elektronik',
     createdAt: date,
     updatedAt: date
 };
@@ -128,6 +129,13 @@ const productFindById = {
     ProductResources: [{ ...productResource }],
     User: { ...user, Profile: { ...profile, City: { ...city } } }
 };
+const productFilter = {
+    Product: {
+        ...product,
+        ProductResources: [{ ...productResource }]
+    },
+    ProductCategory: { ...category }
+};
 
 jest.mock('fs/promises');
 jest.mock('express-validator');
@@ -154,7 +162,7 @@ describe('GET /api/v1/products', () => {
         });
     });
     test('404 Not Found', async () => {
-        const req = mockRequest({ protocol: 'http' });
+        const req = mockRequest();
         const res = mockResponse();
 
         Product.findAll = jest.fn().mockImplementation(() => []);
@@ -183,6 +191,7 @@ describe('POST /api/v1/products', () => {
         Notification.create = jest
             .fn()
             .mockImplementation(() => ({ ...notification }));
+        Product.findAll = jest.fn().mockImplementation(() => [{ ...product }]);
     });
     afterEach(() => jest.clearAllMocks());
     test('201 Created', async () => {
@@ -255,6 +264,40 @@ describe('POST /api/v1/products', () => {
             data: errors
         });
     });
+    test('403 Forbidden', async () => {
+        const req = mockRequest({
+            user: { id: 1 },
+            body: {
+                categories: [1],
+                name: 'Product',
+                price: 100,
+                stock: 10,
+                sold: 0,
+                description: 'Product description',
+                status: true
+            },
+            files: [{ filename: 'product.jpg' }],
+            protocol: 'http'
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+        Product.findAll = jest
+            .fn()
+            .mockImplementation(() => [[], [], [], [], []]);
+
+        await create(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(403);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'You can only post 4 products',
+            data: null
+        });
+    });
 });
 
 describe('GET /api/v1/products/search', () => {
@@ -312,10 +355,7 @@ describe('GET /api/v1/products/search', () => {
         });
     });
     test('404 Not Found', async () => {
-        const req = mockRequest({
-            query: { keyword: 'prod' },
-            protocol: 'http'
-        });
+        const req = mockRequest({ query: { keyword: 'prod' } });
         const res = mockResponse();
 
         validationResult.mockImplementation(() => ({
@@ -325,6 +365,84 @@ describe('GET /api/v1/products/search', () => {
         Product.findAll = jest.fn().mockImplementation(() => []);
 
         await search(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Product not found',
+            data: null
+        });
+    });
+});
+
+describe('GET /api/v1/products/filter', () => {
+    beforeEach(() => {
+        ProductCategory.findOne = jest
+            .fn()
+            .mockImplementation(() => ({ ...category }));
+        ProductCategoryThrough.findAll = jest
+            .fn()
+            .mockImplementation(() => [{ ...productFilter }]);
+    });
+    afterEach(() => jest.clearAllMocks());
+    test('200 OK', async () => {
+        const req = mockRequest({
+            query: { category: 'elektronik' },
+            protocol: 'http'
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+
+        await filterByCategory(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({
+            success: true,
+            message: 'Product found',
+            data: [{ ...productFilter }]
+        });
+    });
+    test('400 Bad Request', async () => {
+        const req = mockRequest({ query: { category: '' } });
+        const res = mockResponse();
+        const errors = [
+            {
+                value: '',
+                msg: 'Category is required',
+                param: 'category',
+                location: 'query'
+            }
+        ];
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => false,
+            array: () => errors
+        }));
+
+        await filterByCategory(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Validation error',
+            data: errors
+        });
+    });
+    test('404 Not Found', async () => {
+        const req = mockRequest({ query: { category: 'elektronik' } });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+        ProductCategoryThrough.findAll = jest.fn().mockImplementation(() => []);
+
+        await filterByCategory(req, res);
 
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
@@ -378,8 +496,7 @@ describe('GET /api/v1/user/products', () => {
     test('404 Not Found', async () => {
         const req = mockRequest({
             user: { id: 1 },
-            query: { sortBy: '' },
-            protocol: 'http'
+            query: { sortBy: '' }
         });
         const res = mockResponse();
 
@@ -455,7 +572,7 @@ describe('GET /api/v1/user/products/:productId', () => {
         });
     });
     test('404 Not Found', async () => {
-        const req = mockRequest({ params: { productId: 1 }, protocol: 'http' });
+        const req = mockRequest({ params: { productId: 1 } });
         const res = mockResponse();
 
         validationResult.mockImplementation(() => ({
