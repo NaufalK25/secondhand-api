@@ -59,6 +59,22 @@ module.exports = {
         let { categories } = req.body;
         const productResources = req.files;
 
+        let products = await Product.findAll({
+            where: { sellerId: req.user.id },
+            include: [
+                { model: ProductCategory, through: { attributes: [] } },
+                { model: ProductResource },
+                { model: Wishlist }
+            ]
+        });
+        if(products.length>3){
+            return res.status(403).json({
+                success: false,
+                message: 'Produk melebihi batas',
+                data: null
+            });
+        }
+        
         const product = await Product.create({
             sellerId: req.user.id,
             name,
