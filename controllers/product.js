@@ -192,13 +192,65 @@ module.exports = {
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
         const { keyword } = req.query;
-
         const products = await Product.findAll({
-            where: { name: { [Op.like]: `%${keyword}%` } }
+            where: { name: { [Op.like]: `%${keyword}%` } },
+            include: [
+                { model: ProductCategory, through: { attributes: [] } },
+                { model: ProductResource }
+            ]
         });
 
         if (products.length === 0)
             return notFound(req, res, 'Product not found');
+
+        products.forEach(product => {
+            if (product.ProductResources) {
+                product.ProductResources.forEach(resource => {
+                    resource.filename = `${req.protocol}://${req.get(
+                        'host'
+                    )}/images/products/${resource.filename}`;
+                });
+            }
+        });
+
+        res.status(200).json({
+            success: true,
+            message: 'Product found',
+            data: products
+        });
+    },
+    filterByCategoryy: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+
+        const { category } = req.query;
+        const productCategory = await ProductCategory.findOne({
+            where: { category: { [Op.iLike]: `%${category}%` } }
+        });
+        const products = await ProductCategoryThrough.findAll({
+            where: { productCategoryId: productCategory.id },
+            attributes: [],
+            include: [
+                {
+                    model: Product,
+                    include: [{ model: ProductResource }]
+                },
+                { model: ProductCategory }
+            ]
+        });
+
+        if (products.length === 0)
+            return notFound(req, res, 'Product not found');
+
+        products.forEach(product => {
+            if (product.Product.ProductResources) {
+                product.Product.ProductResources.forEach(resource => {
+                    resource.filename = `${req.protocol}://${req.get(
+                        'host'
+                    )}/images/products/${resource.filename}`;
+                });
+            }
+        });
 
         res.status(200).json({
             success: true,

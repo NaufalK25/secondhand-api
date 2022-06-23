@@ -7,11 +7,30 @@ const {
     methodNotAllowed,
     unAuthorized
 } = require('../../../controllers/error');
-const { create, findAll, search } = require('../../../controllers/product');
+const {
+    create,
+    filterByCategoryy,
+    findAll,
+    search
+} = require('../../../controllers/product');
 const { productStorage } = require('../../../middlewares/file');
-const { User } = require('../../../models');
 
 const router = express.Router();
+
+router
+    .route('/filter')
+    .get(
+        [
+            query('category')
+                .notEmpty()
+                .withMessage('Category is required')
+                .trim()
+                .isString()
+                .withMessage('Category must be a string')
+        ],
+        filterByCategoryy
+    )
+    .all(methodNotAllowed);
 
 router
     .route('/search')
