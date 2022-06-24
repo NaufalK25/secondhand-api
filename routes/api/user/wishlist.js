@@ -45,16 +45,17 @@ router
         [
             body('productId')
                 .notEmpty()
-                .withMessage('productId is required')
+                .withMessage('Id produk harus diisi')
                 .isInt()
-                .withMessage('productId must be an integer')
+                .withMessage('Id produk harus berupa angka')
                 .custom(async (value, { req }) => {
                     const wishlist = await Wishlist.findOne({
                         where: { userId: req.user.id, productId: value }
                     });
-
                     if (wishlist) {
-                        throw new Error('Product already in wishlist');
+                        throw new Error(
+                            'Produk sudah ada didalam daftar keinginan'
+                        );
                     }
                 })
         ],
@@ -77,7 +78,7 @@ router
                 }
             )(req, res, next);
         },
-        param('id').isInt().withMessage('Id must be an integer'),
+        param('id').isInt().withMessage('Id harus berupa angka'),
         destroy
     )
     .all(methodNotAllowed);

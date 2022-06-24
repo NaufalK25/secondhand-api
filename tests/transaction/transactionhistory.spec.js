@@ -81,7 +81,7 @@ describe('GET /api/v1/transactions/history', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Riwayat Transaksi ditemukan',
+            message: 'Riwayat transaksi ditemukan',
             data: [{ ...transactionHistorySeller }]
         });
     });
@@ -96,7 +96,7 @@ describe('GET /api/v1/transactions/history', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Riwayat Transaksi ditemukan',
+            message: 'Riwayat transaksi ditemukan',
             data: [{ ...transactionHistoryBuyer }]
         });
     });
@@ -113,7 +113,7 @@ describe('GET /api/v1/transactions/history', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Riwayat Transaksi tidak ditemukan',
+            message: 'Riwayat transaksi tidak ditemukan',
             data: null
         });
     });
@@ -146,7 +146,7 @@ describe('GET /api/v1/transactions/history/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Riwayat Transaksi ditemukan',
+            message: 'Riwayat transaksi ditemukan',
             data: { ...transactionHistorySeller }
         });
     });
@@ -167,7 +167,7 @@ describe('GET /api/v1/transactions/history/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Riwayat Transaksi ditemukan',
+            message: 'Riwayat transaksi ditemukan',
             data: { ...transactionHistoryBuyer }
         });
     });
@@ -180,7 +180,7 @@ describe('GET /api/v1/transactions/history/:id', () => {
         const errors = [
             {
                 value: '',
-                msg: 'Id must be an integer',
+                msg: 'Id harus berupa angka',
                 param: 'id',
                 location: 'params'
             }
@@ -218,7 +218,7 @@ describe('GET /api/v1/transactions/history/:id', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Riwayat Transaksi tidak ditemukan',
+            message: 'Riwayat transaksi tidak ditemukan',
             data: null
         });
     });

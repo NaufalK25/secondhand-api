@@ -121,7 +121,7 @@ describe('POST /api/v1/user/wishlists', () => {
         const errors = [
             {
                 valuue: '',
-                msg: 'Product id is required',
+                msg: 'Id produk harus diisi',
                 param: 'productId',
                 location: 'body'
             }
@@ -215,7 +215,7 @@ describe('DELETE /api/v1/user/wishlist/:id', () => {
         const errors = [
             {
                 valuue: '',
-                msg: 'Id must be an integer',
+                msg: 'Id harus berupa angka',
                 param: 'id',
                 location: 'params'
             }

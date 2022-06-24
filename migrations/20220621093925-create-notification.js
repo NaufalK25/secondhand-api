@@ -30,6 +30,7 @@ module.exports = {
             },
             type: { type: Sequelize.STRING, allowNull: false },
             description: { type: Sequelize.STRING },
+            status: { type: Sequelize.BOOLEAN, defaultValue: false }, // true = read, false = unread
             createdAt: { allowNull: false, type: Sequelize.DATE },
             updatedAt: { allowNull: false, type: Sequelize.DATE }
         });

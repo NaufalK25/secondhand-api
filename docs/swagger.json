@@ -101,7 +101,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/responses/Register"
+                                    "$ref": "#/components/responses/Auth"
                                 }
                             }
                         }
@@ -182,7 +182,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/responses/Login"
+                                    "$ref": "#/components/responses/Auth"
                                 }
                             }
                         }
@@ -199,6 +199,16 @@
                     },
                     "403": {
                         "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -238,7 +248,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/responses/Logout"
+                                    "$ref": "#/components/responses/Auth"
                                 }
                             }
                         }
@@ -255,6 +265,156 @@
                     },
                     "500": {
                         "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
+        "/auth/forgot-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Send email to reset password",
+                "operationId": "forgot-password",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "encoding": {},
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "secondhand@gmail.com"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email sent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Auth"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
+        "/auth/reset-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Reset your password",
+                "operationId": "reset-password",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "encoding": {},
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "token",
+                                    "password"
+                                ],
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "secondhand@gmail.com"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "example": "123456789"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Secondhand06"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Auth"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -684,7 +844,7 @@
                 "tags": [
                     "Notification"
                 ],
-                "summary": "Get all notifications",
+                "summary": "Get all notifications by user",
                 "operationId": "notification-get",
                 "responses": {
                     "200": {
@@ -692,7 +852,82 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/responses/Notification"
+                                    "$ref": "#/components/responses/Notification/GetByUser"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Notification"
+                ],
+                "summary": "Update notification by notification id",
+                "operationId": "notification-put",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notification updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Notification/Put"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
                                 }
                             }
                         }
@@ -753,6 +988,170 @@
                             }
                         }
                     },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/search": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Search product",
+                "operationId": "products-search",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Product/GetAll"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/filter": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Filter product by category",
+                "operationId": "products-filter",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "hobi",
+                                "kendaraan",
+                                "baju",
+                                "elektronik",
+                                "kesehatan"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Product/Filter"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/products": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get all products by seller",
+                "operationId": "products-get-by-seller",
+                "parameters": [
+                    {
+                        "name": "sortBy",
+                        "in": "query",
+                        "description": "sort by sold or wishlist, default is createdAt",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "sold",
+                                "wishlist"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Product/GetBySeller"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "content": {
@@ -783,7 +1182,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -891,149 +1295,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "jwt": []
-                    }
-                ]
-            }
-        },
-        "/products/search": {
-            "get": {
-                "tags": [
-                    "Product"
-                ],
-                "summary": "Search product",
-                "operationId": "products-search",
-                "parameters": [
-                    {
-                        "name": "keyword",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Product found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Product/GetAll"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/user/products": {
-            "get": {
-                "tags": [
-                    "Product"
-                ],
-                "summary": "Get all products by seller",
-                "operationId": "products-get-by-seller",
-                "parameters": [
-                    {
-                        "name": "sortBy",
-                        "in": "query",
-                        "description": "sort by sold or wishlist, default is createdAt",
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "sold",
-                                "wishlist"
-                            ]
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Product found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Product/GetBySeller"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
+                    "403": {
+                        "description": "Forbidden",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1859,6 +2122,9 @@
                     "description": {
                         "type": "string"
                     },
+                    "status": {
+                        "type": "boolean"
+                    },
                     "createdAt": {
                         "type": "string",
                         "format": "date-time"
@@ -2439,6 +2705,64 @@
                     }
                 }
             },
+            "ProductFilter": {
+                "type": "object",
+                "properties": {
+                    "Product": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "sellerId": {
+                                "type": "integer"
+                            },
+                            "categoryId": {
+                                "type": "integer"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "price": {
+                                "type": "integer"
+                            },
+                            "publishDate": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "stock": {
+                                "type": "integer"
+                            },
+                            "sold": {
+                                "type": "integer"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "type": "string"
+                            },
+                            "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "ProductResources": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ProductResource"
+                                }
+                            }
+                        }
+                    },
+                    "ProductCategory": {
+                        "$ref": "#/components/schemas/Category"
+                    }
+                }
+            },
             "NotificationGetByUser": {
                 "type": "object",
                 "properties": {
@@ -2525,6 +2849,20 @@
             }
         },
         "responses": {
+            "Auth": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "string"
+                    }
+                }
+            },
             "Category": {
                 "type": "object",
                 "properties": {
@@ -2578,47 +2916,35 @@
                     }
                 }
             },
-            "Login": {
-                "type": "object",
-                "properties": {
-                    "success": {
-                        "type": "boolean"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "data": {
-                        "$ref": "#/components/schemas/User"
-                    }
-                }
-            },
-            "Logout": {
-                "type": "object",
-                "properties": {
-                    "success": {
-                        "type": "boolean"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "data": {
-                        "type": "string"
-                    }
-                }
-            },
             "Notification": {
-                "type": "object",
-                "properties": {
-                    "success": {
-                        "type": "boolean"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/includes/NotificationGetByUser"
+                "GetByUser": {
+                    "type": "object",
+                    "properties": {
+                        "success": {
+                            "type": "boolean"
+                        },
+                        "message": {
+                            "type": "string"
+                        },
+                        "data": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/includes/NotificationGetByUser"
+                            }
+                        }
+                    }
+                },
+                "Put": {
+                    "type": "object",
+                    "properties": {
+                        "success": {
+                            "type": "boolean"
+                        },
+                        "message": {
+                            "type": "string"
+                        },
+                        "data": {
+                            "$ref": "#/components/schemas/Notification"
                         }
                     }
                 }
@@ -2684,6 +3010,23 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/components/includes/ProductGetAll"
+                            }
+                        }
+                    }
+                },
+                "Filter": {
+                    "type": "object",
+                    "properties": {
+                        "success": {
+                            "type": "boolean"
+                        },
+                        "message": {
+                            "type": "string"
+                        },
+                        "data": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/includes/ProductFilter"
                             }
                         }
                     }
@@ -2763,28 +3106,6 @@
                         },
                         "data": {
                             "$ref": "#/components/schemas/Profile"
-                        }
-                    }
-                }
-            },
-            "Register": {
-                "type": "object",
-                "properties": {
-                    "success": {
-                        "type": "boolean"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "data": {
-                        "type": "object",
-                        "properties": {
-                            "user": {
-                                "$ref": "#/components/schemas/User"
-                            },
-                            "profile": {
-                                "$ref": "#/components/schemas/Profile"
-                            }
                         }
                     }
                 }

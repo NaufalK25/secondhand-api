@@ -144,7 +144,7 @@ describe('PUT /api/v1/transactions/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Transaksi diperbarui',
+            message: 'Transaksi berhasil diperbarui',
             data: { id: req.user.id, status: true }
         });
     });
@@ -158,7 +158,7 @@ describe('PUT /api/v1/transactions/:id', () => {
         const errors = [
             {
                 value: 'test',
-                msg: 'Status must be a boolean',
+                msg: 'Status harus berupa nilai benar atau salah',
                 param: 'status',
                 location: 'body'
             }

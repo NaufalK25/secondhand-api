@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const { Op } = require('sequelize');
 const { validationResult } = require('express-validator');
-const { badRequest, notFound } = require('../controllers/error');
+const { badRequest, forbidden, notFound } = require('../controllers/error');
 const {
     City,
     Notification,
@@ -59,22 +59,12 @@ module.exports = {
         let { categories } = req.body;
         const productResources = req.files;
 
-        let products = await Product.findAll({
-            where: { sellerId: req.user.id },
-            include: [
-                { model: ProductCategory, through: { attributes: [] } },
-                { model: ProductResource },
-                { model: Wishlist }
-            ]
+        const products = await Product.findAll({
+            where: { sellerId: req.user.id }
         });
-        if(products.length>3){
-            return res.status(403).json({
-                success: false,
-                message: 'Produk melebihi batas',
-                data: null
-            });
-        }
-        
+        if (products.length > 4)
+            return forbidden(req, res, 'Anda hanya bisa memposting 4 produk');
+
         const product = await Product.create({
             sellerId: req.user.id,
             name,
@@ -208,13 +198,65 @@ module.exports = {
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
         const { keyword } = req.query;
-
         const products = await Product.findAll({
-            where: { name: { [Op.like]: `%${keyword}%` } }
+            where: { name: { [Op.like]: `%${keyword}%` } },
+            include: [
+                { model: ProductCategory, through: { attributes: [] } },
+                { model: ProductResource }
+            ]
         });
 
         if (products.length === 0)
             return notFound(req, res, 'Produk tidak ditemukan');
+
+        products.forEach(product => {
+            if (product.ProductResources) {
+                product.ProductResources.forEach(resource => {
+                    resource.filename = `${req.protocol}://${req.get(
+                        'host'
+                    )}/images/products/${resource.filename}`;
+                });
+            }
+        });
+
+        res.status(200).json({
+            success: true,
+            message: 'Produk ditemukan',
+            data: products
+        });
+    },
+    filterByCategory: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+
+        const { category } = req.query;
+        const productCategory = await ProductCategory.findOne({
+            where: { category: { [Op.iLike]: `%${category}%` } }
+        });
+        const products = await ProductCategoryThrough.findAll({
+            where: { productCategoryId: productCategory.id },
+            attributes: [],
+            include: [
+                {
+                    model: Product,
+                    include: [{ model: ProductResource }]
+                },
+                { model: ProductCategory }
+            ]
+        });
+
+        if (products.length === 0)
+            return notFound(req, res, 'Produk tidak ditemukan');
+
+        products.forEach(product => {
+            if (product.Product.ProductResources) {
+                product.Product.ProductResources.forEach(resource => {
+                    resource.filename = `${req.protocol}://${req.get(
+                        'host'
+                    )}/images/products/${resource.filename}`;
+                });
+            }
+        });
 
         res.status(200).json({
             success: true,

@@ -1,4 +1,5 @@
-const { notFound } = require('../controllers/error');
+const { validationResult } = require('express-validator');
+const { badRequest, notFound } = require('../controllers/error');
 const {
     Notification,
     Product,
@@ -9,7 +10,7 @@ const {
 module.exports = {
     findByUser: async (req, res) => {
         const notification = await Notification.findAll({
-            where: { userId: req.user.id },
+            where: { userId: req.user.id, status: false },
             include: [
                 { model: Product, include: [{ model: ProductResources }] },
                 { model: ProductOffer }
@@ -23,6 +24,25 @@ module.exports = {
             success: true,
             message: 'Notifikasi ditemukan',
             data: notification
+        });
+    },
+    update: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+
+        const notification = await Notification.findByPk(req.params.id);
+        if (!notification)
+            return notFound(req, res, 'Notifikasi tidak ditemukan');
+
+        await Notification.update(
+            { status: true },
+            { where: { id: req.params.id } }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: 'Notifikasi berhasil diperbarui',
+            data: null
         });
     }
 };

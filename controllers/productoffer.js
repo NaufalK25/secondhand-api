@@ -51,6 +51,14 @@ module.exports = {
             priceOffer: req.body.priceOffer
         });
 
+        // notify buyer if their offer has been sent
+        await Notification.create({
+            userId: req.user.id,
+            productId: product.id,
+            productOfferId: newProductOffer.id,
+            type: 'Penawaran produk'
+        });
+
         // notify seller if their product is being offered
         await Notification.create({
             userId: product.sellerId,
@@ -115,7 +123,7 @@ module.exports = {
 
         res.status(200).json({
             success: true,
-            message: 'Penawaran Produk diperbarui',
+            message: 'Penawaran produk berhasil diperbarui',
             data: {
                 id: req.user.id,
                 ...updatedData

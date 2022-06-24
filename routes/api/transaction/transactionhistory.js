@@ -43,7 +43,7 @@ router
                 }
             )(req, res, next);
         },
-        [param('id').isInt().withMessage('Id must be an integer')],
+        [param('id').isInt().withMessage('Id harus berupa angka')],
         findById
     )
     .all(methodNotAllowed);
