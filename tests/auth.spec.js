@@ -63,7 +63,7 @@ describe('POST /api/v1/auth/login', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Login success',
+            message: 'Berhasil masuk',
             data: { ...user }
         });
     });
@@ -89,7 +89,7 @@ describe('POST /api/v1/auth/login', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });
@@ -106,7 +106,7 @@ describe('POST /api/v1/auth/logout', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Logout success',
+            message: 'Berhasil keluar',
             data: null
         });
     });
@@ -139,7 +139,7 @@ describe('POST /api/v1/auth/register', () => {
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Register success',
+            message: 'Berhasil registrasi',
             data: { user, profile }
         });
     });
@@ -167,7 +167,7 @@ describe('POST /api/v1/auth/register', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });

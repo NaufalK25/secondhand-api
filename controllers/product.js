@@ -25,7 +25,7 @@ module.exports = {
         });
 
         if (products.length === 0)
-            return notFound(req, res, 'Product not found');
+            return notFound(req, res, 'Produk tidak ditemukan');
 
         products.forEach(product => {
             if (product.ProductResources) {
@@ -39,7 +39,7 @@ module.exports = {
 
         res.status(200).json({
             success: true,
-            message: 'Product found',
+            message: 'Produk ditemukan',
             data: products
         });
     },
@@ -101,7 +101,7 @@ module.exports = {
 
         res.status(201).json({
             success: true,
-            message: 'Product created',
+            message: 'Produk berhasil dibuat',
             data: product
         });
     },
@@ -144,7 +144,7 @@ module.exports = {
         }
 
         if (products.length === 0)
-            return notFound(req, res, 'Product not found');
+            return notFound(req, res, 'Produk tidak ditemukan');
 
         products.forEach(product => {
             if (product.ProductResources) {
@@ -158,7 +158,7 @@ module.exports = {
 
         res.status(200).json({
             success: true,
-            message: 'Product found',
+            message: 'Produk ditemukan',
             data: products
         });
     },
@@ -177,7 +177,7 @@ module.exports = {
             ]
         });
 
-        if (!product) return notFound(req, res, 'Product not found');
+        if (!product) return notFound(req, res, 'Produk tidak ditemukan');
 
         if (product.ProductResources) {
             product.ProductResources.forEach(resource => {
@@ -189,7 +189,7 @@ module.exports = {
 
         res.status(200).json({
             success: true,
-            message: 'Product found',
+            message: 'Produk ditemukan',
             data: product
         });
     },
@@ -207,7 +207,7 @@ module.exports = {
         });
 
         if (products.length === 0)
-            return notFound(req, res, 'Product not found');
+            return notFound(req, res, 'Produk tidak ditemukan');
 
         products.forEach(product => {
             if (product.ProductResources) {
@@ -260,7 +260,7 @@ module.exports = {
 
         res.status(200).json({
             success: true,
-            message: 'Product found',
+            message: 'Produk ditemukan',
             data: products
         });
     }

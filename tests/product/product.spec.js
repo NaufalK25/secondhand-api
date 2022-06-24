@@ -157,7 +157,7 @@ describe('GET /api/v1/products', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Product found',
+            message: 'Produk ditemukan',
             data: [{ ...productFindAll }]
         });
     });
@@ -172,7 +172,7 @@ describe('GET /api/v1/products', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Product not found',
+            message: 'Produk tidak ditemukan',
             data: null
         });
     });
@@ -221,7 +221,7 @@ describe('POST /api/v1/products', () => {
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Product created',
+            message: 'Produk berhasil dibuat',
             data: { ...product }
         });
     });
@@ -260,7 +260,7 @@ describe('POST /api/v1/products', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });
@@ -324,7 +324,7 @@ describe('GET /api/v1/products/search', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Product found',
+            message: 'Produk ditemukan',
             data: [{ ...productFindAll }]
         });
     });
@@ -350,7 +350,7 @@ describe('GET /api/v1/products/search', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });
@@ -369,7 +369,7 @@ describe('GET /api/v1/products/search', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Product not found',
+            message: 'Produk tidak ditemukan',
             data: null
         });
     });
@@ -489,7 +489,7 @@ describe('GET /api/v1/user/products', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });
@@ -511,7 +511,7 @@ describe('GET /api/v1/user/products', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Product not found',
+            message: 'Produk tidak ditemukan',
             data: null
         });
     });
@@ -538,7 +538,7 @@ describe('GET /api/v1/user/products/:productId', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Product found',
+            message: 'Produk ditemukan',
             data: { ...productFindById }
         });
     });
@@ -567,7 +567,7 @@ describe('GET /api/v1/user/products/:productId', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });
@@ -586,7 +586,7 @@ describe('GET /api/v1/user/products/:productId', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Product not found',
+            message: 'Produk tidak ditemukan',
             data: null
         });
     });

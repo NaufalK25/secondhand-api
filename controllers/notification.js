@@ -17,11 +17,11 @@ module.exports = {
         });
 
         if (notification.length === 0)
-            return notFound(req, res, 'Notification not found');
+            return notFound(req, res, 'Notifikasi tidak ditemukan');
 
         res.status(200).json({
             success: true,
-            message: 'Notification found',
+            message: 'Notifikasi ditemukan',
             data: notification
         });
     }

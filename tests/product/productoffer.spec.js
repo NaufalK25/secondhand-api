@@ -111,7 +111,7 @@ describe('GET /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'ProductOffer found',
+            message: 'Penawaran produk ditemukan',
             data: [{ ...productOffer }]
         });
     });
@@ -129,7 +129,7 @@ describe('GET /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'ProductOffer found',
+            message: 'Penawaran produk ditemukan',
             data: [{ ...productOffer }]
         });
     });
@@ -148,7 +148,7 @@ describe('GET /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'ProductOffer not found',
+            message: 'Penawaran produk tidak ditemukan',
             data: null
         });
     });
@@ -182,7 +182,7 @@ describe('POST /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'ProductOffer created',
+            message: 'Penawaran produk berhasil dibuat',
             data: { ...productOffer }
         });
     });
@@ -211,7 +211,7 @@ describe('POST /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });
@@ -233,7 +233,7 @@ describe('POST /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Product not found',
+            message: 'Produk tidak ditemukan',
             data: null
         });
     });
@@ -276,7 +276,7 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'ProductOffer updated',
+            message: 'Penawaran Produk diperbarui',
             data: { id: 1, status: null }
         });
     });
@@ -301,7 +301,7 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'ProductOffer updated',
+            message: 'Penawaran Produk diperbarui',
             data: { id: 1, status: true }
         });
     });
@@ -331,7 +331,7 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });
@@ -352,7 +352,7 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.status).toHaveBeenCalledWith(403);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'You are not allowed to update this product offer',
+            message: 'Anda tidak diperbolehkan untuk memperbarui penawaran produk ini',
             data: null
         });
     });
@@ -375,7 +375,7 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'ProductOffer not found',
+            message: 'Penawaran produk tidak ditemukan',
             data: null
         });
     });

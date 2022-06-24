@@ -10,11 +10,11 @@ module.exports = {
         });
 
         if (wishlist.length === 0)
-            return notFound(req, res, 'Wishlist not found');
+            return notFound(req, res, 'Daftar keinginan tidak ditemukan');
 
         res.status(200).json({
             success: true,
-            message: 'Wishlist found',
+            message: 'Daftar keinginan ditemukan',
             data: wishlist
         });
     },
@@ -23,10 +23,10 @@ module.exports = {
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
         const user = await User.findByPk(req.user.id);
-        if (!user) return notFound(req, res, 'User not found');
+        if (!user) return notFound(req, res, 'Pengguna tidak ditemukan');
 
         const product = await Product.findByPk(req.body.productId);
-        if (!product) return notFound(req, res, 'Product not found');
+        if (!product) return notFound(req, res, 'Produk tidak ditemukan');
 
         const newWishlist = await Wishlist.create({
             userId: req.user.id,
@@ -35,7 +35,7 @@ module.exports = {
 
         res.status(201).json({
             success: true,
-            message: 'Wishlist created',
+            message: 'Daftar keinginan berhasil ditambah',
             data: newWishlist
         });
     },
@@ -44,12 +44,12 @@ module.exports = {
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
         const wishlist = await Wishlist.findByPk(req.params.id);
-        if (!wishlist) return notFound(req, res, 'Wishlist not found');
+        if (!wishlist) return notFound(req, res, 'Daftar keinginan tidak ditemukan');
         if (wishlist.userId !== req.user.id)
             return forbidden(
                 req,
                 res,
-                'You are not allowed to delete this wishlist'
+                'Anda tidak diperbolehkan untuk menghapus daftar keinginan ini'
             );
 
         const deletedWishlist = await Wishlist.destroy({
@@ -58,7 +58,7 @@ module.exports = {
 
         res.status(200).json({
             success: true,
-            message: 'Wishlist deleted',
+            message: 'Daftar keinginan berhasil dihapus',
             data: deletedWishlist
         });
     }

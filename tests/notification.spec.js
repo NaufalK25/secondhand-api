@@ -74,7 +74,7 @@ describe('GET /api/v1/notifications', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Notification found',
+            message: 'Notifikasi ditemukan',
             data: [{ ...notificationGet }]
         });
     });
@@ -89,7 +89,7 @@ describe('GET /api/v1/notifications', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Notification not found',
+            message: 'Notifikasi tidak ditemukan',
             data: null
         });
     });
