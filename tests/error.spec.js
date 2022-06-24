@@ -31,7 +31,7 @@ describe('errorController', () => {
         expect(res.status).toBeCalledWith(401);
         expect(res.json).toBeCalledWith({
             success: false,
-            message: 'Tidak sah',
+            message: 'Tidak memiliki token',
             data: null
         });
     });
@@ -44,7 +44,7 @@ describe('errorController', () => {
         expect(res.status).toBeCalledWith(403);
         expect(res.json).toBeCalledWith({
             success: false,
-            message: 'Terlarang',
+            message: 'Dilarang',
             data: null
         });
     });
@@ -57,7 +57,7 @@ describe('errorController', () => {
         expect(res.status).toBeCalledWith(404);
         expect(res.json).toBeCalledWith({
             success: false,
-            message: `Endpoint ${req.originalUrl} Tidak ditemukan`,
+            message: `Endpoint ${req.originalUrl} tidak ditemukan`,
             data: null
         });
     });
@@ -70,7 +70,7 @@ describe('errorController', () => {
         expect(res.status).toBeCalledWith(404);
         expect(res.json).toBeCalledWith({
             success: false,
-            message: `Endpoint ${req.originalUrl} Tidak ditemukan`,
+            message: `Endpoint ${req.originalUrl} tidak ditemukan`,
             data: null
         });
     });
@@ -86,7 +86,7 @@ describe('errorController', () => {
         expect(res.status).toBeCalledWith(405);
         expect(res.json).toBeCalledWith({
             success: false,
-            message: `Method ${req.method} not allowed at endpoint ${req.originalUrl}`,
+            message: `Metode ${req.method} tidak diizinkan di endpoint ${req.originalUrl}`,
             data: null
         });
     });
@@ -94,12 +94,16 @@ describe('errorController', () => {
         const req = mockRequest();
         const res = mockResponse();
 
-        errorController.internalServerError('Kesalahan Internal Server', req, res);
+        errorController.internalServerError(
+            'Terjadi kesalahan pada server',
+            req,
+            res
+        );
 
         expect(res.status).toBeCalledWith(500);
         expect(res.json).toBeCalledWith({
             success: false,
-            message: 'Kesalahan Internal Server',
+            message: 'Terjadi kesalahan pada server',
             data: null
         });
     });
@@ -108,7 +112,7 @@ describe('errorController', () => {
         const res = mockResponse();
 
         errorController.internalServerError(
-            new Error('Kesalahan Internal Server'),
+            new Error('Terjadi kesalahan pada server'),
             req,
             res
         );
@@ -116,7 +120,7 @@ describe('errorController', () => {
         expect(res.status).toBeCalledWith(500);
         expect(res.json).toBeCalledWith({
             success: false,
-            message: 'Kesalahan Internal Server',
+            message: 'Terjadi kesalahan pada server',
             data: null
         });
     });

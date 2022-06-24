@@ -195,7 +195,7 @@ describe('POST /api/v1/products/offers', () => {
         const errors = [
             {
                 value: '',
-                msg: 'Product id is required',
+                msg: 'Id produk harus diisi',
                 param: 'productId',
                 location: 'body'
             }
@@ -276,7 +276,7 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Penawaran Produk diperbarui',
+            message: 'Penawaran produk berhasil diperbarui',
             data: { id: 1, status: null }
         });
     });
@@ -301,7 +301,7 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Penawaran Produk diperbarui',
+            message: 'Penawaran produk berhasil diperbarui',
             data: { id: 1, status: true }
         });
     });
@@ -315,7 +315,7 @@ describe('PUT /api/v1/products/offer/:id', () => {
         const errors = [
             {
                 value: 'test',
-                msg: 'Status must be a boolean',
+                msg: 'Status harus berupa nilai benar atau salah',
                 param: 'status',
                 location: 'body'
             }

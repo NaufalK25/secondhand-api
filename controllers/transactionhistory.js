@@ -23,11 +23,11 @@ module.exports = {
         }
 
         if (transaction.length === 0)
-            return notFound(req, res, 'Riwayat Transaksi tidak ditemukan');
+            return notFound(req, res, 'Riwayat transaksi tidak ditemukan');
 
         res.status(200).json({
             success: true,
-            message: 'Riwayat Transaksi ditemukan',
+            message: 'Riwayat transaksi ditemukan',
             data: transaction
         });
     },
@@ -54,11 +54,11 @@ module.exports = {
         }
 
         if (!transaction)
-            return notFound(req, res, 'Riwayat Transaksi tidak ditemukan');
+            return notFound(req, res, 'Riwayat transaksi tidak ditemukan');
 
         res.status(200).json({
             success: true,
-            message: 'Riwayat Transaksi ditemukan',
+            message: 'Riwayat transaksi ditemukan',
             data: transaction
         });
     }

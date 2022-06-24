@@ -63,7 +63,7 @@ module.exports = {
             where: { sellerId: req.user.id }
         });
         if (products.length > 4)
-            return forbidden(req, res, 'You can only post 4 products');
+            return forbidden(req, res, 'Anda hanya bisa memposting 4 produk');
 
         const product = await Product.create({
             sellerId: req.user.id,
@@ -221,7 +221,7 @@ module.exports = {
 
         res.status(200).json({
             success: true,
-            message: 'Product found',
+            message: 'Produk ditemukan',
             data: products
         });
     },
@@ -246,7 +246,7 @@ module.exports = {
         });
 
         if (products.length === 0)
-            return notFound(req, res, 'Product not found');
+            return notFound(req, res, 'Produk tidak ditemukan');
 
         products.forEach(product => {
             if (product.Product.ProductResources) {

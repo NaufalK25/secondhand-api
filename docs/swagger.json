@@ -101,7 +101,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/responses/Register"
+                                    "$ref": "#/components/responses/Auth"
                                 }
                             }
                         }
@@ -182,7 +182,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/responses/Login"
+                                    "$ref": "#/components/responses/Auth"
                                 }
                             }
                         }
@@ -199,6 +199,16 @@
                     },
                     "403": {
                         "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -238,7 +248,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/responses/Logout"
+                                    "$ref": "#/components/responses/Auth"
                                 }
                             }
                         }
@@ -278,12 +288,56 @@
                 ],
                 "summary": "Send email to reset password",
                 "operationId": "forgot-password",
-                "requestBody": {},
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "encoding": {},
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "secondhand@gmail.com"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
-                    "200": {},
-                    "400": {},
-                    "401": {},
-                    "500": {}
+                    "200": {
+                        "description": "Email sent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Auth"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    }
                 },
                 "security": [
                     {
@@ -300,12 +354,76 @@
                 "summary": "Reset your password",
                 "operationId": "reset-password",
                 "requestBody": {
-                    "200": {},
-                    "400": {},
-                    "401": {},
-                    "500": {}
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "encoding": {},
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "token",
+                                    "password"
+                                ],
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "secondhand@gmail.com"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "example": "123456789"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Secondhand06"
+                                    }
+                                }
+                            }
+                        }
+                    }
                 },
-                "responses": {},
+                "responses": {
+                    "200": {
+                        "description": "Password reset",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Auth"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    }
+                },
                 "security": [
                     {
                         "jwt": []
@@ -734,7 +852,82 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/responses/Notification"
+                                    "$ref": "#/components/responses/Notification/GetByUser"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Notification"
+                ],
+                "summary": "Update notification by notification id",
+                "operationId": "notification-put",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notification updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Notification/Put"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
                                 }
                             }
                         }
@@ -806,149 +999,6 @@
                         }
                     }
                 }
-            },
-            "post": {
-                "tags": [
-                    "Product"
-                ],
-                "summary": "Create new product",
-                "operationId": "products-create",
-                "requestBody": {
-                    "content": {
-                        "multipart/form-data": {
-                            "encoding": {},
-                            "schema": {
-                                "required": [
-                                    "categories",
-                                    "description",
-                                    "images",
-                                    "name",
-                                    "price",
-                                    "status",
-                                    "stock"
-                                ],
-                                "type": "object",
-                                "properties": {
-                                    "categories": {
-                                        "maxItems": 5,
-                                        "minItems": 1,
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer"
-                                        },
-                                        "example": [
-                                            1,
-                                            2
-                                        ]
-                                    },
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Produk"
-                                    },
-                                    "price": {
-                                        "type": "integer",
-                                        "format": "int32",
-                                        "example": 100000
-                                    },
-                                    "stock": {
-                                        "type": "integer",
-                                        "format": "int32",
-                                        "example": 10
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "example": "Deskripsi produk"
-                                    },
-                                    "status": {
-                                        "type": "boolean",
-                                        "description": "true = available, false = sold out",
-                                        "enum": [
-                                            true,
-                                            false
-                                        ]
-                                    },
-                                    "images": {
-                                        "maxItems": 4,
-                                        "minItems": 1,
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string",
-                                            "format": "binary"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "201": {
-                        "description": "Product created",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Product/Post"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "jwt": []
-                    }
-                ]
             }
         },
         "/products/search": {
@@ -1104,6 +1154,149 @@
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Create new product",
+                "operationId": "products-create",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "encoding": {},
+                            "schema": {
+                                "required": [
+                                    "categories",
+                                    "description",
+                                    "images",
+                                    "name",
+                                    "price",
+                                    "status",
+                                    "stock"
+                                ],
+                                "type": "object",
+                                "properties": {
+                                    "categories": {
+                                        "maxItems": 5,
+                                        "minItems": 1,
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Produk"
+                                    },
+                                    "price": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "example": 100000
+                                    },
+                                    "stock": {
+                                        "type": "integer",
+                                        "format": "int32",
+                                        "example": 10
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Deskripsi produk"
+                                    },
+                                    "status": {
+                                        "type": "boolean",
+                                        "description": "true = available, false = sold out",
+                                        "enum": [
+                                            true,
+                                            false
+                                        ]
+                                    },
+                                    "images": {
+                                        "maxItems": 4,
+                                        "minItems": 1,
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Product created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Product/Post"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1929,6 +2122,9 @@
                     "description": {
                         "type": "string"
                     },
+                    "status": {
+                        "type": "boolean"
+                    },
                     "createdAt": {
                         "type": "string",
                         "format": "date-time"
@@ -2653,6 +2849,20 @@
             }
         },
         "responses": {
+            "Auth": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "string"
+                    }
+                }
+            },
             "Category": {
                 "type": "object",
                 "properties": {
@@ -2706,47 +2916,35 @@
                     }
                 }
             },
-            "Login": {
-                "type": "object",
-                "properties": {
-                    "success": {
-                        "type": "boolean"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "data": {
-                        "$ref": "#/components/schemas/User"
-                    }
-                }
-            },
-            "Logout": {
-                "type": "object",
-                "properties": {
-                    "success": {
-                        "type": "boolean"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "data": {
-                        "type": "string"
-                    }
-                }
-            },
             "Notification": {
-                "type": "object",
-                "properties": {
-                    "success": {
-                        "type": "boolean"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/includes/NotificationGetByUser"
+                "GetByUser": {
+                    "type": "object",
+                    "properties": {
+                        "success": {
+                            "type": "boolean"
+                        },
+                        "message": {
+                            "type": "string"
+                        },
+                        "data": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/includes/NotificationGetByUser"
+                            }
+                        }
+                    }
+                },
+                "Put": {
+                    "type": "object",
+                    "properties": {
+                        "success": {
+                            "type": "boolean"
+                        },
+                        "message": {
+                            "type": "string"
+                        },
+                        "data": {
+                            "$ref": "#/components/schemas/Notification"
                         }
                     }
                 }
@@ -2908,28 +3106,6 @@
                         },
                         "data": {
                             "$ref": "#/components/schemas/Profile"
-                        }
-                    }
-                }
-            },
-            "Register": {
-                "type": "object",
-                "properties": {
-                    "success": {
-                        "type": "boolean"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "data": {
-                        "type": "object",
-                        "properties": {
-                            "user": {
-                                "$ref": "#/components/schemas/User"
-                            },
-                            "profile": {
-                                "$ref": "#/components/schemas/Profile"
-                            }
                         }
                     }
                 }

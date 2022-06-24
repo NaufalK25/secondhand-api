@@ -118,7 +118,7 @@ describe('PUT /api/v1/user/profile', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Profil diperbarui',
+            message: 'Profil berhasil diperbarui',
             data: {
                 id: req.user.id,
                 ...req.body,
@@ -129,9 +129,7 @@ describe('PUT /api/v1/user/profile', () => {
     test('400 Bad Request', async () => {
         const req = mockRequest({
             body: {
-                userId: '',
-                name: 'John Doe',
-                phoneNumber: '081234567890',
+                phoneNumber: '',
                 cityId: 1,
                 address: 'Jl. Kebon Jeruk No. 1'
             },
@@ -141,8 +139,8 @@ describe('PUT /api/v1/user/profile', () => {
         const errors = [
             {
                 value: '',
-                msg: 'User id must be an integer',
-                param: 'userId',
+                msg: 'Nomor telepon harus diisi',
+                param: 'phoneNumber',
                 location: 'body'
             }
         ];

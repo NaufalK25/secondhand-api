@@ -178,128 +178,6 @@ describe('GET /api/v1/products', () => {
     });
 });
 
-describe('POST /api/v1/products', () => {
-    beforeEach(() => {
-        fs.unlink = jest.fn().mockImplementation(() => Promise.resolve());
-        Product.create = jest.fn().mockImplementation(() => ({ ...product }));
-        ProductCategoryThrough.create = jest
-            .fn()
-            .mockImplementation(() => ({ ...productCategoryThrough }));
-        ProductResource.create = jest
-            .fn()
-            .mockImplementation(() => ({ ...productResource }));
-        Notification.create = jest
-            .fn()
-            .mockImplementation(() => ({ ...notification }));
-        Product.findAll = jest.fn().mockImplementation(() => [{ ...product }]);
-    });
-    afterEach(() => jest.clearAllMocks());
-    test('201 Created', async () => {
-        const req = mockRequest({
-            user: { id: 1 },
-            body: {
-                categories: [1],
-                name: 'Product',
-                price: 100,
-                stock: 10,
-                sold: 0,
-                description: 'Product description',
-                status: true
-            },
-            files: [{ filename: 'product.jpg' }],
-            protocol: 'http'
-        });
-        const res = mockResponse();
-
-        validationResult.mockImplementation(() => ({
-            isEmpty: () => true,
-            array: () => []
-        }));
-
-        await create(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(201);
-        expect(res.json).toHaveBeenCalledWith({
-            success: true,
-            message: 'Produk berhasil dibuat',
-            data: { ...product }
-        });
-    });
-    test('400 Bad Request', async () => {
-        const req = mockRequest({
-            user: { id: 1 },
-            body: {
-                categories: [1],
-                name: '',
-                price: 100,
-                stock: 10,
-                sold: 0,
-                description: 'Product description',
-                status: true
-            },
-            files: [{ filename: 'product.jpg' }],
-            protocol: 'http'
-        });
-        const res = mockResponse();
-        const errors = [
-            {
-                value: '',
-                msg: 'Name is required',
-                param: 'name',
-                location: 'body'
-            }
-        ];
-
-        validationResult.mockImplementation(() => ({
-            isEmpty: () => false,
-            array: () => errors
-        }));
-
-        await create(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(400);
-        expect(res.json).toHaveBeenCalledWith({
-            success: false,
-            message: 'Kesalahan validasi',
-            data: errors
-        });
-    });
-    test('403 Forbidden', async () => {
-        const req = mockRequest({
-            user: { id: 1 },
-            body: {
-                categories: [1],
-                name: 'Product',
-                price: 100,
-                stock: 10,
-                sold: 0,
-                description: 'Product description',
-                status: true
-            },
-            files: [{ filename: 'product.jpg' }],
-            protocol: 'http'
-        });
-        const res = mockResponse();
-
-        validationResult.mockImplementation(() => ({
-            isEmpty: () => true,
-            array: () => []
-        }));
-        Product.findAll = jest
-            .fn()
-            .mockImplementation(() => [[], [], [], [], []]);
-
-        await create(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(403);
-        expect(res.json).toHaveBeenCalledWith({
-            success: false,
-            message: 'You can only post 4 products',
-            data: null
-        });
-    });
-});
-
 describe('GET /api/v1/products/search', () => {
     beforeEach(() => {
         Product.findAll = jest
@@ -334,7 +212,7 @@ describe('GET /api/v1/products/search', () => {
         const errors = [
             {
                 value: '',
-                msg: 'Keyword is required',
+                msg: 'Kata kunci harus diisi',
                 param: 'keyword',
                 location: 'query'
             }
@@ -402,7 +280,7 @@ describe('GET /api/v1/products/filter', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Product found',
+            message: 'Produk ditemukan',
             data: [{ ...productFilter }]
         });
     });
@@ -412,7 +290,7 @@ describe('GET /api/v1/products/filter', () => {
         const errors = [
             {
                 value: '',
-                msg: 'Category is required',
+                msg: 'Kategori harus diisi',
                 param: 'category',
                 location: 'query'
             }
@@ -428,7 +306,7 @@ describe('GET /api/v1/products/filter', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });
@@ -447,7 +325,7 @@ describe('GET /api/v1/products/filter', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Product not found',
+            message: 'Produk tidak ditemukan',
             data: null
         });
     });
@@ -473,7 +351,7 @@ describe('GET /api/v1/user/products', () => {
         const errors = [
             {
                 value: 1,
-                msg: 'Sort by must be a string',
+                msg: 'Sort by harus berupa huruf',
                 param: 'sortBy',
                 location: 'query'
             }
@@ -517,6 +395,128 @@ describe('GET /api/v1/user/products', () => {
     });
 });
 
+describe('POST /api/v1/user/products', () => {
+    beforeEach(() => {
+        fs.unlink = jest.fn().mockImplementation(() => Promise.resolve());
+        Product.create = jest.fn().mockImplementation(() => ({ ...product }));
+        ProductCategoryThrough.create = jest
+            .fn()
+            .mockImplementation(() => ({ ...productCategoryThrough }));
+        ProductResource.create = jest
+            .fn()
+            .mockImplementation(() => ({ ...productResource }));
+        Notification.create = jest
+            .fn()
+            .mockImplementation(() => ({ ...notification }));
+        Product.findAll = jest.fn().mockImplementation(() => [{ ...product }]);
+    });
+    afterEach(() => jest.clearAllMocks());
+    test('201 Created', async () => {
+        const req = mockRequest({
+            user: { id: 1 },
+            body: {
+                categories: [1],
+                name: 'Product',
+                price: 100,
+                stock: 10,
+                sold: 0,
+                description: 'Product description',
+                status: true
+            },
+            files: [{ filename: 'product.jpg' }],
+            protocol: 'http'
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+
+        await create(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(201);
+        expect(res.json).toHaveBeenCalledWith({
+            success: true,
+            message: 'Produk berhasil dibuat',
+            data: { ...product }
+        });
+    });
+    test('400 Bad Request', async () => {
+        const req = mockRequest({
+            user: { id: 1 },
+            body: {
+                categories: [1],
+                name: '',
+                price: 100,
+                stock: 10,
+                sold: 0,
+                description: 'Product description',
+                status: true
+            },
+            files: [{ filename: 'product.jpg' }],
+            protocol: 'http'
+        });
+        const res = mockResponse();
+        const errors = [
+            {
+                value: '',
+                msg: 'Nama produk harus diisi',
+                param: 'name',
+                location: 'body'
+            }
+        ];
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => false,
+            array: () => errors
+        }));
+
+        await create(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Kesalahan validasi',
+            data: errors
+        });
+    });
+    test('403 Forbidden', async () => {
+        const req = mockRequest({
+            user: { id: 1 },
+            body: {
+                categories: [1],
+                name: 'Product',
+                price: 100,
+                stock: 10,
+                sold: 0,
+                description: 'Product description',
+                status: true
+            },
+            files: [{ filename: 'product.jpg' }],
+            protocol: 'http'
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+        Product.findAll = jest
+            .fn()
+            .mockImplementation(() => [[], [], [], [], []]);
+
+        await create(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(403);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Anda hanya bisa memposting 4 produk',
+            data: null
+        });
+    });
+});
+
 describe('GET /api/v1/user/products/:productId', () => {
     beforeEach(() => {
         Product.findByPk = jest
@@ -551,7 +551,7 @@ describe('GET /api/v1/user/products/:productId', () => {
         const errors = [
             {
                 value: '',
-                msg: 'Product id is required',
+                msg: 'Id produk harus diisi',
                 param: 'productId',
                 location: 'params'
             }

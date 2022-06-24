@@ -36,30 +36,30 @@ router
         [
             body('email')
                 .notEmpty()
-                .withMessage('Email is required')
+                .withMessage('Email harus diisi')
                 .trim()
                 .isEmail()
-                .withMessage('Email must be valid')
+                .withMessage('Email tidak valid')
                 .custom(async value => {
                     const user = await User.findOne({
                         where: { email: value }
                     });
-                    if (!user) throw new Error('Email not found');
+                    if (!user) throw new Error('Email tidak terdaftar');
                 }),
             body('password')
                 .notEmpty()
-                .withMessage('Password is required')
+                .withMessage('Password harus diisi')
                 .trim()
                 .isString()
-                .withMessage('Password must be a string')
+                .withMessage('Password harus berupa huruf')
                 .isLength({ min: 8 })
-                .withMessage('Password must be at least 8 characters long')
+                .withMessage('Password minimal 8 karakter')
                 .custom(async (value, { req }) => {
                     const user = await User.findOne({
                         where: { email: req.body.email }
                     });
                     if (!(await bcrypjs.compare(value, user.password)))
-                        throw new Error('Password is incorrect');
+                        throw new Error('Password salah');
                 })
         ],
         login
@@ -100,37 +100,89 @@ router
         [
             body('name')
                 .notEmpty()
-                .withMessage('Name is required')
+                .withMessage('Nama harus diisi')
                 .trim()
                 .isString()
-                .withMessage('Name must be a string'),
+                .withMessage('Nama harus berupa huruf'),
             body('email')
                 .notEmpty()
-                .withMessage('Email is required')
+                .withMessage('Email harus diisi')
                 .trim()
                 .isEmail()
-                .withMessage('Email must be valid')
+                .withMessage('Email tidak valid')
                 .custom(async value => {
                     const user = await User.findOne({
                         where: { email: value }
                     });
-                    if (user) throw new Error('Email already exists');
+                    if (user) throw new Error('Email sudah terdaftar');
                 }),
             body('password')
                 .notEmpty()
-                .withMessage('Password is required')
+                .withMessage('Password harus diisi')
                 .trim()
                 .isString()
-                .withMessage('Password must be a string')
+                .withMessage('Password harus berupa huruf')
                 .isLength({ min: 8 })
-                .withMessage('Password must be at least 8 characters long')
+                .withMessage('Password minimal 8 karakter')
         ],
         register
     )
     .all(methodNotAllowed);
 
-router.route('/forgot-password').post(forgotPassword).all(methodNotAllowed);
+router
+    .route('/forgot-password')
+    .post(
+        [
+            body('email')
+                .notEmpty()
+                .withMessage('Email harus diisi')
+                .trim()
+                .isEmail()
+                .withMessage('Email tidak valid')
+                .custom(async value => {
+                    const user = await User.findOne({
+                        where: { email: value }
+                    });
+                    if (!user) throw new Error('Email tidak terdaftar');
+                })
+        ],
+        forgotPassword
+    )
+    .all(methodNotAllowed);
 
-router.route('/reset-password').post(resetPassword).all(methodNotAllowed);
+router
+    .route('/reset-password')
+    .post(
+        [
+            body('email')
+                .notEmpty()
+                .withMessage('Email harus diisi')
+                .trim()
+                .isEmail()
+                .withMessage('Email tidak valid')
+                .custom(async value => {
+                    const user = await User.findOne({
+                        where: { email: value }
+                    });
+                    if (!user) throw new Error('Email tidak terdaftar');
+                }),
+            body('token')
+                .notEmpty()
+                .withMessage('Token harus diisi')
+                .trim()
+                .isString()
+                .withMessage('Token harus berupa huruf'),
+            body('password')
+                .notEmpty()
+                .withMessage('Password harus diisi')
+                .trim()
+                .isString()
+                .withMessage('Password harus berupa huruf')
+                .isLength({ min: 8 })
+                .withMessage('Password minimal 8 karakter')
+        ],
+        resetPassword
+    )
+    .all(methodNotAllowed);
 
 module.exports = router;

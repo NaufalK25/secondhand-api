@@ -1,12 +1,28 @@
+const fs = require('fs/promises');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const mustache = require('mustache');
+const nodemailer = require('nodemailer');
+const { v4 } = require('uuid');
 const { validationResult } = require('express-validator');
-const { login, logout, register } = require('../controllers/auth');
+const {
+    forgotPassword,
+    login,
+    logout,
+    register,
+    resetPassword
+} = require('../controllers/auth');
 const { Profile, User } = require('../models');
 
 process.env.NODE_ENV = 'test';
 
-const mockRequest = ({ body } = {}) => ({ body });
+const mockRequest = ({ body, protocol } = {}) => ({
+    body,
+    protocol,
+    get: jest.fn().mockImplementation(header => {
+        if (header === 'host') return 'localhost:8000';
+    })
+});
 const mockResponse = () => {
     const res = {};
     res.cookie = jest.fn().mockReturnValue(res);
@@ -36,9 +52,13 @@ const profile = {
     updatedAt: date
 };
 
+jest.mock('fs/promises');
 jest.mock('bcryptjs');
 jest.mock('jsonwebtoken');
+jest.mock('mustache');
+jest.mock('nodemailer');
 jest.mock('express-validator');
+jest.mock('uuid');
 
 describe('POST /api/v1/auth/login', () => {
     beforeEach(() => {
@@ -64,7 +84,7 @@ describe('POST /api/v1/auth/login', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'Berhasil masuk',
-            data: { ...user }
+            data: null
         });
     });
     test('400 Bad Request', async () => {
@@ -73,7 +93,7 @@ describe('POST /api/v1/auth/login', () => {
         const errors = [
             {
                 value: '',
-                msg: 'Email is required',
+                msg: 'Email harus diisi',
                 param: 'email',
                 location: 'body'
             }
@@ -91,6 +111,27 @@ describe('POST /api/v1/auth/login', () => {
             success: false,
             message: 'Kesalahan validasi',
             data: errors
+        });
+    });
+    test('404 Not Found', async () => {
+        const req = mockRequest({
+            body: { email: 'johndoe@gmail.com', password: '12345678' }
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+        User.findOne = jest.fn().mockImplementation(() => null);
+
+        await login(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Pengguna tidak ditemukan',
+            data: null
         });
     });
 });
@@ -114,6 +155,11 @@ describe('POST /api/v1/auth/logout', () => {
 
 describe('POST /api/v1/auth/register', () => {
     beforeEach(() => {
+        fs.readFile.mockImplementation(() => 'welcome_mail');
+        mustache.render.mockImplementation(() => 'welcome_mail');
+        nodemailer.createTransport.mockImplementation(() => ({
+            sendMail: jest.fn().mockImplementation(() => Promise.resolve())
+        }));
         bcryptjs.hash.mockImplementation(() => 'hashedPassword');
         User.create = jest.fn().mockImplementation(() => ({ ...user }));
         Profile.create = jest.fn().mockImplementation(() => ({ ...profile }));
@@ -140,7 +186,7 @@ describe('POST /api/v1/auth/register', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'Berhasil registrasi',
-            data: { user, profile }
+            data: null
         });
     });
     test('400 Bad Request', async () => {
@@ -151,7 +197,7 @@ describe('POST /api/v1/auth/register', () => {
         const errors = [
             {
                 value: '',
-                msg: 'Name is required',
+                msg: 'Nama harus diisi',
                 param: 'name',
                 location: 'body'
             }
@@ -169,6 +215,198 @@ describe('POST /api/v1/auth/register', () => {
             success: false,
             message: 'Kesalahan validasi',
             data: errors
+        });
+    });
+});
+
+describe('POST/ api/v1/auth/forgot-password', () => {
+    beforeEach(() => {
+        fs.readFile.mockImplementation(() => 'forgot_password');
+        mustache.render.mockImplementation(() => 'forgot_password');
+        nodemailer.createTransport.mockImplementation(() => ({
+            sendMail: jest.fn().mockImplementation(() => Promise.resolve())
+        }));
+        v4.mockImplementation(() => 'token');
+        User.findOne = jest.fn().mockImplementation(() => ({ ...user }));
+    });
+    afterEach(() => jest.clearAllMocks());
+    test('200 OK', async () => {
+        const req = mockRequest({
+            body: { email: 'johndoe@gmail.com' },
+            protocol: 'http'
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+
+        await forgotPassword(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({
+            success: true,
+            message: 'Email berhasil dikirim',
+            data: null
+        });
+    });
+    test('400 Bad Request', async () => {
+        const req = mockRequest({ body: { email: '' } });
+        const res = mockResponse();
+        const errors = [
+            {
+                value: '',
+                msg: 'Email harus diisi',
+                param: 'email',
+                location: 'body'
+            }
+        ];
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => false,
+            array: () => errors
+        }));
+
+        await forgotPassword(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Kesalahan validasi',
+            data: errors
+        });
+    });
+    test('404 Not Found', async () => {
+        const req = mockRequest({
+            body: { email: 'johndoe@gmail.com' },
+            protocol: 'http'
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+        User.findOne = jest.fn().mockImplementation(() => null);
+
+        await forgotPassword(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Pengguna tidak ditemukan',
+            data: null
+        });
+    });
+});
+
+describe('POST/ api/v1/auth/reset-password', () => {
+    beforeEach(() => {
+        bcryptjs.hash.mockImplementation(() => 'hashedPassword');
+        User.findOne = jest.fn().mockImplementation(() => ({ ...user }));
+        User.update = jest.fn().mockImplementation(() => ({ ...user }));
+    });
+    afterEach(() => jest.clearAllMocks());
+    test('200 OK', async () => {
+        const req = mockRequest({
+            body: {
+                email: 'johndoe@gmail.com',
+                token: 'token',
+                password: '12345678'
+            }
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+
+        await resetPassword(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({
+            success: true,
+            message: 'Password berhasil direset',
+            data: null
+        });
+    });
+    test('400 Bad Request', async () => {
+        const req = mockRequest({
+            body: { email: 'johndoe@gmail.com', token: 'token', password: '' }
+        });
+        const res = mockResponse();
+        const errors = [
+            {
+                value: '',
+                msg: 'Password harus diisi',
+                param: 'password',
+                location: 'body'
+            }
+        ];
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => false,
+            array: () => errors
+        }));
+
+        await resetPassword(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Kesalahan validasi',
+            data: errors
+        });
+    });
+    test('403 Forbidden', async () => {
+        const req = mockRequest({
+            body: {
+                email: 'johndoe@gmail.com',
+                token: 'token2',
+                password: '12345678'
+            }
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+
+        await resetPassword(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(403);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Token tidak valid',
+            data: null
+        });
+    });
+    test('404 Not Found', async () => {
+        const req = mockRequest({
+            body: {
+                email: 'johndoe@gmail.com',
+                token: 'token',
+                password: '12345678'
+            }
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+        User.findOne = jest.fn().mockImplementation(() => null);
+
+        await resetPassword(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Pengguna tidak ditemukan',
+            data: null
         });
     });
 });

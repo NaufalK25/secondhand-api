@@ -9,18 +9,18 @@ module.exports = {
     unAuthorized: (req, res) => {
         res.status(401).json({
             success: false,
-            message: 'Tidak sah',
+            message: 'Tidak memiliki token',
             data: null
         });
     },
-    forbidden: (req, res, message = 'Terlarang') => {
+    forbidden: (req, res, message = 'Dilarang') => {
         res.status(403).json({
             success: false,
             message,
             data: null
         });
     },
-    notFound: (req, res, message = `Endpoint ${req.originalUrl} Tidak ditemukan`) => {
+    notFound: (req, res, message = `Endpoint ${req.originalUrl} tidak ditemukan`) => {
         res.status(404).json({
             success: false,
             message,
@@ -30,14 +30,14 @@ module.exports = {
     notFoundDefault: (req, res) => {
         res.status(404).json({
             success: false,
-            message: `Endpoint ${req.originalUrl} Tidak ditemukan`,
+            message: `Endpoint ${req.originalUrl} tidak ditemukan`,
             data: null
         });
     },
     methodNotAllowed: (req, res) => {
         res.status(405).json({
             success: false,
-            message: `Method ${req.method} not allowed at endpoint ${req.originalUrl}`,
+            message: `Metode ${req.method} tidak diizinkan di endpoint ${req.originalUrl}`,
             data: null
         });
     },
