@@ -2144,9 +2144,6 @@
                     "sellerId": {
                         "type": "integer"
                     },
-                    "categoryId": {
-                        "type": "integer"
-                    },
                     "name": {
                         "type": "string"
                     },
@@ -2472,9 +2469,6 @@
                     "sellerId": {
                         "type": "integer"
                     },
-                    "categoryId": {
-                        "type": "integer"
-                    },
                     "name": {
                         "type": "string"
                     },
@@ -2526,9 +2520,6 @@
                         "type": "integer"
                     },
                     "sellerId": {
-                        "type": "integer"
-                    },
-                    "categoryId": {
                         "type": "integer"
                     },
                     "name": {
@@ -2588,9 +2579,6 @@
                         "type": "integer"
                     },
                     "sellerId": {
-                        "type": "integer"
-                    },
-                    "categoryId": {
                         "type": "integer"
                     },
                     "name": {
@@ -2717,9 +2705,6 @@
                             "sellerId": {
                                 "type": "integer"
                             },
-                            "categoryId": {
-                                "type": "integer"
-                            },
                             "name": {
                                 "type": "string"
                             },
@@ -2799,9 +2784,6 @@
                                 "type": "integer"
                             },
                             "sellerId": {
-                                "type": "integer"
-                            },
-                            "categoryId": {
                                 "type": "integer"
                             },
                             "name": {
