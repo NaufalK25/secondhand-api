@@ -6,11 +6,11 @@ module.exports = {
         const categories = await ProductCategory.findAll();
 
         if (categories.length === 0)
-            return notFound(req, res, 'Category not found');
+            return notFound(req, res, 'Kategori tidak ditemukan');
 
         res.status(200).json({
             success: true,
-            message: 'Category found',
+            message: 'Kategori ditemukan',
             data: categories
         });
     }

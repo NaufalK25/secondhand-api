@@ -76,7 +76,7 @@ describe('GET /api/v1/transactions', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Transction found',
+            message: 'Transaksi ditemukan',
             data: [{ ...transactionGet }]
         });
     });
@@ -91,7 +91,7 @@ describe('GET /api/v1/transactions', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Transction found',
+            message: 'Transaksi ditemukan',
             data: [{ ...transactionGet }]
         });
     });
@@ -108,7 +108,7 @@ describe('GET /api/v1/transactions', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Transction not found',
+            message: 'Transaksi tidak ditemukan',
             data: null
         });
     });
@@ -144,7 +144,7 @@ describe('PUT /api/v1/transactions/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Transaction updated',
+            message: 'Transaksi diperbarui',
             data: { id: req.user.id, status: true }
         });
     });
@@ -174,7 +174,7 @@ describe('PUT /api/v1/transactions/:id', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });
@@ -196,7 +196,7 @@ describe('PUT /api/v1/transactions/:id', () => {
         expect(res.status).toHaveBeenCalledWith(403);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'You are not allowed to update this transaction',
+            message: 'Anda tidak diperbolehkan untuk memperbarui transaksi ini',
             data: null
         });
     });
@@ -219,7 +219,7 @@ describe('PUT /api/v1/transactions/:id', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Transaction not found',
+            message: 'Transaksi tidak ditemukan',
             data: null
         });
     });

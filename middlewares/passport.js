@@ -16,11 +16,11 @@ passport.use(
             try {
                 const user = await User.findByPk(payload.id);
                 if (!user)
-                    return done(null, false, { message: 'User not found' });
-                return done(null, user, { message: 'Logged in Successfully' });
+                    return done(null, false, { message: 'Pengguna tidak ditemukan' });
+                return done(null, user, { message: 'Login Berhasil' });
             } catch (err) {
                 return done(err, false, {
-                    message: 'Error while trying to log in'
+                    message: 'Kesalahan saat mencoba masuk'
                 });
             }
         }

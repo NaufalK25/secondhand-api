@@ -65,7 +65,7 @@ describe('GET /api/v1/user/wishlists', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Wishlist found',
+            message: 'Daftar keinginan ditemukan',
             data: { ...wishlist }
         });
     });
@@ -84,7 +84,7 @@ describe('GET /api/v1/user/wishlists', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Wishlist not found',
+            message: 'Daftar keinginan tidak ditemukan',
             data: null
         });
     });
@@ -111,7 +111,7 @@ describe('POST /api/v1/user/wishlists', () => {
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Wishlist created',
+            message: 'Daftar keinginan berhasil ditambah',
             data: { ...wishlist }
         });
     });
@@ -137,7 +137,7 @@ describe('POST /api/v1/user/wishlists', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });
@@ -156,7 +156,7 @@ describe('POST /api/v1/user/wishlists', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'User not found',
+            message: 'Pengguna tidak ditemukan',
             data: null
         });
     });
@@ -175,7 +175,7 @@ describe('POST /api/v1/user/wishlists', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Product not found',
+            message: 'Produk tidak ditemukan',
             data: null
         });
     });
@@ -205,7 +205,7 @@ describe('DELETE /api/v1/user/wishlist/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Wishlist deleted',
+            message: 'Daftar keinginan berhasil dihapus',
             data: { ...wishlist }
         });
     });
@@ -231,7 +231,7 @@ describe('DELETE /api/v1/user/wishlist/:id', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });
@@ -249,7 +249,7 @@ describe('DELETE /api/v1/user/wishlist/:id', () => {
         expect(res.status).toHaveBeenCalledWith(403);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'You are not allowed to delete this wishlist',
+            message: 'Anda tidak diperbolehkan untuk menghapus daftar keinginan ini',
             data: null
         });
     });
@@ -268,7 +268,7 @@ describe('DELETE /api/v1/user/wishlist/:id', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Wishlist not found',
+            message: 'Daftar keinginan tidak ditemukan',
             data: null
         });
     });

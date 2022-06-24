@@ -18,7 +18,7 @@ module.exports = {
 
         res.status(200).json({
             success: true,
-            message: 'Profile found',
+            message: 'Profil ditemukan',
             data: profile
         });
     },
@@ -61,7 +61,7 @@ module.exports = {
 
         res.status(200).json({
             success: true,
-            message: 'Profile updated',
+            message: 'Profil diperbarui',
             data: {
                 id: req.user.id,
                 ...updatedData
