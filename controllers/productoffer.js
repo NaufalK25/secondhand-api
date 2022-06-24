@@ -30,11 +30,11 @@ module.exports = {
         }
 
         if (userProductOffer.length === 0)
-            return notFound(req, res, 'ProductOffer not found');
+            return notFound(req, res, 'Penawaran produk tidak ditemukan');
 
         res.status(200).json({
             success: true,
-            message: 'ProductOffer found',
+            message: 'Penawaran produk ditemukan',
             data: userProductOffer
         });
     },
@@ -43,7 +43,7 @@ module.exports = {
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
         const product = await Product.findByPk(req.body.productId);
-        if (!product) return notFound(req, res, 'Product not found');
+        if (!product) return notFound(req, res, 'Produk tidak ditemukan');
 
         const newProductOffer = await ProductOffer.create({
             productId: req.body.productId,
@@ -61,7 +61,7 @@ module.exports = {
 
         res.status(201).json({
             success: true,
-            message: 'ProductOffer created',
+            message: 'Penawaran produk berhasil dibuat',
             data: newProductOffer
         });
     },
@@ -74,12 +74,12 @@ module.exports = {
         });
         const updatedData = {};
         if (!userProductOffer)
-            return notFound(req, res, 'ProductOffer not found');
+            return notFound(req, res, 'Penawaran produk tidak ditemukan');
         if (userProductOffer.Product.sellerId !== req.user.id)
             return forbidden(
                 req,
                 res,
-                'You are not allowed to update this product offer'
+                'Anda tidak diperbolehkan untuk memperbarui penawaran produk ini'
             );
 
         updatedData.status = userProductOffer.status;
@@ -115,7 +115,7 @@ module.exports = {
 
         res.status(200).json({
             success: true,
-            message: 'ProductOffer updated',
+            message: 'Penawaran Produk diperbarui',
             data: {
                 id: req.user.id,
                 ...updatedData

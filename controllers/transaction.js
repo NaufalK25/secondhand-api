@@ -19,11 +19,11 @@ module.exports = {
         }
 
         if (transaction.length === 0)
-            return notFound(req, res, 'Transction not found');
+            return notFound(req, res, 'Transaksi tidak ditemukan');
 
         res.status(200).json({
             success: true,
-            message: 'Transction found',
+            message: 'Transaksi ditemukan',
             data: transaction
         });
     },
@@ -35,12 +35,12 @@ module.exports = {
             include: [{ model: Product, include: [{ model: User }] }]
         });
         const updatedData = {};
-        if (!transaction) return notFound(req, res, 'Transaction not found');
+        if (!transaction) return notFound(req, res, 'Transaksi tidak ditemukan');
         if (transaction.Product.sellerId !== req.user.id)
             return forbidden(
                 req,
                 res,
-                'You are not allowed to update this transaction'
+                'Anda tidak diperbolehkan untuk memperbarui transaksi ini'
             );
 
         updatedData.status = transaction.status;
@@ -64,7 +64,7 @@ module.exports = {
         }
         res.status(200).json({
             success: true,
-            message: 'Transaction updated',
+            message: 'Transaksi diperbarui',
             data: {
                 id: req.user.id,
                 ...updatedData

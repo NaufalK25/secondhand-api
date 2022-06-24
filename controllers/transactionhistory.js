@@ -23,11 +23,11 @@ module.exports = {
         }
 
         if (transaction.length === 0)
-            return notFound(req, res, 'TransctionHistory not found');
+            return notFound(req, res, 'Riwayat Transaksi tidak ditemukan');
 
         res.status(200).json({
             success: true,
-            message: 'TransctionHistory found',
+            message: 'Riwayat Transaksi ditemukan',
             data: transaction
         });
     },
@@ -54,11 +54,11 @@ module.exports = {
         }
 
         if (!transaction)
-            return notFound(req, res, 'TransctionHistory not found');
+            return notFound(req, res, 'Riwayat Transaksi tidak ditemukan');
 
         res.status(200).json({
             success: true,
-            message: 'TransctionHistory found',
+            message: 'Riwayat Transaksi ditemukan',
             data: transaction
         });
     }

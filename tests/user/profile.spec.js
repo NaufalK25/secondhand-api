@@ -73,7 +73,7 @@ describe('GET /api/v1/user/profile', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Profile found',
+            message: 'Profil ditemukan',
             data: {
                 ...profileGetById,
                 profilePicture: `${req.protocol}://${req.get(
@@ -118,7 +118,7 @@ describe('PUT /api/v1/user/profile', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Profile updated',
+            message: 'Profil diperbarui',
             data: {
                 id: req.user.id,
                 ...req.body,
@@ -157,7 +157,7 @@ describe('PUT /api/v1/user/profile', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });

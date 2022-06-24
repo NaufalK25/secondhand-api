@@ -22,14 +22,14 @@ module.exports = {
 
         res.cookie('token', token).status(200).json({
             success: true,
-            message: 'Login success',
+            message: 'Berhasil masuk',
             data: user
         });
     },
     logout: (req, res) => {
         res.clearCookie('token').status(200).json({
             success: true,
-            message: 'Logout success',
+            message: 'Berhasil keluar',
             data: null
         });
     },
@@ -72,7 +72,7 @@ module.exports = {
 
         res.status(201).json({
             success: true,
-            message: 'Register success',
+            message: 'Berhasil registrasi',
             data: { user, profile }
         });
     }

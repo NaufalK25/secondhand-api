@@ -35,7 +35,7 @@ describe('GET /api/v1/products/categories', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Category found',
+            message: 'Kategori ditemukan',
             data: [{ ...category }]
         });
     });
@@ -50,7 +50,7 @@ describe('GET /api/v1/products/categories', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Category not found',
+            message: 'Kategori tidak ditemukan',
             data: null
         });
     });

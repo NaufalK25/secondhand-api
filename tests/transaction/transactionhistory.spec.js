@@ -81,7 +81,7 @@ describe('GET /api/v1/transactions/history', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'TransctionHistory found',
+            message: 'Riwayat Transaksi ditemukan',
             data: [{ ...transactionHistorySeller }]
         });
     });
@@ -96,7 +96,7 @@ describe('GET /api/v1/transactions/history', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'TransctionHistory found',
+            message: 'Riwayat Transaksi ditemukan',
             data: [{ ...transactionHistoryBuyer }]
         });
     });
@@ -113,7 +113,7 @@ describe('GET /api/v1/transactions/history', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'TransctionHistory not found',
+            message: 'Riwayat Transaksi tidak ditemukan',
             data: null
         });
     });
@@ -146,7 +146,7 @@ describe('GET /api/v1/transactions/history/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'TransctionHistory found',
+            message: 'Riwayat Transaksi ditemukan',
             data: { ...transactionHistorySeller }
         });
     });
@@ -167,7 +167,7 @@ describe('GET /api/v1/transactions/history/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'TransctionHistory found',
+            message: 'Riwayat Transaksi ditemukan',
             data: { ...transactionHistoryBuyer }
         });
     });
@@ -196,7 +196,7 @@ describe('GET /api/v1/transactions/history/:id', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });
@@ -218,7 +218,7 @@ describe('GET /api/v1/transactions/history/:id', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'TransctionHistory not found',
+            message: 'Riwayat Transaksi tidak ditemukan',
             data: null
         });
     });
