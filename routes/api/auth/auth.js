@@ -2,7 +2,13 @@ const bcrypjs = require('bcryptjs');
 const { Router } = require('express');
 const { body } = require('express-validator');
 const passport = require('../../../middlewares/passport');
-const { login, logout, register } = require('../../../controllers/auth');
+const {
+    forgotPassword,
+    login,
+    logout,
+    register,
+    resetPassword
+} = require('../../../controllers/auth');
 const {
     forbidden,
     internalServerError,
@@ -122,5 +128,9 @@ router
         register
     )
     .all(methodNotAllowed);
+
+router.route('/forgot-password').post(forgotPassword).all(methodNotAllowed);
+
+router.route('/reset-password').post(resetPassword).all(methodNotAllowed);
 
 module.exports = router;

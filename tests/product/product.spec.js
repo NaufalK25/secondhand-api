@@ -77,7 +77,7 @@ const product = {
 };
 const category = {
     id: 1,
-    category: 'Elektronik',
+    category: 'Hobi',
     createdAt: date,
     updatedAt: date
 };
@@ -387,7 +387,7 @@ describe('GET /api/v1/products/filter', () => {
     afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
         const req = mockRequest({
-            query: { category: 'elektronik' },
+            query: { category: 'hobi' },
             protocol: 'http'
         });
         const res = mockResponse();
@@ -433,7 +433,7 @@ describe('GET /api/v1/products/filter', () => {
         });
     });
     test('404 Not Found', async () => {
-        const req = mockRequest({ query: { category: 'elektronik' } });
+        const req = mockRequest({ query: { category: 'hobi' } });
         const res = mockResponse();
 
         validationResult.mockImplementation(() => ({

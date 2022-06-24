@@ -14,7 +14,7 @@ const mockResponse = () => {
 const date = new Date();
 const category = {
     id: 1,
-    category: 'Fashion',
+    category: 'Hobi',
     createdAt: date,
     updatedAt: date
 };

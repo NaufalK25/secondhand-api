@@ -6,6 +6,24 @@ module.exports = {
             'ProductCategories',
             [
                 {
+                    category: 'Hobi',
+                    description: null,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                },
+                {
+                    category: 'Kendaraan',
+                    description: null,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                },
+                {
+                    category: 'Baju',
+                    description: null,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                },
+                {
                     category: 'Elektronik',
                     description: null,
                     createdAt: new Date(),
@@ -13,24 +31,6 @@ module.exports = {
                 },
                 {
                     category: 'Kesehatan',
-                    description: null,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                },
-                {
-                    category: 'Kecantikan',
-                    description: null,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                },
-                {
-                    category: 'Fashion pria',
-                    description: null,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                },
-                {
-                    category: 'Fashion wanita',
                     description: null,
                     createdAt: new Date(),
                     updatedAt: new Date()

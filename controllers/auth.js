@@ -1,6 +1,6 @@
+const fs = require('fs/promises');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const fs = require('fs/promises');
 const mustache = require('mustache');
 const nodemailer = require('nodemailer');
 const { validationResult } = require('express-validator');
@@ -75,5 +75,13 @@ module.exports = {
             message: 'Register success',
             data: { user, profile }
         });
+    },
+    forgotPassword: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+    },
+    resetPassword: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
     }
 };

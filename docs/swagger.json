@@ -271,6 +271,48 @@
                 ]
             }
         },
+        "/auth/forgot-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Send email to reset password",
+                "operationId": "forgot-password",
+                "requestBody": {},
+                "responses": {
+                    "200": {},
+                    "400": {},
+                    "401": {},
+                    "500": {}
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
+        "/auth/reset-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Reset your password",
+                "operationId": "reset-password",
+                "requestBody": {
+                    "200": {},
+                    "400": {},
+                    "401": {},
+                    "500": {}
+                },
+                "responses": {},
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
         "/user/profile": {
             "get": {
                 "tags": [
@@ -684,7 +726,7 @@
                 "tags": [
                     "Notification"
                 ],
-                "summary": "Get all notifications",
+                "summary": "Get all notifications by user",
                 "operationId": "notification-get",
                 "responses": {
                     "200": {
@@ -973,7 +1015,14 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                                "hobi",
+                                "kendaraan",
+                                "baju",
+                                "elektronik",
+                                "kesehatan"
+                            ]
                         }
                     }
                 ],
@@ -2516,7 +2565,6 @@
                     "ProductCategory": {
                         "$ref": "#/components/schemas/Category"
                     }
-
                 }
             },
             "NotificationGetByUser": {
