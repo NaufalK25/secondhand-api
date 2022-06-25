@@ -1,5 +1,12 @@
 const { validationResult } = require('express-validator');
-const { Product, ProductOffer, Transaction, User } = require('../models');
+const {
+    Notification,
+    Product,
+    ProductOffer,
+    Transaction,
+    TransactionHistory,
+    User
+} = require('../models');
 const { badRequest, forbidden, notFound } = require('./error');
 
 module.exports = {
@@ -11,7 +18,6 @@ module.exports = {
                 include: [
                     {
                         model: Product,
-                        attributes: [],
                         where: { sellerId: req.user.id }
                     }
                 ]
@@ -24,11 +30,11 @@ module.exports = {
         }
 
         if (userProductOffer.length === 0)
-            return notFound(req, res, 'ProductOffer not found');
+            return notFound(req, res, 'Penawaran produk tidak ditemukan');
 
         res.status(200).json({
             success: true,
-            message: 'ProductOffer found',
+            message: 'Penawaran produk ditemukan',
             data: userProductOffer
         });
     },
@@ -37,7 +43,7 @@ module.exports = {
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
         const product = await Product.findByPk(req.body.productId);
-        if (!product) return notFound(req, res, 'Product not found');
+        if (!product) return notFound(req, res, 'Produk tidak ditemukan');
 
         const newProductOffer = await ProductOffer.create({
             productId: req.body.productId,
@@ -45,9 +51,25 @@ module.exports = {
             priceOffer: req.body.priceOffer
         });
 
+        // notify buyer if their offer has been sent
+        await Notification.create({
+            userId: req.user.id,
+            productId: product.id,
+            productOfferId: newProductOffer.id,
+            type: 'Penawaran produk'
+        });
+
+        // notify seller if their product is being offered
+        await Notification.create({
+            userId: product.sellerId,
+            productId: product.id,
+            productOfferId: newProductOffer.id,
+            type: 'Penawaran produk'
+        });
+
         res.status(201).json({
             success: true,
-            message: 'ProductOffer created',
+            message: 'Penawaran produk berhasil dibuat',
             data: newProductOffer
         });
     },
@@ -59,29 +81,49 @@ module.exports = {
             include: [{ model: Product, include: [{ model: User }] }]
         });
         const updatedData = {};
-        if (!userProductOffer) return notFound(req, res, 'ProductOffer not found');
+        if (!userProductOffer)
+            return notFound(req, res, 'Penawaran produk tidak ditemukan');
+        if (userProductOffer.Product.sellerId !== req.user.id)
+            return forbidden(
+                req,
+                res,
+                'Anda tidak diperbolehkan untuk memperbarui penawaran produk ini'
+            );
 
         updatedData.status = userProductOffer.status;
-        if (req.body.status)
-            updatedData.status = req.body.status;
+        if (req.body.status) updatedData.status = req.body.status;
 
         await ProductOffer.update(updatedData, {
             where: { id: req.params.id }
         });
-        if (updatedData.status == 'Accepted') {
+
+        // product offer accepted
+        if (updatedData.status === 'true' || updatedData.status === true) {
             // TODO make transaction kalo diterima tawarannya sama seller dia langsung ke proses transaksi
-            await Transaction.create({
+            const transaction = await Transaction.create({
                 productId: userProductOffer.productId,
                 buyerId: userProductOffer.buyerId,
-                transactionDate: new Date(),
-                fixPrice: userProductOffer.priceOffer,
-                status: 'Pending'
+                fixPrice: userProductOffer.priceOffer
+            });
+
+            await TransactionHistory.create({
+                userId: userProductOffer.buyerId,
+                transactionId: transaction.id
+            });
+
+            // notify buyer if product offer accepted by seller
+            await Notification.create({
+                userId: userProductOffer.buyerId,
+                productId: userProductOffer.productId,
+                productOfferId: userProductOffer.id,
+                type: 'Penawaran produk',
+                description: 'Kamu akan segera dihubungi penjual via whatsapp'
             });
         }
 
         res.status(200).json({
             success: true,
-            message: 'ProductOffer updated',
+            message: 'Penawaran produk berhasil diperbarui',
             data: {
                 id: req.user.id,
                 ...updatedData

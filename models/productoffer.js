@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             this.belongsTo(models.Product, { foreignKey: 'productId' });
             this.belongsTo(models.User, { foreignKey: 'buyerId' });
+            this.hasMany(models.Notification, { foreignKey: 'productOfferId' });
         }
     }
     ProductOffer.init(
@@ -12,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
             productId: DataTypes.INTEGER,
             buyerId: DataTypes.INTEGER,
             priceOffer: DataTypes.INTEGER,
-            status: DataTypes.STRING
+            status: DataTypes.BOOLEAN
         },
         { sequelize, modelName: 'ProductOffer' }
     );

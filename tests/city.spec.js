@@ -33,11 +33,11 @@ describe('GET /api/v1/cities', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'City found',
+            message: 'Kota ditemukan',
             data: [{ ...city }]
         });
     });
-    test('404 Not Found', async () => {
+    test('404 Tidak Ditemukan', async () => {
         const req = mockRequest();
         const res = mockResponse();
 
@@ -48,7 +48,7 @@ describe('GET /api/v1/cities', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'City not found',
+            message: 'Kota tidak ditemukan',
             data: null
         });
     });

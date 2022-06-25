@@ -5,11 +5,11 @@ module.exports = {
     findAll: async (req, res) => {
         const city = await City.findAll();
 
-        if (city.length === 0) return notFound(req, res, 'City not found');
+        if (city.length === 0) return notFound(req, res, 'Kota tidak ditemukan');
 
         res.status(200).json({
             success: true,
-            message: 'City found',
+            message: 'Kota ditemukan',
             data: city
         });
     }

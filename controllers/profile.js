@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const { validationResult } = require('express-validator');
-const { Profile, User } = require('../models');
-const { badRequest, internalServerError } = require('./error');
+const { City, Profile, User } = require('../models');
+const { badRequest } = require('./error');
 
 module.exports = {
     findByUser: async (req, res) => {
@@ -10,36 +10,35 @@ module.exports = {
 
         const baseUrl = `${req.protocol}://${req.get('host')}`;
         const profilePicturePath = `${baseUrl}/images/profiles/`;
-        const profile = await Profile.findOne(
-            { where: { userId: req.user.id } },
-            { include: [{ model: User }] }
-        );
+        const profile = await Profile.findOne({
+            where: { userId: req.user.id },
+            include: [{ model: City }]
+        });
         profile.profilePicture = `${profilePicturePath}${profile.profilePicture}`;
 
         res.status(200).json({
             success: true,
-            message: 'Profile found',
+            message: 'Profil ditemukan',
             data: profile
         });
     },
     update: async (req, res) => {
         const errors = validationResult(req);
-        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+        if (!errors.isEmpty()) {
+            if (req.file) await fs.unlink(req.file.path);
 
-        const unlinkProfilePicturePath = `${__dirname}/../uploads/profiles/`;
-        const profile = await Profile.findOne(
-            { where: { userId: req.user.id } },
-            { include: [{ model: User }] }
-        );
+            return badRequest(errors.array(), req, res);
+        }
+
         const updatedData = {};
+        const profile = await Profile.findOne({
+            where: { userId: req.user.id }
+        });
 
         if (req.file) {
             if (profile.profilePicture !== 'default.png') {
                 fs.unlink(
-                    `${unlinkProfilePicturePath}${profile.profilePicture}`,
-                    err => {
-                        if (err) return internalServerError(err, req, res);
-                    }
+                    `${__dirname}/../uploads/profiles/${profile.profilePicture}`
                 );
             }
             updatedData.profilePicture = req.file.filename;
@@ -62,7 +61,7 @@ module.exports = {
 
         res.status(200).json({
             success: true,
-            message: 'Profile updated',
+            message: 'Profil berhasil diperbarui',
             data: {
                 id: req.user.id,
                 ...updatedData

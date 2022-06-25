@@ -4,7 +4,13 @@ const {
     findByUser,
     update
 } = require('../../controllers/productoffer');
-const { Product, ProductOffer, Transaction } = require('../../models');
+const {
+    Notification,
+    Product,
+    ProductOffer,
+    Transaction,
+    TransactionHistory
+} = require('../../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -34,7 +40,7 @@ const product = {
     stock: 10,
     sold: 0,
     description: 'Product description',
-    status: 'available',
+    status: true,
     createdAt: date,
     updatedAt: date
 };
@@ -43,7 +49,7 @@ const productOffer = {
     productId: 1,
     buyerId: 1,
     priceOffer: 100,
-    status: 'Pending',
+    status: null,
     createdAt: date,
     updatedAt: date
 };
@@ -53,11 +59,28 @@ const transaction = {
     buyerId: 1,
     transactionDate: date,
     fixPrice: 100,
-    status: 'Pending',
+    status: null,
     createdAt: date,
     updatedAt: date
 };
-const productOfferIncludeProductIncludeUser = {
+const transactionhistory = {
+    id: 1,
+    userId: 1,
+    transactionId: 1,
+    createdAt: date,
+    updatedAt: date
+};
+const notification = {
+    id: 1,
+    userId: 1,
+    productId: 1,
+    productOfferId: null,
+    type: 'Berhasil di terbitkan',
+    description: null,
+    createdAt: date,
+    updatedAt: date
+};
+const productOfferPut = {
     ...productOffer,
     Product: { ...product, User: { ...user } }
 };
@@ -88,7 +111,7 @@ describe('GET /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'ProductOffer found',
+            message: 'Penawaran produk ditemukan',
             data: [{ ...productOffer }]
         });
     });
@@ -106,7 +129,7 @@ describe('GET /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'ProductOffer found',
+            message: 'Penawaran produk ditemukan',
             data: [{ ...productOffer }]
         });
     });
@@ -125,7 +148,7 @@ describe('GET /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'ProductOffer not found',
+            message: 'Penawaran produk tidak ditemukan',
             data: null
         });
     });
@@ -133,6 +156,9 @@ describe('GET /api/v1/products/offers', () => {
 
 describe('POST /api/v1/products/offers', () => {
     beforeEach(() => {
+        Notification.create = jest.fn().mockImplementation(() => ({
+            ...notification
+        }));
         Product.findByPk = jest.fn().mockImplementation(() => ({ ...product }));
         ProductOffer.create = jest
             .fn()
@@ -156,7 +182,7 @@ describe('POST /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'ProductOffer created',
+            message: 'Penawaran produk berhasil dibuat',
             data: { ...productOffer }
         });
     });
@@ -169,7 +195,7 @@ describe('POST /api/v1/products/offers', () => {
         const errors = [
             {
                 value: '',
-                msg: 'Product id is required',
+                msg: 'Id produk harus diisi',
                 param: 'productId',
                 location: 'body'
             }
@@ -185,7 +211,7 @@ describe('POST /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });
@@ -207,7 +233,7 @@ describe('POST /api/v1/products/offers', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Product not found',
+            message: 'Produk tidak ditemukan',
             data: null
         });
     });
@@ -215,22 +241,28 @@ describe('POST /api/v1/products/offers', () => {
 
 describe('PUT /api/v1/products/offer/:id', () => {
     beforeEach(() => {
+        Notification.create = jest.fn().mockImplementation(() => ({
+            ...notification
+        }));
         ProductOffer.findByPk = jest.fn().mockImplementation(() => ({
-            ...productOfferIncludeProductIncludeUser
+            ...productOfferPut
         }));
         ProductOffer.update = jest
             .fn()
-            .mockImplementation(() => ({ status: 'Pending' }));
+            .mockImplementation(() => ({ status: null }));
         Transaction.create = jest
             .fn()
             .mockImplementation(() => ({ ...transaction }));
+        TransactionHistory.create = jest
+            .fn()
+            .mockImplementation(() => ({ ...transactionhistory }));
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK (Pending)', async () => {
         const req = mockRequest({
             user: { id: 1 },
             params: { id: 1 },
-            body: { }
+            body: {}
         });
         const res = mockResponse();
 
@@ -244,15 +276,15 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'ProductOffer updated',
-            data: { id: 1, status: 'Pending' }
+            message: 'Penawaran produk berhasil diperbarui',
+            data: { id: 1, status: null }
         });
     });
     test('200 OK (Accepted)', async () => {
         const req = mockRequest({
             user: { id: 1 },
             params: { id: 1 },
-            body: { status: 'Accepted' }
+            body: { status: true }
         });
         const res = mockResponse();
 
@@ -262,28 +294,28 @@ describe('PUT /api/v1/products/offer/:id', () => {
         }));
         ProductOffer.update = jest
             .fn()
-            .mockImplementation(() => ({ status: 'Accepted' }));
+            .mockImplementation(() => ({ status: true }));
 
         await update(req, res);
 
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'ProductOffer updated',
-            data: { id: 1, status: 'Accepted' }
+            message: 'Penawaran produk berhasil diperbarui',
+            data: { id: 1, status: true }
         });
     });
     test('400 Bad Request', async () => {
         const req = mockRequest({
             user: { id: 1 },
             params: { id: 1 },
-            body: { status: '' }
+            body: { status: 'test' }
         });
         const res = mockResponse();
         const errors = [
             {
-                value: '',
-                msg: 'Status is required',
+                value: 'test',
+                msg: 'Status harus berupa nilai benar atau salah',
                 param: 'status',
                 location: 'body'
             }
@@ -299,15 +331,36 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
+        });
+    });
+    test('403 Forbidden', async () => {
+        const req = mockRequest({
+            user: { id: 2 },
+            params: { id: 1 }
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+
+        await update(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(403);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Anda tidak diperbolehkan untuk memperbarui penawaran produk ini',
+            data: null
         });
     });
     test('404 Not Found', async () => {
         const req = mockRequest({
             user: { id: 1 },
             params: { id: 1 },
-            body: { status: 'Pending' }
+            body: { status: null }
         });
         const res = mockResponse();
 
@@ -322,7 +375,7 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'ProductOffer not found',
+            message: 'Penawaran produk tidak ditemukan',
             data: null
         });
     });

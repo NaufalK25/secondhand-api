@@ -1,28 +1,44 @@
 const express = require('express');
-const passport = require('../../../middlewares/passport');
+const { query } = require('express-validator');
+const { methodNotAllowed } = require('../../../controllers/error');
 const {
-    internalServerError,
-    methodNotAllowed,
-    unAuthorized
-} = require('../../../controllers/error');
-const { findAll } = require('../../../controllers/product');
+    filterByCategory,
+    findAll,
+    search
+} = require('../../../controllers/product');
 
 const router = express.Router();
 
 router
-    .route('/')
-    .get((req, res, next) => {
-        passport.authenticate(
-            'jwt',
-            { session: false },
-            async (err, user, info) => {
-                if (err) return internalServerError(err, req, res);
-                if (!user) return unAuthorized(req, res);
-                req.user = user;
-                next();
-            }
-        )(req, res, next);
-    }, findAll)
+    .route('/filter')
+    .get(
+        [
+            query('category')
+                .notEmpty()
+                .withMessage('Kategori harus diisi')
+                .trim()
+                .isString()
+                .withMessage('Kategori harus berupa huruf')
+        ],
+        filterByCategory
+    )
     .all(methodNotAllowed);
+
+router
+    .route('/search')
+    .get(
+        [
+            query('keyword')
+                .notEmpty()
+                .withMessage('Kata kunci harus diisi')
+                .trim()
+                .isString()
+                .withMessage('Kata kunci harus berupa huruf')
+        ],
+        search
+    )
+    .all(methodNotAllowed);
+
+router.route('/').get(findAll).all(methodNotAllowed);
 
 module.exports = router;

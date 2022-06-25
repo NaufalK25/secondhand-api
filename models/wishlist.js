@@ -8,7 +8,11 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
     Wishlist.init(
-        { userId: DataTypes.INTEGER, productId: DataTypes.INTEGER },
+        {
+            userId: DataTypes.INTEGER,
+            productId: DataTypes.INTEGER,
+            status: DataTypes.BOOLEAN
+        },
         { sequelize, modelName: 'Wishlist' }
     );
     return Wishlist;

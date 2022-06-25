@@ -41,11 +41,13 @@ const profile = {
     createdAt: date,
     updatedAt: date
 };
-
-const profileInclude = {
-    ...profile,
-    User: { ...user }
+const city = {
+    id: 1,
+    city: 'Kota Surabaya',
+    createdAt: date,
+    updatedAt: date
 };
+const profileGetById = { ...profile, City: { ...city } };
 
 jest.mock('fs/promises');
 jest.mock('express-validator');
@@ -54,7 +56,7 @@ describe('GET /api/v1/user/profile', () => {
     beforeEach(() => {
         Profile.findOne = jest
             .fn()
-            .mockImplementation(() => ({ ...profileInclude }));
+            .mockImplementation(() => ({ ...profileGetById }));
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
@@ -71,9 +73,9 @@ describe('GET /api/v1/user/profile', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Profile found',
+            message: 'Profil ditemukan',
             data: {
-                ...profileInclude,
+                ...profileGetById,
                 profilePicture: `${req.protocol}://${req.get(
                     'host'
                 )}/images/profiles/profilePicture.jpg`
@@ -87,7 +89,7 @@ describe('PUT /api/v1/user/profile', () => {
         fs.unlink.mockImplementation(() => Promise.resolve());
         Profile.findOne = jest
             .fn()
-            .mockImplementation(() => ({ ...profileInclude }));
+            .mockImplementation(() => ({ ...profile }));
         Profile.update = jest.fn().mockImplementation(() => ({ ...profile }));
         User.update = jest.fn().mockImplementation(() => ({ ...user }));
     });
@@ -116,7 +118,7 @@ describe('PUT /api/v1/user/profile', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Profile updated',
+            message: 'Profil berhasil diperbarui',
             data: {
                 id: req.user.id,
                 ...req.body,
@@ -127,9 +129,7 @@ describe('PUT /api/v1/user/profile', () => {
     test('400 Bad Request', async () => {
         const req = mockRequest({
             body: {
-                userId: '',
-                name: 'John Doe',
-                phoneNumber: '081234567890',
+                phoneNumber: '',
                 cityId: 1,
                 address: 'Jl. Kebon Jeruk No. 1'
             },
@@ -139,8 +139,8 @@ describe('PUT /api/v1/user/profile', () => {
         const errors = [
             {
                 value: '',
-                msg: 'User id must be an integer',
-                param: 'userId',
+                msg: 'Nomor telepon harus diisi',
+                param: 'phoneNumber',
                 location: 'body'
             }
         ];
@@ -155,7 +155,7 @@ describe('PUT /api/v1/user/profile', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });

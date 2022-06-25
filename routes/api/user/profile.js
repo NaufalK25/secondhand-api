@@ -46,30 +46,28 @@ router
                 .optional()
                 .trim()
                 .isString()
-                .withMessage('Name must be a string'),
+                .withMessage('Nama harus berupa huruf'),
             body('phoneNumber')
                 .notEmpty()
-                .withMessage('phoneNumber is required')
+                .withMessage('Nomor telepon harus diisi')
                 .custom(async value => {
-                    const phone = await Profile.findOne({
+                    const user = await Profile.findOne({
                         where: { phoneNumber: value }
                     });
-                    if (phone) {
-                        throw new Error('phoneNumber already exists');
-                    }
+                    if (user) throw new Error('Nomor telepon sudah terdaftar');
                 }),
             body('cityId')
                 .notEmpty()
-                .withMessage('cityId is required')
+                .withMessage('Id kota harus diisi')
                 .trim()
                 .isInt()
-                .withMessage('cityId must be an integer'),
+                .withMessage('Id kota harus berupa angka'),
             body('address')
                 .notEmpty()
-                .withMessage('address is required')
+                .withMessage('Alamat harus diisi')
                 .trim()
                 .isString()
-                .withMessage('address must be a string')
+                .withMessage('Alamat harus berupa huruf')
         ],
         update
     )

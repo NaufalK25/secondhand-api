@@ -28,7 +28,11 @@ module.exports = {
                 defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
             },
             fixPrice: { type: Sequelize.INTEGER, allowNull: false },
-            status: { type: Sequelize.STRING, allowNull: false },
+            status: {
+                type: Sequelize.BOOLEAN,
+                allowNull: true,
+                defaultValue: null // null = pending, true = complete, false = cancel
+            },
             createdAt: { allowNull: false, type: Sequelize.DATE },
             updatedAt: { allowNull: false, type: Sequelize.DATE }
         });

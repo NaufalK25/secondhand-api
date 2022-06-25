@@ -24,11 +24,11 @@ module.exports = {
             },
             priceOffer: { type: Sequelize.INTEGER, allowNull: false },
             status: {
-                type: Sequelize.STRING,
-                allowNull: false,
-                defaultValue: 'Pending'
+                type: Sequelize.BOOLEAN,
+                defaultValue: null // null = pending, true = accept, false = reject
             },
-            createdAt: { allowNull: false, type: Sequelize.DATE }
+            createdAt: { allowNull: false, type: Sequelize.DATE },
+            updatedAt: { allowNull: false, type: Sequelize.DATE }
         });
     },
     async down(queryInterface, Sequelize) {

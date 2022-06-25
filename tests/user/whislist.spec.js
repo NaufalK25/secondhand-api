@@ -30,7 +30,7 @@ const product = {
     stock: 10,
     sold: 0,
     description: 'Product description',
-    status: 'available',
+    status: true,
     createdAt: date,
     updatedAt: date
 };
@@ -65,7 +65,7 @@ describe('GET /api/v1/user/wishlists', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Wishlist found',
+            message: 'Daftar keinginan ditemukan',
             data: { ...wishlist }
         });
     });
@@ -84,7 +84,7 @@ describe('GET /api/v1/user/wishlists', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Wishlist not found',
+            message: 'Daftar keinginan tidak ditemukan',
             data: null
         });
     });
@@ -111,7 +111,7 @@ describe('POST /api/v1/user/wishlists', () => {
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Wishlist created',
+            message: 'Daftar keinginan berhasil ditambah',
             data: { ...wishlist }
         });
     });
@@ -121,7 +121,7 @@ describe('POST /api/v1/user/wishlists', () => {
         const errors = [
             {
                 valuue: '',
-                msg: 'Product id is required',
+                msg: 'Id produk harus diisi',
                 param: 'productId',
                 location: 'body'
             }
@@ -137,7 +137,7 @@ describe('POST /api/v1/user/wishlists', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
         });
     });
@@ -156,7 +156,7 @@ describe('POST /api/v1/user/wishlists', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'User not found',
+            message: 'Pengguna tidak ditemukan',
             data: null
         });
     });
@@ -175,7 +175,7 @@ describe('POST /api/v1/user/wishlists', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Product not found',
+            message: 'Produk tidak ditemukan',
             data: null
         });
     });
@@ -185,7 +185,7 @@ describe('DELETE /api/v1/user/wishlist/:id', () => {
     beforeEach(() => {
         User.findByPk = jest.fn().mockImplementation(() => ({ ...user }));
         Product.findByPk = jest.fn().mockImplementation(() => ({ ...product }));
-        Wishlist.create = jest.fn().mockImplementation(() => ({ ...wishlist }));
+        Wishlist.findByPk = jest.fn().mockImplementation(() => ({ ...wishlist }));
         Wishlist.destroy = jest
             .fn()
             .mockImplementation(() => ({ ...wishlist }));
@@ -205,7 +205,7 @@ describe('DELETE /api/v1/user/wishlist/:id', () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({
             success: true,
-            message: 'Wishlist deleted',
+            message: 'Daftar keinginan berhasil dihapus',
             data: { ...wishlist }
         });
     });
@@ -215,7 +215,7 @@ describe('DELETE /api/v1/user/wishlist/:id', () => {
         const errors = [
             {
                 valuue: '',
-                msg: 'Id must be an integer',
+                msg: 'Id harus berupa angka',
                 param: 'id',
                 location: 'params'
             }
@@ -231,8 +231,26 @@ describe('DELETE /api/v1/user/wishlist/:id', () => {
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: errors
+        });
+    });
+    test('403 Forbidden', async () => {
+        const req = mockRequest({ user: { id: 2 }, params: { id: 1 } });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+
+        await destroy(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(403);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Anda tidak diperbolehkan untuk menghapus daftar keinginan ini',
+            data: null
         });
     });
     test('404 Not Found', async () => {
@@ -250,7 +268,7 @@ describe('DELETE /api/v1/user/wishlist/:id', () => {
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Wishlist not found',
+            message: 'Daftar keinginan tidak ditemukan',
             data: null
         });
     });

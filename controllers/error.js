@@ -2,25 +2,25 @@ module.exports = {
     badRequest: (err, req, res) => {
         res.status(400).json({
             success: false,
-            message: 'Validation error',
+            message: 'Kesalahan validasi',
             data: err
         });
     },
     unAuthorized: (req, res) => {
         res.status(401).json({
             success: false,
-            message: 'Unauthorized',
+            message: 'Tidak memiliki token',
             data: null
         });
     },
-    forbidden: (req, res, message = 'Forbidden') => {
+    forbidden: (req, res, message = 'Dilarang') => {
         res.status(403).json({
             success: false,
             message,
             data: null
         });
     },
-    notFound: (req, res, message = `Endpoint ${req.originalUrl} not found`) => {
+    notFound: (req, res, message = `Endpoint ${req.originalUrl} tidak ditemukan`) => {
         res.status(404).json({
             success: false,
             message,
@@ -30,14 +30,14 @@ module.exports = {
     notFoundDefault: (req, res) => {
         res.status(404).json({
             success: false,
-            message: `Endpoint ${req.originalUrl} not found`,
+            message: `Endpoint ${req.originalUrl} tidak ditemukan`,
             data: null
         });
     },
     methodNotAllowed: (req, res) => {
         res.status(405).json({
             success: false,
-            message: `Method ${req.method} not allowed at endpoint ${req.originalUrl}`,
+            message: `Metode ${req.method} tidak diizinkan di endpoint ${req.originalUrl}`,
             data: null
         });
     },
