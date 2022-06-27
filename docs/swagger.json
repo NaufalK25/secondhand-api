@@ -87,7 +87,7 @@
                                     },
                                     "password": {
                                         "type": "string",
-                                        "example": "Secondhand06"
+                                        "example": "@Secondhand06"
                                     }
                                 }
                             }
@@ -168,7 +168,7 @@
                                     },
                                     "password": {
                                         "type": "string",
-                                        "example": "Secondhand06"
+                                        "example": "@Secondhand06"
                                     }
                                 }
                             }
@@ -375,7 +375,7 @@
                                     },
                                     "password": {
                                         "type": "string",
-                                        "example": "Secondhand06"
+                                        "example": "@Secondhand06"
                                     }
                                 }
                             }
