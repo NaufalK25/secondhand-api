@@ -55,7 +55,7 @@ module.exports = {
             return badRequest(errors.array(), req, res);
         }
 
-        const { name, price, description, status } = req.body;
+        const { name, price, description } = req.body;
         let { categories } = req.body;
         const productResources = req.files;
 
@@ -69,8 +69,7 @@ module.exports = {
             sellerId: req.user.id,
             name,
             price,
-            description,
-            status
+            description
         });
 
         if (typeof categories === 'string') categories = categories.split(',');
