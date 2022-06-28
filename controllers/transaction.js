@@ -51,16 +51,27 @@ module.exports = {
         });
 
         if (updatedData.status === 'true' || updatedData.status === true) {
-            // TODO kalo status selesai/true maka product akan terjual(false) dan di wishlist juga akan false
-            await Product.update(
-                { status: false },
-                { where: { id: transaction.productId } }
-            );
-
-            await Wishlist.update(
-                { status: false },
-                { where: { productId: transaction.productId } }
-            );
+            // TODO kalo status selesai/true maka product akan terjual dan berkurang 1, kalo stoct 1 maka terjual dan habis jadi false dan di wishlist juga akan false
+            const productUpdate = await Product.findByPk(transaction.productId);
+            if(productUpdate.stock == 1){
+                await Product.update(
+                    { stock: (parseInt(productUpdate.stock)-1 ),
+                        sold: (parseInt(productUpdate.sold)+1),
+                        status: false,
+                        },
+                    { where: { id: transaction.productId } }
+                );
+            }else{
+                await Product.update(
+                    { stock: (parseInt(productUpdate.stock)-1),
+                      sold: (parseInt(productUpdate.sold)+1)},
+                    { where: { id: transaction.productId } }
+                );
+                await Wishlist.update(
+                    { status: false },
+                    { where: { productId: transaction.productId } }
+                );
+            }
         }
         res.status(200).json({
             success: true,
