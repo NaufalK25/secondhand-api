@@ -54,8 +54,8 @@ describe('GET /api/v1/user/profile', () => {
         }
   });
 
-  // it('200 OK', async () => {
-  // const res = await request(app)
+  //  it('200 OK', async () => {
+  //  const res = await request(app)
   //   .put('/api/v1/user/profile')
   //   .set('Authorization',`Bearer ${token}`)
   //   .send({
