@@ -1,5 +1,5 @@
-const { findAll } = require('../controllers/city');
-const { City } = require('../models');
+const { findAll } = require('../../controllers/city');
+const { City } = require('../../models');
 
 process.env.NODE_ENV = 'test';
 

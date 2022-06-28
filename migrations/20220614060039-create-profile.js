@@ -10,10 +10,8 @@ module.exports = {
             },
             userId: {
                 type: Sequelize.INTEGER,
-                references: { model: 'Users', key: 'id' },
-                onUpdate: 'CASCADE',
-                onDelete: 'SET NULL',
-                allowNull: false
+                allowNull: false,
+                references: { model: 'Users', key: 'id' }
             },
             name: { type: Sequelize.STRING, allowNull: false },
             profilePicture: {
@@ -23,9 +21,7 @@ module.exports = {
             phoneNumber: { type: Sequelize.STRING, unique: true },
             cityId: {
                 type: Sequelize.INTEGER,
-                references: { model: 'Cities', key: 'id' },
-                onUpdate: 'CASCADE',
-                onDelete: 'SET NULL'
+                references: { model: 'Cities', key: 'id' }
             },
             address: { type: Sequelize.TEXT },
             createdAt: { allowNull: false, type: Sequelize.DATE },

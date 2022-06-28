@@ -10,17 +10,13 @@ module.exports = {
             },
             userId: {
                 type: Sequelize.INTEGER,
-                references: { model: 'Users', key: 'id' },
-                onUpdate: 'CASCADE',
-                onDelete: 'SET NULL',
-                allowNull: false
+                allowNull: false,
+                references: { model: 'Users', key: 'id' }
             },
             productId: {
                 type: Sequelize.INTEGER,
-                references: { model: 'Products', key: 'id' },
-                onUpdate: 'CASCADE',
-                onDelete: 'SET NULL',
-                allowNull: false
+                allowNull: false,
+                references: { model: 'Products', key: 'id' }
             },
             status: {
                 type: Sequelize.BOOLEAN,

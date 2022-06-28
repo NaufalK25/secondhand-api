@@ -3,14 +3,14 @@ const {
     create,
     findByUser,
     update
-} = require('../../controllers/productoffer');
+} = require('../../../controllers/productoffer');
 const {
     Notification,
     Product,
     ProductOffer,
     Transaction,
     TransactionHistory
-} = require('../../models');
+} = require('../../../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -33,11 +33,9 @@ const user = {
 const product = {
     id: 1,
     sellerId: 1,
-    categoryId: 1,
     name: 'Product',
     price: 100,
     publishDate: date,
-    stock: 10,
     sold: 0,
     description: 'Product description',
     status: true,

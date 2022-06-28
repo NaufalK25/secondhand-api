@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const { validationResult } = require('express-validator');
-const { findByUser, update } = require('../../controllers/profile');
-const { Profile, User } = require('../../models');
+const { findByUser, update } = require('../../../controllers/profile');
+const { Profile, User } = require('../../../models');
 
 process.env.NODE_ENV = 'test';
 

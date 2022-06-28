@@ -11,8 +11,8 @@ const {
     logout,
     register,
     resetPassword
-} = require('../controllers/auth');
-const { Profile, User } = require('../models');
+} = require('../../controllers/auth');
+const { Profile, User } = require('../../models');
 
 process.env.NODE_ENV = 'test';
 

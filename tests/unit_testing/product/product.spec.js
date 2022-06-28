@@ -7,14 +7,14 @@ const {
     findById,
     findBySeller,
     search
-} = require('../../controllers/product');
+} = require('../../../controllers/product');
 const {
     Notification,
     Product,
     ProductCategory,
     ProductCategoryThrough,
     ProductResource
-} = require('../../models');
+} = require('../../../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -64,11 +64,9 @@ const city = {
 const product = {
     id: 1,
     sellerId: 1,
-    categoryId: 1,
     name: 'Product',
     price: 100,
     publishDate: date,
-    stock: 10,
     sold: 0,
     description: 'Product description',
     status: true,
@@ -418,7 +416,6 @@ describe('POST /api/v1/user/products', () => {
                 categories: [1],
                 name: 'Product',
                 price: 100,
-                stock: 10,
                 sold: 0,
                 description: 'Product description',
                 status: true
@@ -449,7 +446,6 @@ describe('POST /api/v1/user/products', () => {
                 categories: [1],
                 name: '',
                 price: 100,
-                stock: 10,
                 sold: 0,
                 description: 'Product description',
                 status: true
@@ -488,7 +484,6 @@ describe('POST /api/v1/user/products', () => {
                 categories: [1],
                 name: 'Product',
                 price: 100,
-                stock: 10,
                 sold: 0,
                 description: 'Product description',
                 status: true

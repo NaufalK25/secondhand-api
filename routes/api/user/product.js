@@ -101,11 +101,6 @@ router
                 .withMessage('Harga harus diisi')
                 .isNumeric()
                 .withMessage('Harga harus berupa angka'),
-            body('stock')
-                .notEmpty()
-                .withMessage('Stok harus diisi')
-                .isInt()
-                .withMessage('Stok harus berupa angka'),
             body('description')
                 .notEmpty()
                 .withMessage('Deskripsi harus diisi')

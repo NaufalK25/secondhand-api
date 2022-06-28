@@ -10,10 +10,8 @@ module.exports = {
             },
             productId: {
                 type: Sequelize.INTEGER,
-                references: { model: 'Products', key: 'id' },
-                onUpdate: 'CASCADE',
-                onDelete: 'SET NULL',
-                allowNull: false
+                allowNull: false,
+                references: { model: 'Products', key: 'id' }
             },
             filename: { type: Sequelize.STRING, allowNull: false },
             createdAt: { allowNull: false, type: Sequelize.DATE },

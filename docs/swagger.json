@@ -1206,8 +1206,7 @@
                                     "images",
                                     "name",
                                     "price",
-                                    "status",
-                                    "stock"
+                                    "status"
                                 ],
                                 "type": "object",
                                 "properties": {
@@ -1231,11 +1230,6 @@
                                         "type": "integer",
                                         "format": "int32",
                                         "example": 100000
-                                    },
-                                    "stock": {
-                                        "type": "integer",
-                                        "format": "int32",
-                                        "example": 10
                                     },
                                     "description": {
                                         "type": "string",
@@ -2154,9 +2148,6 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "stock": {
-                        "type": "integer"
-                    },
                     "sold": {
                         "type": "integer"
                     },
@@ -2479,9 +2470,6 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "stock": {
-                        "type": "integer"
-                    },
                     "sold": {
                         "type": "integer"
                     },
@@ -2531,9 +2519,6 @@
                     "publishDate": {
                         "type": "string",
                         "format": "date-time"
-                    },
-                    "stock": {
-                        "type": "integer"
                     },
                     "sold": {
                         "type": "integer"
@@ -2590,9 +2575,6 @@
                     "publishDate": {
                         "type": "string",
                         "format": "date-time"
-                    },
-                    "stock": {
-                        "type": "integer"
                     },
                     "sold": {
                         "type": "integer"
@@ -2715,9 +2697,6 @@
                                 "type": "string",
                                 "format": "date-time"
                             },
-                            "stock": {
-                                "type": "integer"
-                            },
                             "sold": {
                                 "type": "integer"
                             },
@@ -2795,9 +2774,6 @@
                             "publishDate": {
                                 "type": "string",
                                 "format": "date-time"
-                            },
-                            "stock": {
-                                "type": "integer"
                             },
                             "sold": {
                                 "type": "integer"

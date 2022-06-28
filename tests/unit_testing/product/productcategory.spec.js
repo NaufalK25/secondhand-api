@@ -1,5 +1,5 @@
-const { findAll } = require('../../controllers/productcategory');
-const { ProductCategory } = require('../../models');
+const { findAll } = require('../../../controllers/productcategory');
+const { ProductCategory } = require('../../../models');
 
 process.env.NODE_ENV = 'test';
 

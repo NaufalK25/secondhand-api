@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
-const { findByUser, update } = require('../controllers/notification');
-const { Notification } = require('../models');
+const { findByUser, update } = require('../../controllers/notification');
+const { Notification } = require('../../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -26,11 +26,9 @@ const notification = {
 const product = {
     id: 1,
     sellerId: 1,
-    categoryId: 1,
     name: 'Product',
     price: 100,
     publishDate: date,
-    stock: 10,
     sold: 0,
     description: 'Product description',
     status: true,
