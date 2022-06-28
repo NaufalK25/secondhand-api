@@ -5,7 +5,7 @@ const { Product, Transaction, TransactionHistory } = require('../models');
 module.exports = {
     findByUser: async (req, res) => {
         let transaction;
-        if (req.user.roleId == 2) {
+        if (req.user.roleId === 2) {
             //kalo dia seller dia bakal nampilin transaksi barang seller
             transaction = await TransactionHistory.findAll({
                 include: [
@@ -36,7 +36,7 @@ module.exports = {
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
         let transaction;
-        if (req.user.roleId == 2) {
+        if (req.user.roleId === 2) {
             //kalo dia seller dia bakal nampilin transaksi barang seller
             transaction = await TransactionHistory.findByPk(req.params.id, {
                 include: [

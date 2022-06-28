@@ -67,7 +67,6 @@ const product = {
     name: 'Product',
     price: 100,
     publishDate: date,
-    sold: 0,
     description: 'Product description',
     status: true,
     createdAt: date,
@@ -416,7 +415,6 @@ describe('POST /api/v1/user/products', () => {
                 categories: [1],
                 name: 'Product',
                 price: 100,
-                sold: 0,
                 description: 'Product description',
                 status: true
             },
@@ -446,7 +444,6 @@ describe('POST /api/v1/user/products', () => {
                 categories: [1],
                 name: '',
                 price: 100,
-                sold: 0,
                 description: 'Product description',
                 status: true
             },
@@ -484,7 +481,6 @@ describe('POST /api/v1/user/products', () => {
                 categories: [1],
                 name: 'Product',
                 price: 100,
-                sold: 0,
                 description: 'Product description',
                 status: true
             },

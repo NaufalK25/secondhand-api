@@ -29,7 +29,6 @@ const product = {
     name: 'Product',
     price: 100,
     publishDate: date,
-    sold: 0,
     description: 'Product description',
     status: true,
     createdAt: date,

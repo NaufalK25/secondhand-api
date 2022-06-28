@@ -2001,9 +2001,6 @@
                     "password": {
                         "type": "string"
                     },
-                    "token": {
-                        "type": "string"
-                    },
                     "googleId": {
                         "type": "string"
                     },
@@ -2147,9 +2144,6 @@
                     "publishDate": {
                         "type": "string",
                         "format": "date-time"
-                    },
-                    "sold": {
-                        "type": "integer"
                     },
                     "description": {
                         "type": "string"
@@ -2470,9 +2464,6 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "sold": {
-                        "type": "integer"
-                    },
                     "description": {
                         "type": "string"
                     },
@@ -2519,9 +2510,6 @@
                     "publishDate": {
                         "type": "string",
                         "format": "date-time"
-                    },
-                    "sold": {
-                        "type": "integer"
                     },
                     "description": {
                         "type": "string"
@@ -2576,9 +2564,6 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "sold": {
-                        "type": "integer"
-                    },
                     "description": {
                         "type": "string"
                     },
@@ -2618,9 +2603,6 @@
                                 "type": "string"
                             },
                             "password": {
-                                "type": "string"
-                            },
-                            "token": {
                                 "type": "string"
                             },
                             "googleId": {
@@ -2697,9 +2679,6 @@
                                 "type": "string",
                                 "format": "date-time"
                             },
-                            "sold": {
-                                "type": "integer"
-                            },
                             "description": {
                                 "type": "string"
                             },
@@ -2774,9 +2753,6 @@
                             "publishDate": {
                                 "type": "string",
                                 "format": "date-time"
-                            },
-                            "sold": {
-                                "type": "integer"
                             },
                             "description": {
                                 "type": "string"

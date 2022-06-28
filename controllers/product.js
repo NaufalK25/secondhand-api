@@ -111,7 +111,7 @@ module.exports = {
         const sortBy = req.query.sortBy;
         const orders = [['createdAt', 'DESC']];
         if (sortBy === 'sold') {
-            orders.unshift(['sold', 'DESC']);
+            orders.unshift(['status', 'DESC']);
         } else if (sortBy === 'wishlist') {
             orders.unshift([
                 sequelize.fn('count', sequelize.col('Wishlists.id')),
@@ -137,7 +137,7 @@ module.exports = {
         });
 
         if (sortBy === 'sold') {
-            products = products.filter(product => product.sold > 0);
+            products = products.filter(product => product.status === false);
         } else if (sortBy === 'wishlist') {
             products = products.filter(product => product.Wishlists.length > 0);
         }
