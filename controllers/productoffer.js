@@ -105,9 +105,9 @@ module.exports = {
                 buyerId: userProductOffer.buyerId,
                 fixPrice: userProductOffer.priceOffer
             });
-
+            
             await TransactionHistory.create({
-                userId: userProductOffer.buyerId,
+                productId: userProductOffer.productId,
                 transactionId: transaction.id
             });
 

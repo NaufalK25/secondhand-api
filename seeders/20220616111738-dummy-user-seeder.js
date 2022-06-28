@@ -2,7 +2,7 @@
 const bcryptjs = require('bcryptjs');
 module.exports = {
     async up(queryInterface, Sequelize) {
-        const hashedPassword = await bcryptjs.hash('Secondhand06', 10);
+        const hashedPassword = await bcryptjs.hash('@Secondhand06', 10);
         await queryInterface.bulkInsert(
             'Users',
             [
