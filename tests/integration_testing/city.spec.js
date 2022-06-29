@@ -1,9 +1,8 @@
 const request = require('supertest');
 const app = require('../../app');
-
 require('../../controllers/city');
-process.env.NODE_ENV = 'test';
 
+process.env.NODE_ENV = 'test';
 
 describe('GET /api/v1/city', () => {
      it('200 OK', async () => {
