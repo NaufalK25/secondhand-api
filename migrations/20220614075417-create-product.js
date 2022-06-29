@@ -11,7 +11,6 @@ module.exports = {
             sellerId: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                references: { model: 'Users', key: 'id' }
             },
             name: { type: Sequelize.STRING, allowNull: false },
             price: { type: Sequelize.INTEGER, allowNull: false },

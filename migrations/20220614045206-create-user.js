@@ -10,7 +10,6 @@ module.exports = {
             },
             roleId: {
                 type: Sequelize.INTEGER,
-                references: { model: 'RoleUsers', key: 'id' },
                 defaultValue: 1
             },
             email: { type: Sequelize.STRING, allowNull: false, unique: true },

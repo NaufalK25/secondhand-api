@@ -10,13 +10,11 @@ module.exports = {
             },
             userId: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
-                references: { model: 'Users', key: 'id' }
+                allowNull: false
             },
             productId: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
-                references: { model: 'Products', key: 'id' }
+                allowNull: false
             },
             status: {
                 type: Sequelize.BOOLEAN,
