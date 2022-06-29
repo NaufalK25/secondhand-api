@@ -2496,6 +2496,9 @@ module.exports = {
     },
 
     async down(queryInterface, Sequelize) {
-        await queryInterface.bulkDelete('Cities', null, {});
+        await queryInterface.bulkDelete('Cities', null, {
+            truncate: true,
+            restartIdentity: true
+        });
     }
 };
