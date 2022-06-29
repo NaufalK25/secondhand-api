@@ -7,12 +7,12 @@ describe('GET /api/v1/user/profile', () => {
     beforeAll(async () => {
         await request(app).post('/api/v1/auth/register').send({
             name: 'Second Hand Test',
-            email: 'luthfiyah.sakinah19@mail.com',
-            password: '@Luthfiyahsakinah1907'
+            email: 'secondhand06msib@mail.com',
+            password: '@Secondhand06'
         });
         const login = await request(app).post('/api/v1/auth/login').send({
-            email: 'luthfiyah.sakinah19@mail.com',
-            password: '@Luthfiyahsakinah1907'
+            email: 'secondhand06msib@mail.com',
+            password: '@Secondhand06'
         });
         gettoken = login.res.rawHeaders[7];
         let result = gettoken.slice(6);
@@ -46,12 +46,12 @@ describe('GET /api/v1/user/profile', () => {
     beforeAll(async () => {
         await request(app).post('/api/v1/auth/register').send({
             name: 'Second Hand Test',
-            email: 'luthfiyah.sakinah19@mail.com',
-            password: '@Luthfiyahsakinah1907'
+            email: 'secondhand06msib@mail.com',
+            password: '@Secondhand06'
         });
         const login = await request(app).post('/api/v1/auth/login').send({
-            email: 'luthfiyah.sakinah19@mail.com',
-            password: '@Luthfiyahsakinah1907'
+            email: 'secondhand06msib@mail.com',
+            password: '@Secondhand06'
         });
         gettoken = login.res.rawHeaders[7];
         let result = gettoken.slice(6);
@@ -78,7 +78,7 @@ describe('GET /api/v1/user/profile', () => {
     //     cityId: 1,
     //     address: 'Jl. Kebon Jeruk No. 1'
     //   })
-    //   console.log(res)
+    //   
     // expect(res.statusCode).toEqual(200)
     // expect(res.body.message).toEqual('Profil berhasil diperbarui')
     // })
