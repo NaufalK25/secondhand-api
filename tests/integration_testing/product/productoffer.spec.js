@@ -1,31 +1,62 @@
 const request = require('supertest');
 const app = require('../../../app');
 require('../../../controllers/productoffer');
+const buffer = Buffer.from("../../../uploads/profiles");
+
+process.env.NODE_ENV = 'test';
+
+beforeAll(async () => {
+    //bikin user seller
+    await request(app).post('/api/v1/auth/register').send({
+        name: 'Second Hand Test Seller',
+        email: 'secondhand06msibseller@mail.com',
+        password: '@Secondhand06'
+    });
+    //login seller
+    const seller=await request(app).post('/api/v1/auth/login').send({
+        email: 'secondhand06msibseller@mail.com',
+        password: '@Secondhand06'
+    });
+    gettokenseller = seller.res.rawHeaders[7];
+    let resultseller = gettokenseller.slice(6);
+    const finalresultseller = resultseller.replace('; Path=/', '');
+    tokenseller = finalresultseller;
+    //update profile biar jadi seller
+    let nohp = Math.floor(Math.random() * 3);
+    await request(app).put('/api/v1/user/profile').set('Authorization', `Bearer ${tokenseller}`)
+    .field('name','Testing')
+    .field('phoneNumber',`0862345723${nohp}`)
+    .field('cityId',1)
+    .field('address','Jl Kebon Jeruk')
+    .attach('profilePicture', buffer,'default.png');
+    //bikin product
+    await request(app).post('/api/v1/user/products').set('Authorization', `Bearer ${tokenseller}`)
+    .field('categories',[1,2])
+    .field('name','Barang bekas')
+    .field('price',1000000)
+    .field('description','ini product bekas')
+    .field('status',true)
+    .attach('images', buffer,'default.png');
+    const login = await request(app).post('/api/v1/auth/login').send({
+        email: 'secondhand06msib@mail.com',
+        password: '@Secondhand06'
+    });
+    gettoken = login.res.rawHeaders[7];
+    let result = gettoken.slice(6);
+    const finalresult = result.replace('; Path=/', '');
+    token = finalresult;
+});
+
+afterAll(async () => {
+    try {
+        //await request(app).get('/api/v1/auth/logout').set('Authorization',`Bearer ${token}`)
+    } catch (error) {
+        console.log(error);
+    }
+});
 
 describe('POST /api/v1/products/offers', () => {
-    beforeAll(async () => {
-        await request(app).post('/api/v1/auth/register').send({
-            name: 'Second Hand Test',
-            email: 'secondhand06msib@mail.com',
-            password: '@Secondhand06'
-        });
-        const login = await request(app).post('/api/v1/auth/login').send({
-            email: 'secondhand06msib@mail.com',
-            password: '@Secondhand06'
-        });
-        gettoken = login.res.rawHeaders[7];
-        let result = gettoken.slice(6);
-        const finalresult = result.replace('; Path=/', '');
-        token = finalresult;
-    });
-
-    afterAll(async () => {
-        try {
-            //await request(app).get('/api/v1/auth/logout').set('Authorization',`Bearer ${token}`)
-        } catch (error) {
-            console.log(error);
-        }
-    });
+    
 
      it('200 OK', async () => {
      const res = await request(app)
@@ -73,34 +104,16 @@ describe('POST /api/v1/products/offers', () => {
 });
 
 describe('GET /api/v1/products/offers (Buyer)', () => {
-    beforeAll(async () => {
-        await request(app).post('/api/v1/auth/register').send({
-            name: 'Second Hand Test',
-            email: 'secondhand06msib@mail.com',
-            password: '@Secondhand06'
-        });
-        const login = await request(app).post('/api/v1/auth/login').send({
-            email: 'secondhand06msib@mail.com',
-            password: '@Secondhand06'
-        });
-        gettoken = login.res.rawHeaders[7];
-        let result = gettoken.slice(6);
-        const finalresult = result.replace('; Path=/', '');
-        token = finalresult;
-    });
-
-    afterAll(async () => {
-        try {
-            //await request(app).get('/api/v1/auth/logout').set('Authorization',`Bearer ${token}`)
-        } catch (error) {
-            console.log(error);
-        }
-    });
 
     it('200 OK', async () => {
+        const resuser = await request(app)
+            .get('/api/v1/user/profile')
+            .set('Authorization', `Bearer ${token}`);
+            console.log(resuser.body);
         const res = await request(app)
             .get('/api/v1/products/offers')
             .set('Authorization', `Bearer ${token}`);
+            console.log(res.body);
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Penawaran produk ditemukan');
     });
@@ -113,29 +126,11 @@ describe('GET /api/v1/products/offers (Buyer)', () => {
 });
 
 describe('GET /api/v1/products/offers (Seller)', () => {
-    beforeAll(async () => {
-        const login = await request(app).post('/api/v1/auth/login').send({
-            email: 'usersecret@gmail.com',
-            password: '@Secondhand06'
-        });
-        gettoken = login.res.rawHeaders[7];
-        let result = gettoken.slice(6);
-        const finalresult = result.replace('; Path=/', '');
-        token = finalresult;
-    });
-
-    afterAll(async () => {
-        try {
-            //await request(app).get('/api/v1/auth/logout').set('Authorization',`Bearer ${token}`)
-        } catch (error) {
-            console.log(error);
-        }
-    });
 
     it('200 OK', async () => {
         const res = await request(app)
             .get('/api/v1/products/offers')
-            .set('Authorization', `Bearer ${token}`);
+            .set('Authorization', `Bearer ${tokenseller}`);
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Penawaran produk ditemukan');
     });
@@ -147,40 +142,17 @@ describe('GET /api/v1/products/offers (Seller)', () => {
 });
 
 describe('PUT /api/v1/products/offers/:id', () => {
-    beforeAll(async () => {
-        await request(app).post('/api/v1/auth/register').send({
-            name: 'Second Hand Test',
-            email: 'secondhand06msib@mail.com',
-            password: '@Secondhand06'
-        });
-        const login = await request(app).post('/api/v1/auth/login').send({
-            email: 'secondhand06msib@mail.com',
-            password: '@Secondhand06'
-        });
-        gettoken = login.res.rawHeaders[7];
-        let result = gettoken.slice(6);
-        const finalresult = result.replace('; Path=/', '');
-        token = finalresult;
-    });
 
-    afterAll(async () => {
-        try {
-            //await request(app).get('/api/v1/auth/logout').set('Authorization',`Bearer ${token}`)
-        } catch (error) {
-            console.log(error);
-        }
-    });
-
-    //  it('200 OK', async () => {
-    //  const res = await request(app)
-    //   .put('/api/v1/products/offer/1')
-    //   .set('Authorization',`Bearer ${token}`)
-    //   .send({
-    //     status: true,
-    //   });
-    // expect(res.statusCode).toEqual(201)
-    // expect(res.body.message).toEqual('Profil berhasil diperbarui')
-    // })
+     it('200 OK', async () => {
+     const res = await request(app)
+      .put('/api/v1/products/offer/1')
+      .set('Authorization',`Bearer ${tokenseller}`)
+      .send({
+        status: true
+      });
+    expect(res.statusCode).toEqual(200)
+    //expect(res.body.message).toEqual('Profil berhasil diperbarui')
+    })
 
     it('400 Bad Request', async () => {
         const res = await request(app)
