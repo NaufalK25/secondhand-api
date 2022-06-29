@@ -72,7 +72,7 @@ describe('POST /api/v1/products/offers', () => {
     });
 });
 
-describe('GET /api/v1/products/offers', () => {
+describe('GET /api/v1/products/offers (Buyer)', () => {
     beforeAll(async () => {
         await request(app).post('/api/v1/auth/register').send({
             name: 'Second Hand Test',
@@ -103,6 +103,46 @@ describe('GET /api/v1/products/offers', () => {
             .set('Authorization', `Bearer ${token}`);
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Penawaran produk ditemukan');
+    });
+
+    it('401 unauthoreized', async () => {
+        const res = await request(app).get('/api/v1/products/offers');
+        expect(res.statusCode).toEqual(401);
+        expect(res.body.message).toEqual('Tidak memiliki token');
+    });
+});
+
+describe('GET /api/v1/products/offers (Seller)', () => {
+    beforeAll(async () => {
+        const login = await request(app).post('/api/v1/auth/login').send({
+            email: 'usersecret@gmail.com',
+            password: '@Secondhand06'
+        });
+        gettoken = login.res.rawHeaders[7];
+        let result = gettoken.slice(6);
+        const finalresult = result.replace('; Path=/', '');
+        token = finalresult;
+    });
+
+    afterAll(async () => {
+        try {
+            //await request(app).get('/api/v1/auth/logout').set('Authorization',`Bearer ${token}`)
+        } catch (error) {
+            console.log(error);
+        }
+    });
+
+    it('200 OK', async () => {
+        const res = await request(app)
+            .get('/api/v1/products/offers')
+            .set('Authorization', `Bearer ${token}`);
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.message).toEqual('Penawaran produk ditemukan');
+    });
+    it('401 unauthoreized', async () => {
+        const res = await request(app).get('/api/v1/products/offers');
+        expect(res.statusCode).toEqual(401);
+        expect(res.body.message).toEqual('Tidak memiliki token');
     });
 });
 
