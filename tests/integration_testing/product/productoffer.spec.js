@@ -106,14 +106,9 @@ describe('POST /api/v1/products/offers', () => {
 describe('GET /api/v1/products/offers (Buyer)', () => {
 
     it('200 OK', async () => {
-        const resuser = await request(app)
-            .get('/api/v1/user/profile')
-            .set('Authorization', `Bearer ${token}`);
-            console.log(resuser.body);
         const res = await request(app)
             .get('/api/v1/products/offers')
             .set('Authorization', `Bearer ${token}`);
-            console.log(res.body);
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Penawaran produk ditemukan');
     });
