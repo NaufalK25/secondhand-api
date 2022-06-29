@@ -3,13 +3,9 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
     class ProductCategoryThrough extends Model {
         static associate(models) {
-            this.belongsTo(models.Product, {
-                foreignKey: 'productId',
-                onDelete: 'CASCADE'
-            });
+            this.belongsTo(models.Product, { foreignKey: 'productId' });
             this.belongsTo(models.ProductCategory, {
-                foreignKey: 'productCategoryId',
-                onDelete: 'CASCADE'
+                foreignKey: 'productCategoryId'
             });
         }
     }
