@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../../../app');
 require('../../../controllers/productcategory');
+process.env.NODE_ENV = 'test';
 
 describe('GET /api/v1/products/categories', () => {
     it('200 OK', async () => {
