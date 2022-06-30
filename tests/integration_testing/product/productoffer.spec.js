@@ -37,6 +37,11 @@ beforeAll(async () => {
     .field('description','ini product bekas')
     .field('status',true)
     .attach('images', buffer,'default.png');
+    await request(app).post('/api/v1/auth/register').send({
+        name: 'Second Hand Testing',
+        email: 'secondhand06msib@mail.com',
+        password: '@Secondhand06'
+    });
     const login = await request(app).post('/api/v1/auth/login').send({
         email: 'secondhand06msib@mail.com',
         password: '@Secondhand06'
@@ -56,8 +61,6 @@ afterAll(async () => {
 });
 
 describe('POST /api/v1/products/offers', () => {
-    
-
      it('200 OK', async () => {
      const res = await request(app)
       .post('/api/v1/products/offers')
