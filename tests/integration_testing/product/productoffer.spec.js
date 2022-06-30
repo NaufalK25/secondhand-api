@@ -1,7 +1,7 @@
 const request = require('supertest');
 const app = require('../../../app');
 require('../../../controllers/productoffer');
-const buffer = Buffer.from("../../../uploads/profiles");
+const buffer = Buffer.from('../../../uploads/profiles');
 
 process.env.NODE_ENV = 'test';
 
@@ -13,7 +13,7 @@ beforeAll(async () => {
         password: '@Secondhand06'
     });
     //login seller
-    const seller=await request(app).post('/api/v1/auth/login').send({
+    const seller = await request(app).post('/api/v1/auth/login').send({
         email: 'secondhand06msibseller@mail.com',
         password: '@Secondhand06'
     });
@@ -23,20 +23,24 @@ beforeAll(async () => {
     tokenseller = finalresultseller;
     //update profile biar jadi seller
     let nohp = Math.floor(Math.random() * 3);
-    await request(app).put('/api/v1/user/profile').set('Authorization', `Bearer ${tokenseller}`)
-    .field('name','Testing')
-    .field('phoneNumber',`0862345723${nohp}`)
-    .field('cityId',1)
-    .field('address','Jl Kebon Jeruk')
-    .attach('profilePicture', buffer,'default.png');
+    await request(app)
+        .put('/api/v1/user/profile')
+        .set('Authorization', `Bearer ${tokenseller}`)
+        .field('name', 'Testing')
+        .field('phoneNumber', `0862345723${nohp}`)
+        .field('cityId', 1)
+        .field('address', 'Jl Kebon Jeruk')
+        .attach('profilePicture', buffer, 'default.png');
     //bikin product
-    await request(app).post('/api/v1/user/products').set('Authorization', `Bearer ${tokenseller}`)
-    .field('categories',[1,2])
-    .field('name','Barang bekas')
-    .field('price',1000000)
-    .field('description','ini product bekas')
-    .field('status',true)
-    .attach('images', buffer,'default.png');
+    await request(app)
+        .post('/api/v1/user/products')
+        .set('Authorization', `Bearer ${tokenseller}`)
+        .field('categories', [1, 2])
+        .field('name', 'Barang bekas')
+        .field('price', 1000000)
+        .field('description', 'ini product bekas')
+        .field('status', true)
+        .attach('images', buffer, 'default.png');
     await request(app).post('/api/v1/auth/register').send({
         name: 'Second Hand Testing',
         email: 'secondhand06msib@mail.com',
@@ -61,24 +65,24 @@ afterAll(async () => {
 });
 
 describe('POST /api/v1/products/offers', () => {
-     it('200 OK', async () => {
-     const res = await request(app)
-      .post('/api/v1/products/offers')
-      .set('Authorization',`Bearer ${token}`)
-      .send({
-        productId: 1,
-        priceOffer: 10000,
-      })
-      
-    expect(res.statusCode).toEqual(201)
-    expect(res.body.message).toEqual('Penawaran produk berhasil dibuat')
-    })
-    it('400 Bad Request', async () => {
+    it('200 OK', async () => {
         const res = await request(app)
             .post('/api/v1/products/offers')
             .set('Authorization', `Bearer ${token}`)
             .send({
                 productId: 1,
+                priceOffer: 10000
+            });
+
+        expect(res.statusCode).toEqual(201);
+        expect(res.body.message).toEqual('Penawaran produk berhasil dibuat');
+    });
+    it('400 Bad Request', async () => {
+        const res = await request(app)
+            .post('/api/v1/products/offers')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                productId: 1
             });
         expect(res.statusCode).toEqual(400);
         expect(res.body.message).toEqual('Kesalahan validasi');
@@ -89,7 +93,7 @@ describe('POST /api/v1/products/offers', () => {
             .set('Authorization', `Bearer ${token}`)
             .send({
                 productId: 10,
-                priceOffer: 10000,
+                priceOffer: 10000
             });
         expect(res.statusCode).toEqual(404);
         expect(res.body.message).toEqual('Produk tidak ditemukan');
@@ -107,7 +111,6 @@ describe('POST /api/v1/products/offers', () => {
 });
 
 describe('GET /api/v1/products/offers (Buyer)', () => {
-
     it('200 OK', async () => {
         const res = await request(app)
             .get('/api/v1/products/offers')
@@ -124,7 +127,6 @@ describe('GET /api/v1/products/offers (Buyer)', () => {
 });
 
 describe('GET /api/v1/products/offers (Seller)', () => {
-
     it('200 OK', async () => {
         const res = await request(app)
             .get('/api/v1/products/offers')
@@ -140,17 +142,16 @@ describe('GET /api/v1/products/offers (Seller)', () => {
 });
 
 describe('PUT /api/v1/products/offers/:id', () => {
-
-     it('200 OK', async () => {
-     const res = await request(app)
-      .put('/api/v1/products/offer/1')
-      .set('Authorization',`Bearer ${tokenseller}`)
-      .send({
-        status: true
-      });
-    expect(res.statusCode).toEqual(200)
-    //expect(res.body.message).toEqual('Profil berhasil diperbarui')
-    })
+    it('200 OK', async () => {
+        const res = await request(app)
+            .put('/api/v1/products/offer/1')
+            .set('Authorization', `Bearer ${tokenseller}`)
+            .send({
+                status: true
+            });
+        expect(res.statusCode).toEqual(200);
+        //expect(res.body.message).toEqual('Profil berhasil diperbarui')
+    });
 
     it('400 Bad Request', async () => {
         const res = await request(app)
@@ -162,7 +163,7 @@ describe('PUT /api/v1/products/offers/:id', () => {
 
     it('401 unauthoreized', async () => {
         const res = await request(app).put('/api/v1/products/offer/1').send({
-            status: true,
+            status: true
         });
         expect(res.statusCode).toEqual(401);
         expect(res.body.message).toEqual('Tidak memiliki token');

@@ -29,7 +29,6 @@ afterAll(async () => {
 });
 
 describe('GET /api/v1/user/profile', () => {
-
     it('200 OK', async () => {
         const res = await request(app)
             .get('/api/v1/user/profile')
@@ -45,22 +44,22 @@ describe('GET /api/v1/user/profile', () => {
 });
 
 describe('GET /api/v1/user/profile', () => {
-     it('200 OK', async () => {
-     let random = Math.floor(Math.random() * 5)+7;
-     let nohp = Math.floor(Math.random() * 5)*19+random;
-     const res = await request(app)
-      .put('/api/v1/user/profile')
-      .set('Authorization',`Bearer ${token}`)
-      .send({
-        name: 'John Doe',
-        phoneNumber: `0862345773${nohp}`,
-        cityId: 1,
-        address: 'Jl. Kebon Jeruk No. 1'
-      })
-      
-    expect(res.statusCode).toEqual(200)
-    expect(res.body.message).toEqual('Profil berhasil diperbarui')
-    })
+    it('200 OK', async () => {
+        let random = Math.floor(Math.random() * 5) + 7;
+        let nohp = Math.floor(Math.random() * 5) * 19 + random;
+        const res = await request(app)
+            .put('/api/v1/user/profile')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                name: 'John Doe',
+                phoneNumber: `0862345773${nohp}`,
+                cityId: 1,
+                address: 'Jl. Kebon Jeruk No. 1'
+            });
+
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.message).toEqual('Profil berhasil diperbarui');
+    });
     it('400 Bad Request', async () => {
         const res = await request(app)
             .put('/api/v1/user/profile')
