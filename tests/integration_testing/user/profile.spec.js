@@ -46,7 +46,8 @@ describe('GET /api/v1/user/profile', () => {
 
 describe('GET /api/v1/user/profile', () => {
      it('200 OK', async () => {
-     let nohp = Math.floor(Math.random() * 3);
+     let random = Math.floor(Math.random() * 5)+7;
+     let nohp = Math.floor(Math.random() * 5)*19+random;
      const res = await request(app)
       .put('/api/v1/user/profile')
       .set('Authorization',`Bearer ${token}`)
