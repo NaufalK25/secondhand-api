@@ -69,7 +69,7 @@ describe('PUT /api/v1/user/profile', () => {
             .field('address', 'Jl. Kebon Jeruk No. 1')
             .attach(
                 'profilePicture',
-                path.join(__dirname, '../../resources/product.jpg')
+                path.join(__dirname, '../../resources/profile.jpg')
             );
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Profil berhasil diperbarui');
@@ -86,7 +86,7 @@ describe('PUT /api/v1/user/profile', () => {
         expect(res.statusCode).toEqual(400);
         expect(res.body.message).toEqual('Kesalahan validasi');
     });
-    test('401 unauthoreized', async () => {
+    test('401 Unauthorized', async () => {
         const res = await request(app).put('/api/v1/user/profile').send({
             name: 'John Doe',
             phoneNumber: '081234567890',
