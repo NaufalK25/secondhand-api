@@ -1,6 +1,6 @@
 const fs = require('fs/promises');
+const path = require('path');
 const { validationResult } = require('express-validator');
-const cloudinary = require('../../../utils/cloudinary');
 const {
     create,
     filterByCategory,
@@ -16,6 +16,7 @@ const {
     ProductCategoryThrough,
     ProductResource
 } = require('../../../models');
+const { uploadImage } = require('../../../utils/cloudinary');
 
 process.env.NODE_ENV = 'test';
 
@@ -135,7 +136,7 @@ const productFilter = {
 
 jest.mock('fs/promises');
 jest.mock('express-validator');
-jest.mock('sequelize');
+jest.mock('../../../utils/cloudinary');
 
 describe('GET /api/v1/products', () => {
     beforeEach(() => {
@@ -386,9 +387,9 @@ describe('GET /api/v1/user/products', () => {
 
 describe('POST /api/v1/user/products', () => {
     beforeEach(() => {
-        cloudinary.uploadImage = jest.fn().mockImplementation(() => ({
+        uploadImage.mockImplementation(() => ({
             secure_url:
-                'https://res.cloudinary.com/dko04cygp/image/upload/v1656654290/products/1/1-1.jpg'
+                'https://res.cloudinary.com/dko04cygp/image/upload/v1656665571/tests/products/1/1-1.png'
         }));
         fs.unlink.mockImplementation(() => Promise.resolve());
         Product.create = jest.fn().mockImplementation(() => ({ ...product }));
@@ -414,7 +415,17 @@ describe('POST /api/v1/user/products', () => {
                 description: 'Product description',
                 status: true
             },
-            files: [{ path: 'uploads/profiles/default.png' }]
+            files: [
+                {
+                    path: path.join(
+                        __dirname,
+                        '..',
+                        '..',
+                        'resources',
+                        'product.jpg'
+                    )
+                }
+            ]
         });
         const res = mockResponse();
 
@@ -442,7 +453,17 @@ describe('POST /api/v1/user/products', () => {
                 description: 'Product description',
                 status: true
             },
-            files: [{ path: 'uploads/profiles/default.png' }]
+            files: [
+                {
+                    path: path.join(
+                        __dirname,
+                        '..',
+                        '..',
+                        'resources',
+                        'product.jpg'
+                    )
+                }
+            ]
         });
         const res = mockResponse();
         const errors = [

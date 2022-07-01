@@ -1,8 +1,9 @@
 const fs = require('fs/promises');
+const path = require('path');
 const { validationResult } = require('express-validator');
-const cloudinary = require('../../../utils/cloudinary');
 const { findByUser, update } = require('../../../controllers/profile');
 const { Profile, User } = require('../../../models');
+const { uploadImage } = require('../../../utils/cloudinary');
 
 process.env.NODE_ENV = 'test';
 
@@ -49,6 +50,7 @@ const profileGetById = { ...profile, City: { ...city } };
 
 jest.mock('fs/promises');
 jest.mock('express-validator');
+jest.mock('../../../utils/cloudinary');
 
 describe('GET /api/v1/user/profile', () => {
     beforeEach(() => {
@@ -79,9 +81,9 @@ describe('GET /api/v1/user/profile', () => {
 
 describe('PUT /api/v1/user/profile', () => {
     beforeEach(() => {
-        cloudinary.uploadImage = jest.fn().mockImplementation(() => ({
+        uploadImage.mockImplementation(() => ({
             secure_url:
-                'https://res.cloudinary.com/dko04cygp/image/upload/v1656654290/profiles/default.png'
+                'https://res.cloudinary.com/dko04cygp/image/upload/v1656665571/tests/profiles/1.png'
         }));
         fs.unlink.mockImplementation(() => Promise.resolve());
         Profile.findOne = jest.fn().mockImplementation(() => ({ ...profile }));
@@ -99,7 +101,15 @@ describe('PUT /api/v1/user/profile', () => {
                 address: 'Jl. Kebon Jeruk No. 1'
             },
             user: { id: 1 },
-            file: { path: 'uploads/profiles/default.png' }
+            file: {
+                path: path.join(
+                    __dirname,
+                    '..',
+                    '..',
+                    'resources',
+                    'profile.jpg'
+                )
+            }
         });
         const res = mockResponse();
 
@@ -118,7 +128,7 @@ describe('PUT /api/v1/user/profile', () => {
                 id: req.user.id,
                 ...req.body,
                 profilePicture:
-                    'https://res.cloudinary.com/dko04cygp/image/upload/v1656665571/profiles/1.png'
+                    'https://res.cloudinary.com/dko04cygp/image/upload/v1656665571/tests/profiles/1.png'
             }
         });
     });

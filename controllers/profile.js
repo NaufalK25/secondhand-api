@@ -6,9 +6,6 @@ const { badRequest } = require('./error');
 
 module.exports = {
     findByUser: async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
-
         const profile = await Profile.findOne({
             where: { userId: req.user.id },
             include: [{ model: City }]

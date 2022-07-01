@@ -1,65 +1,80 @@
+const path = require('path');
 const request = require('supertest');
 const app = require('../../../app');
+const { sequelize } = require('../../../models');
+const { uploadImage } = require('../../../utils/cloudinary');
 
 process.env.NODE_ENV = 'test';
+let token;
+const { queryInterface } = sequelize;
+
+jest.mock('../../../utils/cloudinary');
 
 beforeAll(async () => {
     await request(app).post('/api/v1/auth/register').send({
-        name: 'Second Hand Test',
-        email: 'secondhand06msibprof@mail.com',
-        password: '@Secondhand06'
+        name: 'Profile',
+        email: 'profile@gmail.com',
+        password: '@Profile123'
     });
     const login = await request(app).post('/api/v1/auth/login').send({
-        email: 'secondhand06msibprof@mail.com',
-        password: '@Secondhand06'
+        email: 'profile@gmail.com',
+        password: '@Profile123'
     });
-    gettoken = login.res.rawHeaders[7];
-    let result = gettoken.slice(6);
-    const finalresult = result.replace('; Path=/', '');
-    token = finalresult;
+    token = login.res.rawHeaders[7].slice(6).replace('; Path=/', '');
 });
-
 afterAll(async () => {
-    try {
-        //await request(app).get('/api/v1/auth/logout').set('Authorization',`Bearer ${token}`)
-    } catch (error) {
-        console.log(error);
-    }
+    await request(app)
+        .post('/api/v1/auth/logout')
+        .set('Authorization', `Bearer ${token}`);
+
+    await queryInterface.bulkDelete('Users', null, {
+        truncate: true,
+        restartIdentity: true
+    });
+    await queryInterface.bulkDelete('Profiles', null, {
+        truncate: true,
+        restartIdentity: true
+    });
 });
 
 describe('GET /api/v1/user/profile', () => {
-    it('200 OK', async () => {
+    test('200 OK', async () => {
         const res = await request(app)
             .get('/api/v1/user/profile')
             .set('Authorization', `Bearer ${token}`);
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Profil ditemukan');
     });
-    it('401 unauthoreized', async () => {
+    test('401 unauthoreized', async () => {
         const res = await request(app).get('/api/v1/user/profile');
         expect(res.statusCode).toEqual(401);
         expect(res.body.message).toEqual('Tidak memiliki token');
     });
 });
 
-describe('GET /api/v1/user/profile', () => {
-    it('200 OK', async () => {
-        let random = Math.floor(Math.random() * 5) + 7;
-        let nohp = Math.floor(Math.random() * 5) * 19 + random;
+describe('PUT /api/v1/user/profile', () => {
+    beforeAll(() => {
+        uploadImage.mockImplementation(() => ({
+            secure_url:
+                'https://res.cloudinary.com/dko04cygp/image/upload/v1656665571/tests/profiles/1.png'
+        }));
+    });
+    afterAll(() => jest.clearAllMocks());
+    test('200 OK', async () => {
         const res = await request(app)
             .put('/api/v1/user/profile')
             .set('Authorization', `Bearer ${token}`)
-            .send({
-                name: 'John Doe',
-                phoneNumber: `0862345773${nohp}`,
-                cityId: 1,
-                address: 'Jl. Kebon Jeruk No. 1'
-            });
-
+            .field('phoneNumber', '0812345678')
+            .field('cityId', 1)
+            .field('address', 'Jl. Kebon Jeruk No. 1')
+            .attach(
+                'profilePicture',
+                path.join(__dirname, '../../resources/product.jpg')
+            );
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Profil berhasil diperbarui');
     });
-    it('400 Bad Request', async () => {
+    test('400 Bad Request', async () => {
         const res = await request(app)
             .put('/api/v1/user/profile')
             .set('Authorization', `Bearer ${token}`)
@@ -71,8 +86,7 @@ describe('GET /api/v1/user/profile', () => {
         expect(res.statusCode).toEqual(400);
         expect(res.body.message).toEqual('Kesalahan validasi');
     });
-
-    it('401 unauthoreized', async () => {
+    test('401 unauthoreized', async () => {
         const res = await request(app).put('/api/v1/user/profile').send({
             name: 'John Doe',
             phoneNumber: '081234567890',
