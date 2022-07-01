@@ -1,6 +1,5 @@
 const request = require('supertest');
 const app = require('../../../app');
-require('../../../controllers/productoffer');
 const buffer = Buffer.from('../../../uploads/profiles');
 
 process.env.NODE_ENV = 'test';

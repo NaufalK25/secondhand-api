@@ -1,6 +1,5 @@
 const request = require('supertest');
 const app = require('../../../app');
-require('../../../controllers/profile');
 
 process.env.NODE_ENV = 'test';
 

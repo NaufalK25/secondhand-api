@@ -1,6 +1,7 @@
 const fs = require('fs/promises');
 const { validationResult } = require('express-validator');
 const { City, Profile, User } = require('../models');
+const { uploadImage } = require('../utils/cloudinary');
 const { badRequest } = require('./error');
 
 module.exports = {
@@ -8,13 +9,10 @@ module.exports = {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const baseUrl = `${req.protocol}://${req.get('host')}`;
-        const profilePicturePath = `${baseUrl}/images/profiles/`;
         const profile = await Profile.findOne({
             where: { userId: req.user.id },
             include: [{ model: City }]
         });
-        profile.profilePicture = `${profilePicturePath}${profile.profilePicture}`;
 
         res.status(200).json({
             success: true,
@@ -23,26 +21,21 @@ module.exports = {
         });
     },
     update: async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            if (req.file) await fs.unlink(req.file.path);
-
-            return badRequest(errors.array(), req, res);
-        }
-
         const updatedData = {};
         const profile = await Profile.findOne({
             where: { userId: req.user.id }
         });
 
         if (req.file) {
-            if (profile.profilePicture !== 'default.png') {
-                fs.unlink(
-                    `${__dirname}/../uploads/profiles/${profile.profilePicture}`
-                );
-            }
-            updatedData.profilePicture = req.file.filename;
+            const { path } = req.file;
+            const image = await uploadImage('profiles', path, profile.id);
+            updatedData.profilePicture =
+                image.secure_url || profile.profilePicture;
+            await fs.unlink(path);
         }
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
         if (req.body.name) updatedData.name = req.body.name || profile.name;
         if (req.body.userId)
