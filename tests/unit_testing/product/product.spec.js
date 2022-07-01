@@ -1,4 +1,5 @@
 const fs = require('fs/promises');
+const path = require('path');
 const { validationResult } = require('express-validator');
 const {
     create,
@@ -15,19 +16,16 @@ const {
     ProductCategoryThrough,
     ProductResource
 } = require('../../../models');
+const { uploadImage } = require('../../../utils/cloudinary');
 
 process.env.NODE_ENV = 'test';
 
-const mockRequest = ({ user, body, params, query, files, protocol } = {}) => ({
+const mockRequest = ({ user, body, params, query, files } = {}) => ({
     user,
     body,
     params,
     query,
-    files,
-    protocol,
-    get: jest.fn().mockImplementation(header => {
-        if (header === 'host') return 'localhost:8000';
-    })
+    files
 });
 const mockResponse = () => {
     const res = {};
@@ -48,7 +46,8 @@ const profile = {
     id: 1,
     userId: 1,
     name: 'John Doe',
-    profilePicture: 'profilePicture.jpg',
+    profilePicture:
+        'https://res.cloudinary.com/dko04cygp/image/upload/v1656654290/profiles/default.png',
     phoneNumber: '081234567890',
     cityId: 1,
     address: 'Jl. Kebon Jeruk No. 1',
@@ -88,7 +87,8 @@ const productCategoryThrough = {
 const productResource = {
     id: 1,
     productId: 1,
-    filename: 'product.jpg',
+    filename:
+        'https://res.cloudinary.com/dko04cygp/image/upload/v1656654290/products/1/1-1.jpg',
     createdAt: date,
     updatedAt: date
 };
@@ -136,7 +136,7 @@ const productFilter = {
 
 jest.mock('fs/promises');
 jest.mock('express-validator');
-jest.mock('sequelize');
+jest.mock('../../../utils/cloudinary');
 
 describe('GET /api/v1/products', () => {
     beforeEach(() => {
@@ -146,7 +146,7 @@ describe('GET /api/v1/products', () => {
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
-        const req = mockRequest({ protocol: 'http' });
+        const req = mockRequest();
         const res = mockResponse();
 
         await findAll(req, res);
@@ -183,10 +183,7 @@ describe('GET /api/v1/products/search', () => {
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
-        const req = mockRequest({
-            query: { keyword: 'prod' },
-            protocol: 'http'
-        });
+        const req = mockRequest({ query: { keyword: 'prod' } });
         const res = mockResponse();
 
         validationResult.mockImplementation(() => ({
@@ -204,7 +201,7 @@ describe('GET /api/v1/products/search', () => {
         });
     });
     test('400 Bad Request', async () => {
-        const req = mockRequest({ query: { keyword: '' }, protocol: 'http' });
+        const req = mockRequest({ query: { keyword: '' } });
         const res = mockResponse();
         const errors = [
             {
@@ -261,10 +258,7 @@ describe('GET /api/v1/products/filter', () => {
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
-        const req = mockRequest({
-            query: { category: 'hobi' },
-            protocol: 'http'
-        });
+        const req = mockRequest({ query: { category: 'hobi' } });
         const res = mockResponse();
 
         validationResult.mockImplementation(() => ({
@@ -341,8 +335,7 @@ describe('GET /api/v1/user/products', () => {
     test('400 Bad Request', async () => {
         const req = mockRequest({
             user: { id: 1 },
-            query: { sortBy: 1 },
-            protocol: 'http'
+            query: { sortBy: 1 }
         });
         const res = mockResponse();
         const errors = [
@@ -394,7 +387,11 @@ describe('GET /api/v1/user/products', () => {
 
 describe('POST /api/v1/user/products', () => {
     beforeEach(() => {
-        fs.unlink = jest.fn().mockImplementation(() => Promise.resolve());
+        uploadImage.mockImplementation(() => ({
+            secure_url:
+                'https://res.cloudinary.com/dko04cygp/image/upload/v1656665571/tests/products/1/1-1.png'
+        }));
+        fs.unlink.mockImplementation(() => Promise.resolve());
         Product.create = jest.fn().mockImplementation(() => ({ ...product }));
         ProductCategoryThrough.create = jest
             .fn()
@@ -418,8 +415,17 @@ describe('POST /api/v1/user/products', () => {
                 description: 'Product description',
                 status: true
             },
-            files: [{ filename: 'product.jpg' }],
-            protocol: 'http'
+            files: [
+                {
+                    path: path.join(
+                        __dirname,
+                        '..',
+                        '..',
+                        'resources',
+                        'product.jpg'
+                    )
+                }
+            ]
         });
         const res = mockResponse();
 
@@ -447,8 +453,17 @@ describe('POST /api/v1/user/products', () => {
                 description: 'Product description',
                 status: true
             },
-            files: [{ filename: 'product.jpg' }],
-            protocol: 'http'
+            files: [
+                {
+                    path: path.join(
+                        __dirname,
+                        '..',
+                        '..',
+                        'resources',
+                        'product.jpg'
+                    )
+                }
+            ]
         });
         const res = mockResponse();
         const errors = [
@@ -475,18 +490,7 @@ describe('POST /api/v1/user/products', () => {
         });
     });
     test('403 Forbidden', async () => {
-        const req = mockRequest({
-            user: { id: 1 },
-            body: {
-                categories: [1],
-                name: 'Product',
-                price: 100,
-                description: 'Product description',
-                status: true
-            },
-            files: [{ filename: 'product.jpg' }],
-            protocol: 'http'
-        });
+        const req = mockRequest({ user: { id: 1 } });
         const res = mockResponse();
 
         validationResult.mockImplementation(() => ({
@@ -516,7 +520,7 @@ describe('GET /api/v1/user/products/:productId', () => {
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
-        const req = mockRequest({ params: { productId: 1 }, protocol: 'http' });
+        const req = mockRequest({ params: { productId: 1 } });
         const res = mockResponse();
 
         validationResult.mockImplementation(() => ({
@@ -534,10 +538,7 @@ describe('GET /api/v1/user/products/:productId', () => {
         });
     });
     test('400 Bad Request', async () => {
-        const req = mockRequest({
-            params: { productId: '' },
-            protocol: 'http'
-        });
+        const req = mockRequest({ params: { productId: '' } });
         const res = mockResponse();
         const errors = [
             {

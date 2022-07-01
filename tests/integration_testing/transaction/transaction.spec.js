@@ -1,68 +1,127 @@
+const path = require('path');
 const request = require('supertest');
 const app = require('../../../app');
-require('../../../controllers/productoffer');
-const buffer = Buffer.from('../../../uploads/profiles');
+const { sequelize } = require('../../../models');
+const { uploadImage } = require('../../../utils/cloudinary');
 
 process.env.NODE_ENV = 'test';
+let buyerToken, sellerToken;
+const { queryInterface } = sequelize;
+
+jest.mock('../../../utils/cloudinary');
 
 beforeAll(async () => {
-    //login seller
-    const seller = await request(app).post('/api/v1/auth/login').send({
-        email: 'secondhand06msibseller@mail.com',
-        password: '@Secondhand06'
-    });
-    gettokenseller = seller.res.rawHeaders[7];
-    let resultseller = gettokenseller.slice(6);
-    const finalresultseller = resultseller.replace('; Path=/', '');
-    tokenseller = finalresultseller;
+    uploadImage.mockImplementation(() => ({
+        secure_url:
+            'https://res.cloudinary.com/dko04cygp/image/upload/v1656665571/tests/products/1/1-1.jpg'
+    }));
+    // seller
     await request(app).post('/api/v1/auth/register').send({
-        name: 'Second Hand Testing',
-        email: 'secondhand06msib@mail.com',
-        password: '@Secondhand06'
+        name: 'Transaction Seller',
+        email: 'transactionseller@gmail.com',
+        password: '@TransactionSeller123'
     });
-    const login = await request(app).post('/api/v1/auth/login').send({
-        email: 'secondhand06msib@mail.com',
-        password: '@Secondhand06'
+    const seller = await request(app).post('/api/v1/auth/login').send({
+        email: 'transactionseller@gmail.com',
+        password: '@TransactionSeller123'
     });
-    gettoken = login.res.rawHeaders[7];
-    let result = gettoken.slice(6);
-    const finalresult = result.replace('; Path=/', '');
-    token = finalresult;
+    sellerToken = seller.res.rawHeaders[7].slice(6).replace('; Path=/', '');
+    await request(app)
+        .put('/api/v1/user/profile')
+        .set('Authorization', `Bearer ${sellerToken}`)
+        .send({
+            phoneNumber: '08123456789',
+            cityId: 1,
+            address: 'Jl Kebon Jeruk'
+        });
+    await request(app)
+        .post('/api/v1/user/products')
+        .set('Authorization', `Bearer ${sellerToken}`)
+        .field('categories', [1, 2])
+        .field('name', 'Barang bekas')
+        .field('price', 1000000)
+        .field('description', 'ini product bekas')
+        .field('status', true)
+        .attach('images', path.join(__dirname, '../../resources/product.jpg'));
+    // buyer
+    await request(app).post('/api/v1/auth/register').send({
+        name: 'Transaction Buyer',
+        email: 'transactionbuyer@gmail.com',
+        password: '@TransactionBuyer123'
+    });
+    const buyer = await request(app).post('/api/v1/auth/login').send({
+        email: 'transactionbuyer@gmail.com',
+        password: '@TransactionBuyer123'
+    });
+    buyerToken = buyer.res.rawHeaders[7].slice(6).replace('; Path=/', '');
+    await request(app)
+        .post('/api/v1/products/offers')
+        .set('Authorization', `Bearer ${buyerToken}`)
+        .send({ productId: 1, priceOffer: 10000 });
+    await request(app)
+        .put('/api/v1/products/offer/1')
+        .set('Authorization', `Bearer ${sellerToken}`)
+        .send({ status: true });
 });
-
 afterAll(async () => {
-    try {
-        //await request(app).get('/api/v1/auth/logout').set('Authorization',`Bearer ${token}`)
-    } catch (error) {
-        console.log(error);
-    }
+    await queryInterface.bulkDelete('Notifications', null, {
+        truncate: true,
+        restartIdentity: true
+    });
+    await queryInterface.bulkDelete('Products', null, {
+        truncate: true,
+        restartIdentity: true
+    });
+    await queryInterface.bulkDelete('ProductOffers', null, {
+        truncate: true,
+        restartIdentity: true
+    });
+    await queryInterface.bulkDelete('ProductResources', null, {
+        truncate: true,
+        restartIdentity: true
+    });
+    await queryInterface.bulkDelete('Profiles', null, {
+        truncate: true,
+        restartIdentity: true
+    });
+    await queryInterface.bulkDelete('Transactions', null, {
+        truncate: true,
+        restartIdentity: true
+    });
+    await queryInterface.bulkDelete('TransactionHistories', null, {
+        truncate: true,
+        restartIdentity: true
+    });
+    await queryInterface.bulkDelete('Users', null, {
+        truncate: true,
+        restartIdentity: true
+    });
+    await queryInterface.bulkDelete('Wishlists', null, {
+        truncate: true,
+        restartIdentity: true
+    });
+    await queryInterface.bulkDelete('ProductCategoryThroughs', null, {
+        truncate: true,
+        restartIdentity: true
+    });
 });
 
-describe('GET /api/v1/transactions (Buyer)', () => {
-    it('200 OK', async () => {
+describe('GET /api/v1/transactions', () => {
+    test('200 OK (Buyer)', async () => {
         const res = await request(app)
             .get('/api/v1/transactions')
-            .set('Authorization', `Bearer ${token}`);
+            .set('Authorization', `Bearer ${buyerToken}`);
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Transaksi ditemukan');
     });
-
-    it('401 unauthoreized', async () => {
-        const res = await request(app).get('/api/v1/transactions');
-        expect(res.statusCode).toEqual(401);
-        expect(res.body.message).toEqual('Tidak memiliki token');
-    });
-});
-
-describe('GET /api/v1/transactions (Seller)', () => {
-    it('200 OK', async () => {
+    test('200 OK (Seller)', async () => {
         const res = await request(app)
             .get('/api/v1/transactions')
-            .set('Authorization', `Bearer ${tokenseller}`);
+            .set('Authorization', `Bearer ${sellerToken}`);
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Transaksi ditemukan');
     });
-    it('401 unauthoreized', async () => {
+    test('401 Unauthorized', async () => {
         const res = await request(app).get('/api/v1/transactions');
         expect(res.statusCode).toEqual(401);
         expect(res.body.message).toEqual('Tidak memiliki token');
@@ -70,29 +129,25 @@ describe('GET /api/v1/transactions (Seller)', () => {
 });
 
 describe('PUT /api/v1/transactions/:id', () => {
-    it('200 OK', async () => {
+    test('200 OK', async () => {
         const res = await request(app)
             .put('/api/v1/transactions/1')
-            .set('Authorization', `Bearer ${tokenseller}`)
-            .send({
-                status: true
-            });
+            .set('Authorization', `Bearer ${sellerToken}`)
+            .send({ status: true });
         expect(res.statusCode).toEqual(200);
-        //expect(res.body.message).toEqual('Profil berhasil diperbarui')
+        expect(res.body.message).toEqual('Transaksi berhasil diperbarui');
     });
-
-    it('400 Bad Request', async () => {
+    test('400 Bad Request', async () => {
         const res = await request(app)
             .put('/api/v1/transactions/1')
-            .set('Authorization', `Bearer ${token}`);
+            .set('Authorization', `Bearer ${sellerToken}`);
         expect(res.statusCode).toEqual(400);
         expect(res.body.message).toEqual('Kesalahan validasi');
     });
-
-    it('401 unauthoreized', async () => {
-        const res = await request(app).put('/api/v1/transactions/1').send({
-            status: true
-        });
+    test('401 Unauthorized', async () => {
+        const res = await request(app)
+            .put('/api/v1/transactions/1')
+            .send({ status: true });
         expect(res.statusCode).toEqual(401);
         expect(res.body.message).toEqual('Tidak memiliki token');
     });
