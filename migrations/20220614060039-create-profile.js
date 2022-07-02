@@ -15,7 +15,7 @@ module.exports = {
             name: { type: Sequelize.STRING, allowNull: false },
             profilePicture: {
                 type: Sequelize.STRING,
-                defaultValue: 'default.png'
+                defaultValue: 'https://res.cloudinary.com/dko04cygp/image/upload/v1656654290/profiles/default.png'
             },
             phoneNumber: { type: Sequelize.STRING, unique: true },
             cityId: {

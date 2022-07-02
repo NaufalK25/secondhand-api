@@ -1,19 +1,17 @@
 const fs = require('fs/promises');
+const path = require('path');
 const { validationResult } = require('express-validator');
 const { findByUser, update } = require('../../../controllers/profile');
 const { Profile, User } = require('../../../models');
+const { uploadImage } = require('../../../utils/cloudinary');
 
 process.env.NODE_ENV = 'test';
 
-const mockRequest = ({ body, user, file, protocol, originalUrl } = {}) => ({
+const mockRequest = ({ body, user, file, originalUrl } = {}) => ({
     body,
     user,
     file,
-    protocol,
-    originalUrl,
-    get: jest.fn().mockImplementation(header => {
-        if (header === 'host') return 'localhost:8000';
-    })
+    originalUrl
 });
 const mockResponse = () => {
     const res = {};
@@ -34,7 +32,8 @@ const profile = {
     id: 1,
     userId: 1,
     name: 'John Doe',
-    profilePicture: 'profilePicture.jpg',
+    profilePicture:
+        'https://res.cloudinary.com/dko04cygp/image/upload/v1656654290/profiles/default.png',
     phoneNumber: '081234567890',
     cityId: 1,
     address: 'Jl. Kebon Jeruk No. 1',
@@ -51,6 +50,7 @@ const profileGetById = { ...profile, City: { ...city } };
 
 jest.mock('fs/promises');
 jest.mock('express-validator');
+jest.mock('../../../utils/cloudinary');
 
 describe('GET /api/v1/user/profile', () => {
     beforeEach(() => {
@@ -60,7 +60,7 @@ describe('GET /api/v1/user/profile', () => {
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
-        const req = mockRequest({ user: { id: 1 }, protocol: 'http' });
+        const req = mockRequest({ user: { id: 1 } });
         const res = mockResponse();
 
         validationResult.mockImplementation(() => ({
@@ -74,22 +74,19 @@ describe('GET /api/v1/user/profile', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'Profil ditemukan',
-            data: {
-                ...profileGetById,
-                profilePicture: `${req.protocol}://${req.get(
-                    'host'
-                )}/images/profiles/profilePicture.jpg`
-            }
+            data: { ...profileGetById }
         });
     });
 });
 
 describe('PUT /api/v1/user/profile', () => {
     beforeEach(() => {
+        uploadImage.mockImplementation(() => ({
+            secure_url:
+                'https://res.cloudinary.com/dko04cygp/image/upload/v1656665571/tests/profiles/1.png'
+        }));
         fs.unlink.mockImplementation(() => Promise.resolve());
-        Profile.findOne = jest
-            .fn()
-            .mockImplementation(() => ({ ...profile }));
+        Profile.findOne = jest.fn().mockImplementation(() => ({ ...profile }));
         Profile.update = jest.fn().mockImplementation(() => ({ ...profile }));
         User.update = jest.fn().mockImplementation(() => ({ ...user }));
     });
@@ -104,7 +101,15 @@ describe('PUT /api/v1/user/profile', () => {
                 address: 'Jl. Kebon Jeruk No. 1'
             },
             user: { id: 1 },
-            file: { filename: 'profilePicture.jpg' }
+            file: {
+                path: path.join(
+                    __dirname,
+                    '..',
+                    '..',
+                    'resources',
+                    'profile.jpg'
+                )
+            }
         });
         const res = mockResponse();
 
@@ -122,7 +127,8 @@ describe('PUT /api/v1/user/profile', () => {
             data: {
                 id: req.user.id,
                 ...req.body,
-                profilePicture: 'profilePicture.jpg'
+                profilePicture:
+                    'https://res.cloudinary.com/dko04cygp/image/upload/v1656665571/tests/profiles/1.png'
             }
         });
     });

@@ -5,7 +5,7 @@ const { sequelize } = require('../../models');
 process.env.NODE_ENV = 'test';
 const { queryInterface } = sequelize;
 
-afterEach(async () => {
+afterAll(async () => {
     await queryInterface.bulkDelete('Users', null, {
         truncate: true,
         restartIdentity: true
@@ -50,17 +50,20 @@ describe('POST /api/v1/auth/register', () => {
             .post('/api/v1/auth/register')
             .set('Authorization', `Bearer ${token}`)
             .send({
-                name: 'Register',
-                email: 'register@gmail.com',
+                name: 'Register3',
+                email: 'register3@gmail.com',
                 password: '@Register123'
             });
         expect(res.statusCode).toBe(403);
         expect(res.body.message).toBe('Dilarang');
+        await request(app)
+            .post('/api/v1/auth/logout')
+            .set('Authorization', `Bearer ${token}`);
     });
 });
 
 describe('POST /api/v1/auth/login', () => {
-    beforeEach(async () => {
+    beforeAll(async () => {
         await request(app).post('/api/v1/auth/register').send({
             name: 'Login',
             email: 'login@gmail.com',
@@ -74,6 +77,14 @@ describe('POST /api/v1/auth/login', () => {
         });
         expect(res.statusCode).toBe(200);
         expect(res.body.message).toBe('Berhasil masuk');
+        await request(app)
+            .post('/api/v1/auth/logout')
+            .set(
+                'Authorization',
+                `Bearer ${res.res.rawHeaders[7]
+                    .slice(6)
+                    .replace('; Path=/', '')}`
+            );
     });
     test('400 Bad Request', async () => {
         const res = await request(app).post('/api/v1/auth/login').send({
@@ -98,11 +109,14 @@ describe('POST /api/v1/auth/login', () => {
             });
         expect(res.statusCode).toBe(403);
         expect(res.body.message).toBe('Dilarang');
+        await request(app)
+            .post('/api/v1/auth/logout')
+            .set('Authorization', `Bearer ${token}`);
     });
 });
 
 describe('POST /api/v1/auth/logout', () => {
-    beforeEach(async () => {
+    beforeAll(async () => {
         await request(app).post('/api/v1/auth/register').send({
             name: 'Logout',
             email: 'logout@gmail.com',
