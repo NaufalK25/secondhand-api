@@ -10,17 +10,14 @@ module.exports = {
             },
             userId: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
-                references: { model: 'Users', key: 'id' },
+                allowNull: false
             },
             productId: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
-                references: { model: 'Products', key: 'id' },
+                allowNull: false
             },
             productOfferId: {
-                type: Sequelize.INTEGER,
-                references: { model: 'ProductOffers', key: 'id' },
+                type: Sequelize.INTEGER
             },
             type: { type: Sequelize.STRING, allowNull: false },
             description: { type: Sequelize.STRING },

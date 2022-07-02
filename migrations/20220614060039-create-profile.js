@@ -10,8 +10,7 @@ module.exports = {
             },
             userId: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
-                references: { model: 'Users', key: 'id' }
+                allowNull: false
             },
             name: { type: Sequelize.STRING, allowNull: false },
             profilePicture: {
@@ -20,8 +19,7 @@ module.exports = {
             },
             phoneNumber: { type: Sequelize.STRING, unique: true },
             cityId: {
-                type: Sequelize.INTEGER,
-                references: { model: 'Cities', key: 'id' }
+                type: Sequelize.INTEGER
             },
             address: { type: Sequelize.TEXT },
             createdAt: { allowNull: false, type: Sequelize.DATE },

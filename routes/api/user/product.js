@@ -74,6 +74,17 @@ router
         },
         multer({ storage: productStorage }).array('images'),
         [
+            body('name')
+                .notEmpty()
+                .withMessage('Nama produk harus diisi')
+                .trim()
+                .isString()
+                .withMessage('Nama produk harus berupa huruf'),
+            body('price')
+                .notEmpty()
+                .withMessage('Harga harus diisi')
+                .isNumeric()
+                .withMessage('Harga harus berupa angka'),
             body('categories').custom(value => {
                 if (!value) throw new Error('Kategori harus diisi');
                 if (typeof value === 'string') value = value.split(',');
@@ -90,17 +101,6 @@ router
                 .trim()
                 .isInt()
                 .withMessage('Kategori harus berupa angka'),
-            body('name')
-                .notEmpty()
-                .withMessage('Nama produk harus diisi')
-                .trim()
-                .isString()
-                .withMessage('Nama produk harus berupa huruf'),
-            body('price')
-                .notEmpty()
-                .withMessage('Harga harus diisi')
-                .isNumeric()
-                .withMessage('Harga harus berupa angka'),
             body('description')
                 .notEmpty()
                 .withMessage('Deskripsi harus diisi')

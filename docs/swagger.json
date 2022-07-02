@@ -2481,7 +2481,7 @@
                     "ProductCategories": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/ProductCategory"
+                            "$ref": "#/components/schemas/Category"
                         }
                     },
                     "ProductResources": {
@@ -2528,7 +2528,7 @@
                     "ProductCategories": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/ProductCategory"
+                            "$ref": "#/components/schemas/Category"
                         }
                     },
                     "ProductResources": {
@@ -2581,7 +2581,7 @@
                     "ProductCategories": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/ProductCategory"
+                            "$ref": "#/components/schemas/Category"
                         }
                     },
                     "ProductResources": {
