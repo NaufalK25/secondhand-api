@@ -10,22 +10,16 @@ module.exports = {
             },
             userId: {
                 type: Sequelize.INTEGER,
-                references: { model: 'Users', key: 'id' },
-                onUpdate: 'CASCADE',
-                onDelete: 'SET NULL',
                 allowNull: false
             },
             name: { type: Sequelize.STRING, allowNull: false },
             profilePicture: {
                 type: Sequelize.STRING,
-                defaultValue: 'default.png'
+                defaultValue: 'https://res.cloudinary.com/dko04cygp/image/upload/v1656654290/profiles/default.png'
             },
             phoneNumber: { type: Sequelize.STRING, unique: true },
             cityId: {
-                type: Sequelize.INTEGER,
-                references: { model: 'Cities', key: 'id' },
-                onUpdate: 'CASCADE',
-                onDelete: 'SET NULL'
+                type: Sequelize.INTEGER
             },
             address: { type: Sequelize.TEXT },
             createdAt: { allowNull: false, type: Sequelize.DATE },

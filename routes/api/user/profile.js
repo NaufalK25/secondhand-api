@@ -50,11 +50,12 @@ router
             body('phoneNumber')
                 .notEmpty()
                 .withMessage('Nomor telepon harus diisi')
-                .custom(async value => {
+                .custom(async (value, { req }) => {
                     const user = await Profile.findOne({
                         where: { phoneNumber: value }
                     });
-                    if (user) throw new Error('Nomor telepon sudah terdaftar');
+                    if (user && user.userId !== req.user.id)
+                        throw new Error('Nomor telepon sudah terdaftar');
                 }),
             body('cityId')
                 .notEmpty()

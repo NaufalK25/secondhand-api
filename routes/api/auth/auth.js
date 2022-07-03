@@ -52,8 +52,6 @@ router
                 .trim()
                 .isString()
                 .withMessage('Password harus berupa huruf')
-                .isLength({ min: 8 })
-                .withMessage('Password minimal 8 karakter')
                 .custom(async (value, { req }) => {
                     const user = await User.findOne({
                         where: { email: req.body.email }
@@ -124,6 +122,12 @@ router
                 .withMessage('Password harus berupa huruf')
                 .isLength({ min: 8 })
                 .withMessage('Password minimal 8 karakter')
+                .matches(
+                    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/
+                )
+                .withMessage(
+                    'Password minimal terdiri dari 1 huruf besar, 1 huruf kecil, 1 angka, dan 1 karakter spesial'
+                )
         ],
         register
     )
@@ -180,6 +184,12 @@ router
                 .withMessage('Password harus berupa huruf')
                 .isLength({ min: 8 })
                 .withMessage('Password minimal 8 karakter')
+                .matches(
+                    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/
+                )
+                .withMessage(
+                    'Password minimal terdiri dari 1 huruf besar, 1 huruf kecil, 1 angka, dan 1 karakter spesial'
+                )
         ],
         resetPassword
     )

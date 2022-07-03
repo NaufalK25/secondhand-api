@@ -10,14 +10,10 @@ module.exports = {
             },
             roleId: {
                 type: Sequelize.INTEGER,
-                references: { model: 'RoleUsers', key: 'id' },
-                onUpdate: 'CASCADE',
-                onDelete: 'SET NULL',
                 defaultValue: 1
             },
             email: { type: Sequelize.STRING, allowNull: false, unique: true },
             password: { type: Sequelize.STRING, allowNull: false },
-            token: { type: Sequelize.STRING },
             googleId: { type: Sequelize.STRING },
             createdAt: { allowNull: false, type: Sequelize.DATE },
             updatedAt: { allowNull: false, type: Sequelize.DATE }

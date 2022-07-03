@@ -12,7 +12,7 @@ const { badRequest, forbidden, notFound } = require('./error');
 module.exports = {
     findByUser: async (req, res) => {
         let userProductOffer;
-        if (req.user.roleId == 2) {
+        if (req.user.roleId === 2) {
             //kalo dia seller dia bakal nampilin penawaran yang diajuin buyer
             userProductOffer = await ProductOffer.findAll({
                 include: [
@@ -107,7 +107,7 @@ module.exports = {
             });
 
             await TransactionHistory.create({
-                userId: userProductOffer.buyerId,
+                productId: userProductOffer.productId,
                 transactionId: transaction.id
             });
 

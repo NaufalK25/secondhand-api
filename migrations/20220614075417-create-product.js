@@ -10,10 +10,7 @@ module.exports = {
             },
             sellerId: {
                 type: Sequelize.INTEGER,
-                references: { model: 'Users', key: 'id' },
-                onUpdate: 'CASCADE',
-                onDelete: 'SET NULL',
-                allowNull: false
+                allowNull: false,
             },
             name: { type: Sequelize.STRING, allowNull: false },
             price: { type: Sequelize.INTEGER, allowNull: false },
@@ -21,12 +18,6 @@ module.exports = {
                 type: Sequelize.DATE,
                 allowNull: false,
                 defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-            },
-            stock: { type: Sequelize.INTEGER, allowNull: false },
-            sold: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                defaultValue: 0
             },
             description: { type: Sequelize.STRING },
             status: {

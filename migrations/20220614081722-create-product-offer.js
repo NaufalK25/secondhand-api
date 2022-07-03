@@ -10,16 +10,10 @@ module.exports = {
             },
             productId: {
                 type: Sequelize.INTEGER,
-                references: { model: 'Products', key: 'id' },
-                onUpdate: 'CASCADE',
-                onDelete: 'SET NULL',
                 allowNull: false
             },
             buyerId: {
                 type: Sequelize.INTEGER,
-                references: { model: 'Users', key: 'id' },
-                onUpdate: 'CASCADE',
-                onDelete: 'SET NULL',
                 allowNull: false
             },
             priceOffer: { type: Sequelize.INTEGER, allowNull: false },

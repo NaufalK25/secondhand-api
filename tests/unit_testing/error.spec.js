@@ -1,4 +1,4 @@
-const errorController = require('../controllers/error');
+const errorController = require('../../controllers/error');
 
 const mockRequest = ({ method, originalUrl } = {}) => ({ method, originalUrl });
 const mockResponse = () => {

@@ -8,7 +8,7 @@ const createStorage = (uploadField = '') => {
             if (file.mimetype.startsWith('image/')) {
                 cb(null, `uploads/${uploadField}`);
             } else {
-                cb(new Error('Invalid image type'), null);
+                cb(new Error('File yang diupload harus berupa gambar'), null);
             }
         },
         filename: (req, file, cb) => {
@@ -20,7 +20,7 @@ const createStorage = (uploadField = '') => {
                     )}`
                 );
             } else {
-                cb(new Error('Invalid image type'), null);
+                cb(new Error('File yang diupload harus berupa gambar'), null);
             }
         }
     });

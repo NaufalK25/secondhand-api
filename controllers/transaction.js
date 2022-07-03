@@ -5,7 +5,7 @@ const { Product, Transaction, User, Wishlist } = require('../models');
 module.exports = {
     findByUser: async (req, res) => {
         let transaction;
-        if (req.user.roleId == 2) {
+        if (req.user.roleId === 2) {
             //kalo dia seller dia bakal nampilin transaksi barang seller
             transaction = await Transaction.findAll({
                 include: [{ model: Product, where: { sellerId: req.user.id } }]
@@ -35,7 +35,8 @@ module.exports = {
             include: [{ model: Product, include: [{ model: User }] }]
         });
         const updatedData = {};
-        if (!transaction) return notFound(req, res, 'Transaksi tidak ditemukan');
+        if (!transaction)
+            return notFound(req, res, 'Transaksi tidak ditemukan');
         if (transaction.Product.sellerId !== req.user.id)
             return forbidden(
                 req,
@@ -51,7 +52,7 @@ module.exports = {
         });
 
         if (updatedData.status === 'true' || updatedData.status === true) {
-            // TODO kalo status selesai/true maka product akan terjual(false) dan di wishlist juga akan false
+            // TODO kalo status selesai/true maka product akan terjual dan berkurang 1, kalo stoct 1 maka terjual dan habis jadi false dan di wishlist juga akan false
             await Product.update(
                 { status: false },
                 { where: { id: transaction.productId } }

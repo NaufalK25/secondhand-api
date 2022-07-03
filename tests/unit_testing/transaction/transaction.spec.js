@@ -1,6 +1,6 @@
 const { validationResult } = require('express-validator');
-const { findByUser, update } = require('../../controllers/transaction');
-const { Product, Transaction, Wishlist } = require('../../models');
+const { findByUser, update } = require('../../../controllers/transaction');
+const { Product, Transaction, Wishlist } = require('../../../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -29,8 +29,6 @@ const product = {
     name: 'Product 1',
     price: 100000,
     publishDate: date,
-    stock: 10,
-    sold: 0,
     description: 'Product 1',
     status: true,
     createdAt: date,

@@ -14,6 +14,7 @@ const {
     Wishlist,
     sequelize
 } = require('../models');
+const { uploadImage } = require('../utils/cloudinary');
 
 module.exports = {
     findAll: async (req, res) => {
@@ -27,16 +28,6 @@ module.exports = {
         if (products.length === 0)
             return notFound(req, res, 'Produk tidak ditemukan');
 
-        products.forEach(product => {
-            if (product.ProductResources) {
-                product.ProductResources.forEach(resource => {
-                    resource.filename = `${req.protocol}://${req.get(
-                        'host'
-                    )}/images/products/${resource.filename}`;
-                });
-            }
-        });
-
         res.status(200).json({
             success: true,
             message: 'Produk ditemukan',
@@ -44,34 +35,24 @@ module.exports = {
         });
     },
     create: async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            if (req.files) {
-                req.files.forEach(async file => {
-                    await fs.unlink(file.path);
-                });
-            }
-
-            return badRequest(errors.array(), req, res);
-        }
-
-        const { name, price, stock, description, status } = req.body;
-        let { categories } = req.body;
-        const productResources = req.files;
-
         const products = await Product.findAll({
             where: { sellerId: req.user.id }
         });
         if (products.length > 4)
             return forbidden(req, res, 'Anda hanya bisa memposting 4 produk');
 
+        const { name, price, description } = req.body;
+        let { categories } = req.body;
+        const productResources = req.files;
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+
         const product = await Product.create({
             sellerId: req.user.id,
             name,
             price,
-            stock,
-            description,
-            status
+            description
         });
 
         if (typeof categories === 'string') categories = categories.split(',');
@@ -83,15 +64,20 @@ module.exports = {
                 });
             });
         }
-
-        if (productResources.length > 0) {
-            productResources.forEach(async productResource => {
-                await ProductResource.create({
-                    productId: product.id,
-                    filename: productResource.filename
-                });
+        
+        productResources.forEach(async (productResource, index) => {
+            const { path } = productResource;
+            const image = await uploadImage(
+                `products/${product.id}`,
+                path,
+                `${product.id}-${index + 1}`
+            );
+            await ProductResource.create({
+                productId: product.id,
+                filename: image.secure_url
             });
-        }
+            await fs.unlink(path);
+        });
 
         await Notification.create({
             userId: req.user.id,
@@ -112,7 +98,7 @@ module.exports = {
         const sortBy = req.query.sortBy;
         const orders = [['createdAt', 'DESC']];
         if (sortBy === 'sold') {
-            orders.unshift(['sold', 'DESC']);
+            orders.unshift(['status', 'DESC']);
         } else if (sortBy === 'wishlist') {
             orders.unshift([
                 sequelize.fn('count', sequelize.col('Wishlists.id')),
@@ -138,23 +124,13 @@ module.exports = {
         });
 
         if (sortBy === 'sold') {
-            products = products.filter(product => product.sold > 0);
+            products = products.filter(product => product.status === false);
         } else if (sortBy === 'wishlist') {
             products = products.filter(product => product.Wishlists.length > 0);
         }
 
         if (products.length === 0)
             return notFound(req, res, 'Produk tidak ditemukan');
-
-        products.forEach(product => {
-            if (product.ProductResources) {
-                product.ProductResources.forEach(resource => {
-                    resource.filename = `${req.protocol}://${req.get(
-                        'host'
-                    )}/images/products/${resource.filename}`;
-                });
-            }
-        });
 
         res.status(200).json({
             success: true,
@@ -179,14 +155,6 @@ module.exports = {
 
         if (!product) return notFound(req, res, 'Produk tidak ditemukan');
 
-        if (product.ProductResources) {
-            product.ProductResources.forEach(resource => {
-                resource.filename = `${req.protocol}://${req.get(
-                    'host'
-                )}/images/products/${resource.filename}`;
-            });
-        }
-
         res.status(200).json({
             success: true,
             message: 'Produk ditemukan',
@@ -199,7 +167,7 @@ module.exports = {
 
         const { keyword } = req.query;
         const products = await Product.findAll({
-            where: { name: { [Op.like]: `%${keyword}%` } },
+            where: { name: { [Op.iLike]: `%${keyword}%` } },
             include: [
                 { model: ProductCategory, through: { attributes: [] } },
                 { model: ProductResource }
@@ -208,16 +176,6 @@ module.exports = {
 
         if (products.length === 0)
             return notFound(req, res, 'Produk tidak ditemukan');
-
-        products.forEach(product => {
-            if (product.ProductResources) {
-                product.ProductResources.forEach(resource => {
-                    resource.filename = `${req.protocol}://${req.get(
-                        'host'
-                    )}/images/products/${resource.filename}`;
-                });
-            }
-        });
 
         res.status(200).json({
             success: true,
@@ -247,16 +205,6 @@ module.exports = {
 
         if (products.length === 0)
             return notFound(req, res, 'Produk tidak ditemukan');
-
-        products.forEach(product => {
-            if (product.Product.ProductResources) {
-                product.Product.ProductResources.forEach(resource => {
-                    resource.filename = `${req.protocol}://${req.get(
-                        'host'
-                    )}/images/products/${resource.filename}`;
-                });
-            }
-        });
 
         res.status(200).json({
             success: true,

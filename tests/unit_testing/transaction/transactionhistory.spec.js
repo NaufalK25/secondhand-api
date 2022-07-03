@@ -2,8 +2,8 @@ const { validationResult } = require('express-validator');
 const {
     findByUser,
     findById
-} = require('../../controllers/transactionhistory');
-const { TransactionHistory } = require('../../models');
+} = require('../../../controllers/transactionhistory');
+const { TransactionHistory } = require('../../../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -19,12 +19,9 @@ const date = new Date();
 const product = {
     id: 1,
     sellerId: 1,
-    categoryId: 1,
     name: 'Product',
     price: 100,
     publishDate: date,
-    stock: 10,
-    sold: 0,
     description: 'Product description',
     status: true,
     createdAt: date,
