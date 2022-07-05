@@ -13,10 +13,7 @@ module.exports = {
                 allowNull: false
             },
             name: { type: Sequelize.STRING, allowNull: false },
-            profilePicture: {
-                type: Sequelize.STRING,
-                defaultValue: 'https://res.cloudinary.com/dko04cygp/image/upload/v1656654290/profiles/default.png'
-            },
+            profilePicture: { type: Sequelize.STRING },
             phoneNumber: { type: Sequelize.STRING, unique: true },
             cityId: {
                 type: Sequelize.INTEGER
