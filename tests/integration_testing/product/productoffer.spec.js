@@ -1,4 +1,6 @@
 const path = require('path');
+const mustache = require('mustache');
+const nodemailer = require('nodemailer');
 const request = require('supertest');
 const app = require('../../../app');
 const { sequelize } = require('../../../models');
@@ -8,9 +10,15 @@ process.env.NODE_ENV = 'test';
 let buyerToken, sellerToken;
 const { queryInterface } = sequelize;
 
+jest.mock('mustache');
+jest.mock('nodemailer');
 jest.mock('../../../utils/cloudinary');
 
 beforeAll(async () => {
+    nodemailer.createTransport.mockImplementation(() => ({
+        sendMail: jest.fn().mockImplementation(() => Promise.resolve())
+    }));
+    mustache.render.mockImplementation(() => 'welcome_mail');
     uploadImage.mockImplementation(() => ({
         secure_url:
             'https://res.cloudinary.com/dko04cygp/image/upload/v1656665571/tests/products/1/1-1.jpg'
@@ -56,6 +64,7 @@ beforeAll(async () => {
     buyerToken = buyer.res.rawHeaders[7].slice(6).replace('; Path=/', '');
 });
 afterAll(async () => {
+    jest.clearAllMocks();
     await queryInterface.bulkDelete('Notifications', null, {
         truncate: true,
         restartIdentity: true

@@ -1,4 +1,6 @@
 const path = require('path');
+const mustache = require('mustache');
+const nodemailer = require('nodemailer');
 const request = require('supertest');
 const app = require('../../../app');
 const { sequelize } = require('../../../models');
@@ -8,9 +10,15 @@ process.env.NODE_ENV = 'test';
 let token;
 const { queryInterface } = sequelize;
 
+jest.mock('mustache');
+jest.mock('nodemailer');
 jest.mock('../../../utils/cloudinary');
 
 beforeAll(async () => {
+    nodemailer.createTransport.mockImplementation(() => ({
+        sendMail: jest.fn().mockImplementation(() => Promise.resolve())
+    }));
+    mustache.render.mockImplementation(() => 'welcome_mail');
     uploadImage.mockImplementation(() => ({
         secure_url:
             'https://res.cloudinary.com/dko04cygp/image/upload/v1656665571/tests/products/1/1-1.jpg'
@@ -53,6 +61,7 @@ beforeAll(async () => {
         .attach('images', path.join(__dirname, '../../resources/product.jpg'));
 });
 afterAll(async () => {
+    jest.clearAllMocks();
     await queryInterface.bulkDelete('Notifications', null, {
         truncate: true,
         restartIdentity: true
@@ -203,9 +212,7 @@ describe('GET /api/v1/products/filter', () => {
         expect(res.body.message).toEqual('Produk ditemukan');
     });
     test('400 Bad Request', async () => {
-        const res = await request(app).get(
-            '/api/v1/products/filter?category='
-        );
+        const res = await request(app).get('/api/v1/products/filter?category=');
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toEqual('Kesalahan validasi');
     });

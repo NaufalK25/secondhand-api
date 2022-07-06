@@ -1,4 +1,6 @@
 const path = require('path');
+const mustache = require('mustache');
+const nodemailer = require('nodemailer');
 const request = require('supertest');
 const app = require('../../../app');
 const { sequelize } = require('../../../models');
@@ -8,9 +10,19 @@ process.env.NODE_ENV = 'test';
 let token;
 const { queryInterface } = sequelize;
 
+jest.mock('mustache');
+jest.mock('nodemailer');
 jest.mock('../../../utils/cloudinary');
 
 beforeAll(async () => {
+    nodemailer.createTransport.mockImplementation(() => ({
+        sendMail: jest.fn().mockImplementation(() => Promise.resolve())
+    }));
+    mustache.render.mockImplementation(() => 'welcome_mail');
+    uploadImage.mockImplementation(() => ({
+        secure_url:
+            'https://res.cloudinary.com/dko04cygp/image/upload/v1656665571/tests/profiles/1.png'
+    }));
     await request(app).post('/api/v1/auth/register').send({
         name: 'Profile',
         email: 'profile@gmail.com',
@@ -23,6 +35,7 @@ beforeAll(async () => {
     token = login.res.rawHeaders[7].slice(6).replace('; Path=/', '');
 });
 afterAll(async () => {
+    jest.clearAllMocks();
     await request(app)
         .post('/api/v1/auth/logout')
         .set('Authorization', `Bearer ${token}`);
@@ -53,13 +66,6 @@ describe('GET /api/v1/user/profile', () => {
 });
 
 describe('PUT /api/v1/user/profile', () => {
-    beforeAll(() => {
-        uploadImage.mockImplementation(() => ({
-            secure_url:
-                'https://res.cloudinary.com/dko04cygp/image/upload/v1656665571/tests/profiles/1.png'
-        }));
-    });
-    afterAll(() => jest.clearAllMocks());
     test('200 OK', async () => {
         const res = await request(app)
             .put('/api/v1/user/profile')

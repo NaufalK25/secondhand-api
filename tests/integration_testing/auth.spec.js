@@ -1,3 +1,5 @@
+const mustache = require('mustache');
+const nodemailer = require('nodemailer');
 const request = require('supertest');
 const app = require('../../app');
 const { sequelize } = require('../../models');
@@ -5,7 +7,17 @@ const { sequelize } = require('../../models');
 process.env.NODE_ENV = 'test';
 const { queryInterface } = sequelize;
 
+jest.mock('mustache');
+jest.mock('nodemailer');
+
+beforeAll(() => {
+    nodemailer.createTransport.mockImplementation(() => ({
+        sendMail: jest.fn().mockImplementation(() => Promise.resolve())
+    }));
+    mustache.render.mockImplementation(() => 'welcome_mail');
+});
 afterAll(async () => {
+    jest.clearAllMocks();
     await queryInterface.bulkDelete('Users', null, {
         truncate: true,
         restartIdentity: true
