@@ -52,12 +52,12 @@ router
                 .withMessage('Nomor telepon harus diisi')
                 .isLength({ min: 7 })
                 .withMessage('Nomor telepon minimal 7 digit')
+                .isNumeric()
+                .withMessage('Nomor telepon harus berupa angka')
                 .custom(async (value, { req }) => {
                     const user = await Profile.findOne({
                         where: { phoneNumber: value }
                     });
-                    if (!/^\d+$/.test(value))
-                        throw new Error('Nomor telepon harus berupa angka');
                     if (user && user.userId !== req.user.id)
                         throw new Error('Nomor telepon sudah terdaftar');
                 }),
@@ -75,9 +75,11 @@ router
                 .withMessage('Alamat harus berupa huruf')
                 .isLength({ min: 5 })
                 .withMessage('Alamat minimal 5 karakter')
-                .custom((value) => {
+                .custom(value => {
                     if (/^\d+$/.test(value))
-                        throw new Error('Alamat tidak boleh hanya berupa angka');
+                        throw new Error(
+                            'Alamat tidak boleh hanya berupa angka'
+                        );
                     return true;
                 })
         ],
