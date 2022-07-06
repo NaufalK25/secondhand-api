@@ -16,13 +16,13 @@ beforeAll(async () => {
             'https://res.cloudinary.com/dko04cygp/image/upload/v1656665571/tests/products/1/1-1.jpg'
     }));
     await request(app).post('/api/v1/auth/register').send({
-        name: 'Transaction Seller',
-        email: 'transactionseller@gmail.com',
-        password: '@TransactionSeller123'
+        name: 'Product',
+        email: 'product@gmail.com',
+        password: '@Product123'
     });
     const seller = await request(app).post('/api/v1/auth/login').send({
-        email: 'transactionseller@gmail.com',
-        password: '@TransactionSeller123'
+        email: 'product@gmail.com',
+        password: '@Product123'
     });
     token = seller.res.rawHeaders[7].slice(6).replace('; Path=/', '');
     await request(app)
