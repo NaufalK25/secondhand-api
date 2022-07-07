@@ -893,7 +893,9 @@
                         "jwt": []
                     }
                 ]
-            },
+            }
+        },
+        "/notifications/{id}": {
             "put": {
                 "tags": [
                     "Notification"
