@@ -8,22 +8,10 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            productId: {
-                type: Sequelize.INTEGER,
-                allowNull: false
-            },
-            productCategoryId: {
-                type: Sequelize.INTEGER,
-                allowNull: false
-            },
-            createdAt: {
-                allowNull: false,
-                type: Sequelize.DATE
-            },
-            updatedAt: {
-                allowNull: false,
-                type: Sequelize.DATE
-            }
+            productId: { type: Sequelize.INTEGER, allowNull: false },
+            productCategoryId: { type: Sequelize.INTEGER, allowNull: false },
+            createdAt: { allowNull: false, type: Sequelize.DATE },
+            updatedAt: { allowNull: false, type: Sequelize.DATE }
         });
     },
     async down(queryInterface, Sequelize) {

@@ -8,19 +8,10 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            productId: {
-                type: Sequelize.INTEGER,
-                allowNull: false
-            },
-            buyerId: {
-                type: Sequelize.INTEGER,
-                allowNull: false
-            },
+            productId: { type: Sequelize.INTEGER, allowNull: false },
+            buyerId: { type: Sequelize.INTEGER, allowNull: false },
             priceOffer: { type: Sequelize.INTEGER, allowNull: false },
-            status: {
-                type: Sequelize.BOOLEAN,
-                defaultValue: null // null = pending, true = accept, false = reject
-            },
+            status: { type: Sequelize.BOOLEAN, defaultValue: null }, // null = pending, true = accept, false = reject
             createdAt: { allowNull: false, type: Sequelize.DATE },
             updatedAt: { allowNull: false, type: Sequelize.DATE }
         });

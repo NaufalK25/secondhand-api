@@ -8,16 +8,11 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            userId: {
-                type: Sequelize.INTEGER,
-                allowNull: false
-            },
+            userId: { type: Sequelize.INTEGER, allowNull: false },
             name: { type: Sequelize.STRING, allowNull: false },
             profilePicture: { type: Sequelize.STRING },
             phoneNumber: { type: Sequelize.STRING, unique: true },
-            cityId: {
-                type: Sequelize.INTEGER
-            },
+            cityId: { type: Sequelize.INTEGER },
             address: { type: Sequelize.TEXT },
             createdAt: { allowNull: false, type: Sequelize.DATE },
             updatedAt: { allowNull: false, type: Sequelize.DATE }

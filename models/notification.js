@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
             productId: DataTypes.INTEGER,
             productOfferId: DataTypes.INTEGER,
             type: DataTypes.STRING,
-            description: DataTypes.STRING,
+            description: DataTypes.TEXT,
             status: DataTypes.BOOLEAN
         },
         { sequelize, modelName: 'Notification' }

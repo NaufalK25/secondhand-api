@@ -8,10 +8,7 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            roleId: {
-                type: Sequelize.INTEGER,
-                defaultValue: 1
-            },
+            roleId: { type: Sequelize.INTEGER, defaultValue: 1 },
             email: { type: Sequelize.STRING, allowNull: false, unique: true },
             password: { type: Sequelize.STRING, allowNull: false },
             googleId: { type: Sequelize.STRING },
