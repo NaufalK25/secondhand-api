@@ -67,7 +67,7 @@ const product = {
     price: 100,
     publishDate: date,
     description: 'Product description',
-    status: true,
+    status: false,
     createdAt: date,
     updatedAt: date
 };
@@ -324,14 +324,68 @@ describe('GET /api/v1/products/filter', () => {
 
 describe('GET /api/v1/user/products', () => {
     beforeEach(() => {
-        Product.findALl = jest
+        Product.findAll = jest
             .fn()
             .mockImplementation(() => [{ ...productFindBySeller }]);
     });
     afterEach(() => jest.clearAllMocks());
-    test('200 OK', async () => {});
-    test('200 OK (sold)', async () => {});
-    test('200 OK (wishlist)', async () => {});
+    test('200 OK', async () => {
+        const req = mockRequest({ user: { id: 1 }, query: { sortBy: '' } });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+
+        await findBySeller(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({
+            success: true,
+            message: 'Produk ditemukan',
+            data: [{ ...productFindBySeller }]
+        });
+    });
+    test('200 OK (sold)', async () => {
+        const req = mockRequest({ user: { id: 1 }, query: { sortBy: 'sold' } });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+
+        await findBySeller(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({
+            success: true,
+            message: 'Produk ditemukan',
+            data: [{ ...productFindBySeller }]
+        });
+    });
+    test('200 OK (wishlist)', async () => {
+        const req = mockRequest({
+            user: { id: 1 },
+            query: { sortBy: 'wishlist' }
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+
+        await findBySeller(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({
+            success: true,
+            message: 'Produk ditemukan',
+            data: [{ ...productFindBySeller }]
+        });
+    });
     test('400 Bad Request', async () => {
         const req = mockRequest({
             user: { id: 1 },
@@ -410,6 +464,44 @@ describe('POST /api/v1/user/products', () => {
             user: { id: 1 },
             body: {
                 categories: [1],
+                name: 'Product',
+                price: 100,
+                description: 'Product description',
+                status: true
+            },
+            files: [
+                {
+                    path: path.join(
+                        __dirname,
+                        '..',
+                        '..',
+                        'resources',
+                        'product.jpg'
+                    )
+                }
+            ]
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+
+        await create(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(201);
+        expect(res.json).toHaveBeenCalledWith({
+            success: true,
+            message: 'Produk berhasil dibuat',
+            data: { ...product }
+        });
+    });
+    test('201 Created (categories string)', async () => {
+        const req = mockRequest({
+            user: { id: 1 },
+            body: {
+                categories: '1',
                 name: 'Product',
                 price: 100,
                 description: 'Product description',

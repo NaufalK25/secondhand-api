@@ -2,9 +2,9 @@ const path = require('path');
 const mustache = require('mustache');
 const nodemailer = require('nodemailer');
 const request = require('supertest');
-const app = require('../../../app');
-const { sequelize } = require('../../../models');
-const { uploadImage } = require('../../../utils/cloudinary');
+const app = require('../../app');
+const { sequelize } = require('../../models');
+const { uploadImage } = require('../../utils/cloudinary');
 
 process.env.NODE_ENV = 'test';
 let buyerToken, sellerToken;
@@ -12,7 +12,7 @@ const { queryInterface } = sequelize;
 
 jest.mock('mustache');
 jest.mock('nodemailer');
-jest.mock('../../../utils/cloudinary');
+jest.mock('../../utils/cloudinary');
 
 beforeAll(async () => {
     nodemailer.createTransport.mockImplementation(() => ({
@@ -25,13 +25,13 @@ beforeAll(async () => {
     }));
     // seller
     await request(app).post('/api/v1/auth/register').send({
-        name: 'Product Offer Seller',
-        email: 'productofferseller@gmail.com',
-        password: '@ProductOfferSeller123'
+        name: 'Transaction Seller',
+        email: 'transactionseller@gmail.com',
+        password: '@TransactionSeller123'
     });
     const seller = await request(app).post('/api/v1/auth/login').send({
-        email: 'productofferseller@gmail.com',
-        password: '@ProductOfferSeller123'
+        email: 'transactionseller@gmail.com',
+        password: '@TransactionSeller123'
     });
     sellerToken = seller.res.rawHeaders[7].slice(6).replace('; Path=/', '');
     await request(app)
@@ -50,18 +50,26 @@ beforeAll(async () => {
         .field('price', 1000000)
         .field('description', 'ini product bekas')
         .field('status', true)
-        .attach('images', path.join(__dirname, '../../resources/product.jpg'));
+        .attach('images', path.join(__dirname, '../resources/product.jpg'));
     // buyer
     await request(app).post('/api/v1/auth/register').send({
-        name: 'Product Offer Buyer',
-        email: 'productofferbuyer@gmail.com',
-        password: '@ProductOfferBuyer123'
+        name: 'Transaction Buyer',
+        email: 'transactionbuyer@gmail.com',
+        password: '@TransactionBuyer123'
     });
     const buyer = await request(app).post('/api/v1/auth/login').send({
-        email: 'productofferbuyer@gmail.com',
-        password: '@ProductOfferBuyer123'
+        email: 'transactionbuyer@gmail.com',
+        password: '@TransactionBuyer123'
     });
     buyerToken = buyer.res.rawHeaders[7].slice(6).replace('; Path=/', '');
+    await request(app)
+        .post('/api/v1/products/offers')
+        .set('Authorization', `Bearer ${buyerToken}`)
+        .send({ productId: 1, priceOffer: 10000 });
+    await request(app)
+        .put('/api/v1/products/offer/1')
+        .set('Authorization', `Bearer ${sellerToken}`)
+        .send({ status: true });
 });
 afterAll(async () => {
     jest.clearAllMocks();
@@ -107,96 +115,40 @@ afterAll(async () => {
     });
 });
 
-describe('POST /api/v1/products/offers', () => {
-    test('200 OK', async () => {
-        const res = await request(app)
-            .post('/api/v1/products/offers')
-            .set('Authorization', `Bearer ${buyerToken}`)
-            .send({
-                productId: 1,
-                priceOffer: 10000
-            });
-
-        expect(res.statusCode).toEqual(201);
-        expect(res.body.message).toEqual('Penawaran produk berhasil dibuat');
-    });
-    test('400 Bad Request', async () => {
-        const res = await request(app)
-            .post('/api/v1/products/offers')
-            .set('Authorization', `Bearer ${buyerToken}`)
-            .send({
-                productId: 1
-            });
-        expect(res.statusCode).toEqual(400);
-        expect(res.body.message).toEqual('Kesalahan validasi');
-    });
-    test('401 Unauthorized', async () => {
-        const res = await request(app).post('/api/v1/products/offers').send({
-            name: 'John Doe',
-            phoneNumber: '081234567890',
-            cityId: 1,
-            address: 'Jl. Kebon Jeruk No. 1'
-        });
-        expect(res.statusCode).toEqual(401);
-        expect(res.body.message).toEqual('Tidak memiliki token');
-    });
-    test('404 Not Found', async () => {
-        const res = await request(app)
-            .post('/api/v1/products/offers')
-            .set('Authorization', `Bearer ${buyerToken}`)
-            .send({
-                productId: 10, 
-                priceOffer: 10000
-            });
-        expect(res.statusCode).toEqual(404);
-        expect(res.body.message).toEqual('Produk tidak ditemukan');
-    });
-});
-
-describe('GET /api/v1/products/offers', () => {
+describe('GET /api/v1/notifications', () => {
     test('200 OK (Buyer)', async () => {
         const res = await request(app)
-            .get('/api/v1/products/offers')
+            .get('/api/v1/notifications')
             .set('Authorization', `Bearer ${buyerToken}`);
         expect(res.statusCode).toEqual(200);
-        expect(res.body.message).toEqual('Penawaran produk ditemukan');
+        expect(res.body.message).toEqual('Notifikasi ditemukan');
     });
     test('200 OK (Seller)', async () => {
         const res = await request(app)
-            .get('/api/v1/products/offers')
+            .get('/api/v1/notifications')
             .set('Authorization', `Bearer ${sellerToken}`);
         expect(res.statusCode).toEqual(200);
-        expect(res.body.message).toEqual('Penawaran produk ditemukan');
+        expect(res.body.message).toEqual('Notifikasi ditemukan');
     });
-    test('401 Unauthorized',  async () => {
-        const res = await request(app).get('/api/v1/products/offers');
+    test('401 Unauthorized', async () => {
+        const res = await request(app).get('/api/v1/notifications');
         expect(res.statusCode).toEqual(401);
         expect(res.body.message).toEqual('Tidak memiliki token');
     });
 });
 
-describe('PUT /api/v1/products/offers/:id', () => {
+describe('PUT /api/v1/notifications/:id', () => {
     test('200 OK', async () => {
         const res = await request(app)
-            .put('/api/v1/products/offer/1')
+            .put('/api/v1/notifications/1')
             .set('Authorization', `Bearer ${sellerToken}`)
-            .send({ status: true });
         expect(res.statusCode).toEqual(200);
-        expect(res.body.message).toEqual(
-            'Penawaran produk berhasil diperbarui'
-        );
+        expect(res.body.message).toEqual('Notifikasi berhasil diperbarui');
     });
-    test('400 Bad Request', async () => {
+    test('401 Unauthorized', async () => {
         const res = await request(app)
-            .put('/api/v1/products/offer/1')
-            .set('Authorization', `Bearer ${sellerToken}`);
-        expect(res.statusCode).toEqual(400);
-        expect(res.body.message).toEqual('Kesalahan validasi');
-    });
-    test('401 Unatuhorized', async () => {
-        const res = await request(app).put('/api/v1/products/offer/1').send({
-            status: true
-        });
+            .put('/api/v1/notifications/1')
+            .send({ status: true });
         expect(res.statusCode).toEqual(401);
         expect(res.body.message).toEqual('Tidak memiliki token');
     });

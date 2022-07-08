@@ -1,5 +1,5 @@
-const express = require('express');
 const multer = require('multer');
+const { Router } = require('express');
 const { body } = require('express-validator');
 const passport = require('../../../middlewares/passport');
 const {
@@ -11,7 +11,7 @@ const { findByUser, update } = require('../../../controllers/profile');
 const { profileStorage } = require('../../../middlewares/file');
 const { Profile } = require('../../../models');
 
-const router = express.Router();
+const router = Router();
 
 router
     .route('/profile')
@@ -50,6 +50,10 @@ router
             body('phoneNumber')
                 .notEmpty()
                 .withMessage('Nomor telepon harus diisi')
+                .isLength({ min: 7 })
+                .withMessage('Nomor telepon minimal 7 digit')
+                .isNumeric()
+                .withMessage('Nomor telepon harus berupa angka')
                 .custom(async (value, { req }) => {
                     const user = await Profile.findOne({
                         where: { phoneNumber: value }
@@ -69,6 +73,15 @@ router
                 .trim()
                 .isString()
                 .withMessage('Alamat harus berupa huruf')
+                .isLength({ min: 5 })
+                .withMessage('Alamat minimal 5 karakter')
+                .custom(value => {
+                    if (/^\d+$/.test(value))
+                        throw new Error(
+                            'Alamat tidak boleh hanya berupa angka'
+                        );
+                    return true;
+                })
         ],
         update
     )

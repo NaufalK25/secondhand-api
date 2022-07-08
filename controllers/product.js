@@ -64,7 +64,7 @@ module.exports = {
                 });
             });
         }
-        
+
         productResources.forEach(async (productResource, index) => {
             const { path } = productResource;
             const image = await uploadImage(
@@ -95,11 +95,10 @@ module.exports = {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const sortBy = req.query.sortBy;
+        const { sortBy } = req.query;
         const orders = [['createdAt', 'DESC']];
-        if (sortBy === 'sold') {
-            orders.unshift(['status', 'DESC']);
-        } else if (sortBy === 'wishlist') {
+        if (sortBy === 'sold') orders.unshift(['status', 'DESC']);
+        if (sortBy === 'wishlist') {
             orders.unshift([
                 sequelize.fn('count', sequelize.col('Wishlists.id')),
                 'DESC'
@@ -123,11 +122,10 @@ module.exports = {
             order: orders
         });
 
-        if (sortBy === 'sold') {
+        if (sortBy === 'sold')
             products = products.filter(product => product.status === false);
-        } else if (sortBy === 'wishlist') {
+        if (sortBy === 'wishlist')
             products = products.filter(product => product.Wishlists.length > 0);
-        }
 
         if (products.length === 0)
             return notFound(req, res, 'Produk tidak ditemukan');
@@ -195,10 +193,7 @@ module.exports = {
             where: { productCategoryId: productCategory.id },
             attributes: [],
             include: [
-                {
-                    model: Product,
-                    include: [{ model: ProductResource }]
-                },
+                { model: Product, include: [{ model: ProductResource }] },
                 { model: ProductCategory }
             ]
         });

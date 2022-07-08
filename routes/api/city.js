@@ -1,8 +1,8 @@
-const express = require('express');
+const { Router } = require('express');
 const { findAll } = require('../../controllers/city');
 const { methodNotAllowed } = require('../../controllers/error');
 
-const router = express.Router();
+const router = Router();
 
 router.route('/').get(findAll).all(methodNotAllowed);
 

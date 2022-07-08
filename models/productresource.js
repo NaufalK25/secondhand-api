@@ -7,10 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
     ProductResource.init(
-        {
-            productId: DataTypes.INTEGER,
-            filename: DataTypes.STRING
-        },
+        { productId: DataTypes.INTEGER, filename: DataTypes.STRING },
         { sequelize, modelName: 'ProductResource' }
     );
     return ProductResource;

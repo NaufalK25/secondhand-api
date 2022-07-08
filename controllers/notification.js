@@ -4,7 +4,7 @@ const {
     Notification,
     Product,
     ProductOffer,
-    ProductResources
+    ProductResource
 } = require('../models');
 
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
         const notification = await Notification.findAll({
             where: { userId: req.user.id, status: false },
             include: [
-                { model: Product, include: [{ model: ProductResources }] },
+                { model: Product, include: [{ model: ProductResource }] },
                 { model: ProductOffer }
             ] 
         });
