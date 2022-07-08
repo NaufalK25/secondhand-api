@@ -606,13 +606,16 @@ describe('POST /api/v1/user/products', () => {
 
 describe('GET /api/v1/user/products/:productId', () => {
     beforeEach(() => {
+        Product.findOne = jest
+            .fn()
+            .mockImplementation(() => ({ ...product }));
         Product.findByPk = jest
             .fn()
             .mockImplementation(() => ({ ...productFindById }));
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
-        const req = mockRequest({ params: { productId: 1 } });
+        const req = mockRequest({ params: { productId: 1 }});
         const res = mockResponse();
 
         validationResult.mockImplementation(() => ({

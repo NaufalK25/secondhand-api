@@ -1,13 +1,20 @@
 const {Router} = require('express');
-const { query } = require('express-validator');
+const { query,param } = require('express-validator');
 const { methodNotAllowed } = require('../../../controllers/error');
 const {
     filterByCategory,
     findAll,
-    search
+    search, findById
 } = require('../../../controllers/product');
 
 const router = Router();
+router
+    .route('/:id')
+    .get(
+        [param('id').isInt().withMessage('Id harus berupa angka')],
+        findById
+    )
+    .all(methodNotAllowed);
 
 router
     .route('/filter')
