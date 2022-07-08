@@ -17,26 +17,6 @@ const { productStorage } = require('../../../middlewares/file');
 const router = Router();
 
 router
-    .route('/products/:id')
-    .get(
-        (req, res, next) => {
-            passport.authenticate(
-                'jwt',
-                { session: false },
-                async (err, user, info) => {
-                    if (err) return internalServerError(err, req, res);
-                    if (!user) return unAuthorized(req, res);
-                    req.user = user;
-                    next();
-                }
-            )(req, res, next);
-        },
-        [param('id').isInt().withMessage('Id harus berupa angka')],
-        findById
-    )
-    .all(methodNotAllowed);
-
-router
     .route('/products')
     .get(
         (req, res, next) => {
