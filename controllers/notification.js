@@ -14,7 +14,7 @@ module.exports = {
             include: [
                 { model: Product, include: [{ model: ProductResources }] },
                 { model: ProductOffer }
-            ]
+            ] 
         });
 
         if (notification.length === 0)

@@ -136,7 +136,7 @@ describe('POST /api/v1/products/offers', () => {
             .post('/api/v1/products/offers')
             .set('Authorization', `Bearer ${buyerToken}`)
             .send({
-                productId: 10,
+                productId: 10, 
                 priceOffer: 10000
             });
         expect(res.statusCode).toEqual(404);
@@ -159,7 +159,7 @@ describe('GET /api/v1/products/offers', () => {
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Penawaran produk ditemukan');
     });
-    test('401 Unauthorized', async () => {
+    test('401 Unauthorized',  async () => {
         const res = await request(app).get('/api/v1/products/offers');
         expect(res.statusCode).toEqual(401);
         expect(res.body.message).toEqual('Tidak memiliki token');
