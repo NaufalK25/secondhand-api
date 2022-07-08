@@ -1,5 +1,5 @@
-const express = require('express');
 const multer = require('multer');
+const { Router } = require('express');
 const { body } = require('express-validator');
 const passport = require('../../../middlewares/passport');
 const {
@@ -11,7 +11,7 @@ const { findByUser, update } = require('../../../controllers/profile');
 const { profileStorage } = require('../../../middlewares/file');
 const { Profile } = require('../../../models');
 
-const router = express.Router();
+const router = Router();
 
 router
     .route('/profile')

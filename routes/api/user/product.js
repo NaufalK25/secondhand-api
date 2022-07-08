@@ -1,5 +1,5 @@
-const express = require('express');
 const multer = require('multer');
+const { Router } = require('express');
 const { body, param, query } = require('express-validator');
 const passport = require('../../../middlewares/passport');
 const {
@@ -14,7 +14,7 @@ const {
 } = require('../../../controllers/product');
 const { productStorage } = require('../../../middlewares/file');
 
-const router = express.Router();
+const router = Router();
 
 router
     .route('/products/:id')

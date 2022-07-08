@@ -1,4 +1,4 @@
-const express = require('express');
+const { Router } = require('express');
 const { param } = require('express-validator');
 const passport = require('../../../middlewares/passport');
 const {
@@ -10,7 +10,8 @@ const {
     findByUser,
     findById
 } = require('../../../controllers/transactionhistory');
-const router = express.Router();
+
+const router = Router();
 
 router
     .route('/history')

@@ -1,4 +1,4 @@
-const express = require('express');
+const { Router } = require('express');
 const {
     internalServerError,
     notFoundDefault
@@ -7,7 +7,7 @@ const productRouter = require('./product');
 const profileRouter = require('./profile');
 const wishlistRouter = require('./wishlist');
 
-const router = express.Router();
+const router = Router();
 
 router.use(productRouter); // /products
 router.use(profileRouter); // /profile
