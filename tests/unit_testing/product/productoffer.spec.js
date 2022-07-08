@@ -9,7 +9,8 @@ const {
     Product,
     ProductOffer,
     Transaction,
-    TransactionHistory
+    TransactionHistory,
+    Wishlist
 } = require('../../../models');
 
 process.env.NODE_ENV = 'test';
@@ -47,6 +48,13 @@ const productOffer = {
     buyerId: 1,
     priceOffer: 100,
     status: null,
+    createdAt: date,
+    updatedAt: date
+};
+const wishlist = {
+    id: 1,
+    userId: 1,
+    productId: 1,
     createdAt: date,
     updatedAt: date
 };
@@ -153,6 +161,7 @@ describe('GET /api/v1/products/offers', () => {
 
 describe('POST /api/v1/products/offers', () => {
     beforeEach(() => {
+        Wishlist.create = jest.fn().mockImplementation(() => ({ ...wishlist }));
         Notification.create = jest.fn().mockImplementation(() => ({
             ...notification
         }));
@@ -349,7 +358,8 @@ describe('PUT /api/v1/products/offer/:id', () => {
         expect(res.status).toHaveBeenCalledWith(403);
         expect(res.json).toHaveBeenCalledWith({
             success: false,
-            message: 'Anda tidak diperbolehkan untuk memperbarui penawaran produk ini',
+            message:
+                'Anda tidak diperbolehkan untuk memperbarui penawaran produk ini',
             data: null
         });
     });
