@@ -1,8 +1,7 @@
-const express = require('express');
+const { Router } = require('express');
 const { body, param } = require('express-validator');
 const passport = require('../../../middlewares/passport');
 const {
-    forbidden,
     internalServerError,
     methodNotAllowed,
     unAuthorized
@@ -12,9 +11,8 @@ const {
     findByUser,
     update
 } = require('../../../controllers/productoffer');
-const { Product, ProductOffer, User } = require('../../../models');
 
-const router = express.Router();
+const router = Router();
 
 router
     .route('/offers')

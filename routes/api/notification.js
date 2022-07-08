@@ -1,4 +1,4 @@
-const express = require('express');
+const { Router } = require('express');
 const { param } = require('express-validator');
 const passport = require('../../middlewares/passport');
 const {
@@ -8,7 +8,7 @@ const {
 } = require('../../controllers/error');
 const { findByUser, update } = require('../../controllers/notification');
 
-const router = express.Router();
+const router = Router();
 
 router
     .route('/')

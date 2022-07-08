@@ -1,4 +1,4 @@
-const express = require('express');
+const {Router} = require('express');
 const { query } = require('express-validator');
 const { methodNotAllowed } = require('../../../controllers/error');
 const {
@@ -7,7 +7,7 @@ const {
     search
 } = require('../../../controllers/product');
 
-const router = express.Router();
+const router = Router();
 
 router
     .route('/filter')

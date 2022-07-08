@@ -1,4 +1,4 @@
-const express = require('express');
+const { Router } = require('express');
 const { body, param } = require('express-validator');
 const passport = require('../../../middlewares/passport');
 const {
@@ -7,7 +7,8 @@ const {
     unAuthorized
 } = require('../../../controllers/error');
 const { findByUser, update } = require('../../../controllers/transaction');
-const router = express.Router();
+
+const router = Router();
 
 router
     .route('/')
