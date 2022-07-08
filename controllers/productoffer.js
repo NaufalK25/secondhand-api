@@ -5,7 +5,8 @@ const {
     ProductOffer,
     Transaction,
     TransactionHistory,
-    User
+    User,
+    Wishlist
 } = require('../models');
 const { badRequest, forbidden, notFound } = require('./error');
 
@@ -50,6 +51,8 @@ module.exports = {
             buyerId: req.user.id,
             priceOffer: req.body.priceOffer
         });
+
+        await Wishlist.create({ userId: req.user.id, productId: product.id });
 
         // notify buyer if their offer has been sent
         await Notification.create({
@@ -97,9 +100,8 @@ module.exports = {
             where: { id: req.params.id }
         });
 
-        // product offer accepted
         if (updatedData.status === 'true' || updatedData.status === true) {
-            // TODO make transaction kalo diterima tawarannya sama seller dia langsung ke proses transaksi
+            // product offer accepted
             const transaction = await Transaction.create({
                 productId: userProductOffer.productId,
                 buyerId: userProductOffer.buyerId,

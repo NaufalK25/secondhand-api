@@ -1,6 +1,6 @@
 const multer = require('multer');
 const { Router } = require('express');
-const { body, param, query } = require('express-validator');
+const { body, query } = require('express-validator');
 const passport = require('../../../middlewares/passport');
 const {
     internalServerError,
@@ -10,7 +10,6 @@ const {
 const {
     create,
     findBySeller,
-    findById
 } = require('../../../controllers/product');
 const { productStorage } = require('../../../middlewares/file');
 

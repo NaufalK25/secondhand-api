@@ -1437,7 +1437,7 @@
                 "tags": [
                     "Product Offer"
                 ],
-                "summary": "Get product offer as seller or buyyer",
+                "summary": "Get product offer as seller or buyer",
                 "operationId": "product-offer-get",
                 "responses": {
                     "200": {
@@ -2413,7 +2413,45 @@
                         "format": "date-time"
                     },
                     "Product": {
-                        "$ref": "#/components/schemas/Product"
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "sellerId": {
+                                "type": "integer"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "price": {
+                                "type": "integer"
+                            },
+                            "publishDate": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "type": "string"
+                            },
+                            "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        },
+                        "ProductResources": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/ProductResource"
+                            }
+                        }
                     }
                 }
             },
