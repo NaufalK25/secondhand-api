@@ -140,16 +140,12 @@ module.exports = {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const getproduct = await Product.findOne({
-            where: { id: req.params.id }
-        });
         const product = await Product.findByPk(req.params.id, {
             include: [
                 { model: ProductCategory, through: { attributes: [] } },
                 { model: ProductResource },
                 {
                     model: User,
-                    where: { id: getproduct.sellerId },
                     include: [{ model: Profile, include: [{ model: City }] }]
                 }
             ]
