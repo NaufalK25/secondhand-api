@@ -95,7 +95,7 @@ module.exports = {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const sortBy = req.query.sortBy;
+        const { sortBy } = req.query;
         const orders = [['createdAt', 'DESC']];
         if (sortBy === 'sold') orders.unshift(['status', 'DESC']);
         if (sortBy === 'wishlist') {

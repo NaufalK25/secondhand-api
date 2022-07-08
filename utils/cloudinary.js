@@ -7,7 +7,11 @@ const uploadImage = async (folder, path, publicId) => {
         resource_type: 'auto',
         overwrite: true,
         invalidate: true,
-        folder
+        folder:
+            process.env.NODE_ENV === '' ||
+            process.env.NODE_ENV === 'development'
+                ? `development/${folder}`
+                : folder
     });
     return image;
 };
