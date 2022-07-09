@@ -141,6 +141,64 @@ describe('GET /api/v1/products', () => {
     });
 });
 
+describe('GET /api/v1/products/:id', () => {
+    test('200 OK', async () => {
+        const res = await request(app).get('/api/v1/products/1');
+        expect(res.statusCode).toBe(200);
+        expect(res.body.message).toEqual('Produk ditemukan');
+    });
+    test('400 Bad Request', async () => {
+        const res = await request(app).get('/api/v1/products/a');
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toEqual('Kesalahan validasi');
+    });
+    test('404 Not Found', async () => {
+        await queryInterface.bulkDelete('Notifications', null, {
+            truncate: true,
+            restartIdentity: true
+        });
+        await queryInterface.bulkDelete('Products', null, {
+            truncate: true,
+            restartIdentity: true
+        });
+        await queryInterface.bulkDelete('ProductResources', null, {
+            truncate: true,
+            restartIdentity: true
+        });
+        await queryInterface.bulkDelete('ProductCategoryThroughs', null, {
+            truncate: true,
+            restartIdentity: true
+        });
+        const res = await request(app).get('/api/v1/products/1');
+        expect(res.statusCode).toBe(404);
+        expect(res.body.message).toEqual('Produk tidak ditemukan');
+        await request(app)
+            .post('/api/v1/user/products')
+            .set('Authorization', `Bearer ${token}`)
+            .field('categories', [1, 2])
+            .field('name', 'Barang bekas')
+            .field('price', 1000000)
+            .field('description', 'ini product bekas')
+            .field('status', true)
+            .attach(
+                'images',
+                path.join(__dirname, '../../resources/product.jpg')
+            );
+        await request(app)
+            .post('/api/v1/user/products')
+            .set('Authorization', `Bearer ${token}`)
+            .field('categories', [2, 3])
+            .field('name', 'Barang bekas 2')
+            .field('price', 2000000)
+            .field('description', 'ini product bekas 2')
+            .field('status', true)
+            .attach(
+                'images',
+                path.join(__dirname, '../../resources/product.jpg')
+            );
+    });
+});
+
 describe('GET /api/v1/products/search', () => {
     test('200 OK', async () => {
         const res = await request(app).get(
