@@ -193,8 +193,13 @@ module.exports = {
             where: { productCategoryId: productCategory.id },
             attributes: [],
             include: [
-                { model: Product, include: [{ model: ProductResource }] },
-                { model: ProductCategory }
+                {
+                    model: Product,
+                    include: [
+                        { model: ProductCategory, through: { attributes: [] } },
+                        { model: ProductResource }
+                    ]
+                }
             ]
         });
 

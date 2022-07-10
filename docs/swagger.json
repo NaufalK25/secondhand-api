@@ -2728,6 +2728,12 @@
                                 "type": "string",
                                 "format": "date-time"
                             },
+                            "ProductCategories": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Category"
+                                }
+                            },
                             "ProductResources": {
                                 "type": "array",
                                 "items": {
@@ -2735,9 +2741,6 @@
                                 }
                             }
                         }
-                    },
-                    "ProductCategory": {
-                        "$ref": "#/components/schemas/Category"
                     }
                 }
             },
