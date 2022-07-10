@@ -8,10 +8,7 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            sellerId: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-            },
+            sellerId: { type: Sequelize.INTEGER, allowNull: false },
             name: { type: Sequelize.STRING, allowNull: false },
             price: { type: Sequelize.INTEGER, allowNull: false },
             publishDate: {
@@ -19,11 +16,8 @@ module.exports = {
                 allowNull: false,
                 defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
             },
-            description: { type: Sequelize.STRING },
-            status: {
-                type: Sequelize.BOOLEAN,
-                defaultValue: true // true = available, false = unavailable / sold out
-            },
+            description: { type: Sequelize.TEXT, allowNull: false },
+            status: { type: Sequelize.BOOLEAN, defaultValue: true }, // true = available, false = unavailable / sold out
             createdAt: { allowNull: false, type: Sequelize.DATE },
             updatedAt: { allowNull: false, type: Sequelize.DATE }
         });

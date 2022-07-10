@@ -1,6 +1,6 @@
-const express = require('express');
 const multer = require('multer');
-const { body, param, query } = require('express-validator');
+const { Router } = require('express');
+const { body, query } = require('express-validator');
 const passport = require('../../../middlewares/passport');
 const {
     internalServerError,
@@ -10,31 +10,10 @@ const {
 const {
     create,
     findBySeller,
-    findById
 } = require('../../../controllers/product');
 const { productStorage } = require('../../../middlewares/file');
 
-const router = express.Router();
-
-router
-    .route('/products/:id')
-    .get(
-        (req, res, next) => {
-            passport.authenticate(
-                'jwt',
-                { session: false },
-                async (err, user, info) => {
-                    if (err) return internalServerError(err, req, res);
-                    if (!user) return unAuthorized(req, res);
-                    req.user = user;
-                    next();
-                }
-            )(req, res, next);
-        },
-        [param('id').isInt().withMessage('Id harus berupa angka')],
-        findById
-    )
-    .all(methodNotAllowed);
+const router = Router();
 
 router
     .route('/products')

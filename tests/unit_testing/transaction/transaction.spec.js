@@ -34,6 +34,14 @@ const product = {
     createdAt: date,
     updatedAt: date
 };
+const productResource = {
+    id: 1,
+    productId: 1,
+    filename:
+        'https://res.cloudinary.com/dko04cygp/image/upload/v1656654290/products/1/1-1.jpg',
+    createdAt: date,
+    updatedAt: date
+};
 const wishlist = {
     id: 1,
     userId: 2,
@@ -49,7 +57,10 @@ const buyer = {
     createdAt: date,
     updatedAt: date
 };
-const transactionGet = { ...transaction, Product: { ...product } };
+const transactionGet = {
+    ...transaction,
+    Product: { ...product, ProductResources: [{ ...productResource }] }
+};
 const transactionPut = {
     ...transaction,
     Product: { ...product, User: { ...buyer } }
@@ -119,6 +130,9 @@ describe('PUT /api/v1/transactions/:id', () => {
         }));
         Product.update = jest.fn().mockImplementation(() => ({ ...product }));
         Wishlist.update = jest.fn().mockImplementation(() => ({ ...wishlist }));
+        Wishlist.destroy = jest
+            .fn()
+            .mockImplementation(() => ({ ...wishlist }));
         Transaction.update = jest
             .fn()
             .mockImplementation(() => ({ ...transaction }));

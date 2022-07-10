@@ -2,9 +2,9 @@ const path = require('path');
 const mustache = require('mustache');
 const nodemailer = require('nodemailer');
 const request = require('supertest');
-const app = require('../../../app');
-const { sequelize } = require('../../../models');
-const { uploadImage } = require('../../../utils/cloudinary');
+const app = require('../../app');
+const { sequelize } = require('../../models');
+const { uploadImage } = require('../../utils/cloudinary');
 
 process.env.NODE_ENV = 'test';
 let buyerToken, sellerToken;
@@ -12,7 +12,7 @@ const { queryInterface } = sequelize;
 
 jest.mock('mustache');
 jest.mock('nodemailer');
-jest.mock('../../../utils/cloudinary');
+jest.mock('../../utils/cloudinary');
 
 beforeAll(async () => {
     nodemailer.createTransport.mockImplementation(() => ({
@@ -50,7 +50,7 @@ beforeAll(async () => {
         .field('price', 1000000)
         .field('description', 'ini product bekas')
         .field('status', true)
-        .attach('images', path.join(__dirname, '../../resources/product.jpg'));
+        .attach('images', path.join(__dirname, '../resources/product.jpg'));
     // buyer
     await request(app).post('/api/v1/auth/register').send({
         name: 'Transaction Buyer',
@@ -115,45 +115,40 @@ afterAll(async () => {
     });
 });
 
-describe('GET /api/v1/transactions/history', () => {
+describe('GET /api/v1/notifications', () => {
     test('200 OK (Buyer)', async () => {
         const res = await request(app)
-            .get('/api/v1/transactions/history')
+            .get('/api/v1/notifications')
             .set('Authorization', `Bearer ${buyerToken}`);
         expect(res.statusCode).toEqual(200);
-        expect(res.body.message).toEqual('Riwayat transaksi ditemukan');
+        expect(res.body.message).toEqual('Notifikasi ditemukan');
     });
     test('200 OK (Seller)', async () => {
         const res = await request(app)
-            .get('/api/v1/transactions/history')
+            .get('/api/v1/notifications')
             .set('Authorization', `Bearer ${sellerToken}`);
         expect(res.statusCode).toEqual(200);
-        expect(res.body.message).toEqual('Riwayat transaksi ditemukan');
+        expect(res.body.message).toEqual('Notifikasi ditemukan');
     });
     test('401 Unauthorized', async () => {
-        const res = await request(app).get('/api/v1/transactions/history');
+        const res = await request(app).get('/api/v1/notifications');
         expect(res.statusCode).toEqual(401);
         expect(res.body.message).toEqual('Tidak memiliki token');
     });
 });
 
-describe('GET /api/v1/transactions/history/:id', () => {
-    test('200 OK (Buyer)', async () => {
+describe('PUT /api/v1/notifications/:id', () => {
+    test('200 OK', async () => {
         const res = await request(app)
-            .get('/api/v1/transactions/history/1')
-            .set('Authorization', `Bearer ${buyerToken}`);
+            .put('/api/v1/notifications/1')
+            .set('Authorization', `Bearer ${sellerToken}`)
         expect(res.statusCode).toEqual(200);
-        expect(res.body.message).toEqual('Riwayat transaksi ditemukan');
-    });
-    test('200 OK (Seller)', async () => {
-        const res = await request(app)
-            .get('/api/v1/transactions/history/1')
-            .set('Authorization', `Bearer ${sellerToken}`);
-        expect(res.statusCode).toEqual(200);
-        expect(res.body.message).toEqual('Riwayat transaksi ditemukan');
+        expect(res.body.message).toEqual('Notifikasi berhasil diperbarui');
     });
     test('401 Unauthorized', async () => {
-        const res = await request(app).get('/api/v1/transactions/history/1');
+        const res = await request(app)
+            .put('/api/v1/notifications/1')
+            .send({ status: true });
         expect(res.statusCode).toEqual(401);
         expect(res.body.message).toEqual('Tidak memiliki token');
     });

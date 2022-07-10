@@ -8,19 +8,11 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            userId: {
-                type: Sequelize.INTEGER,
-                allowNull: false
-            },
-            productId: {
-                type: Sequelize.INTEGER,
-                allowNull: false
-            },
-            productOfferId: {
-                type: Sequelize.INTEGER
-            },
+            userId: { type: Sequelize.INTEGER, allowNull: false },
+            productId: { type: Sequelize.INTEGER, allowNull: false },
+            productOfferId: { type: Sequelize.INTEGER },
             type: { type: Sequelize.STRING, allowNull: false },
-            description: { type: Sequelize.STRING },
+            description: { type: Sequelize.TEXT },
             status: { type: Sequelize.BOOLEAN, defaultValue: false }, // true = read, false = unread
             createdAt: { allowNull: false, type: Sequelize.DATE },
             updatedAt: { allowNull: false, type: Sequelize.DATE }

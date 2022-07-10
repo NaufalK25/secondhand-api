@@ -136,6 +136,18 @@ router
 router
     .route('/forgot-password')
     .post(
+        (req, res, next) => {
+            passport.authenticate(
+                'jwt',
+                { session: false },
+                async (err, user, info) => {
+                    if (err) return internalServerError(err, req, res);
+                    if (user) return forbidden(req, res);
+                    req.user = user;
+                    next();
+                }
+            )(req, res, next);
+        },
         [
             body('email')
                 .notEmpty()
@@ -157,6 +169,18 @@ router
 router
     .route('/reset-password')
     .post(
+        (req, res, next) => {
+            passport.authenticate(
+                'jwt',
+                { session: false },
+                async (err, user, info) => {
+                    if (err) return internalServerError(err, req, res);
+                    if (user) return forbidden(req, res);
+                    req.user = user;
+                    next();
+                }
+            )(req, res, next);
+        },
         [
             body('email')
                 .notEmpty()

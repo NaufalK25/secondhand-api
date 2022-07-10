@@ -1,4 +1,4 @@
-const express = require('express');
+const { Router } = require('express');
 const { body, param } = require('express-validator');
 const passport = require('../../../middlewares/passport');
 const {
@@ -13,7 +13,7 @@ const {
 } = require('../../../controllers/wishlist');
 const { Wishlist } = require('../../../models');
 
-const router = express.Router();
+const router = Router();
 
 router
     .route('/wishlists')

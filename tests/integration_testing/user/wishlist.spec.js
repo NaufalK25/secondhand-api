@@ -25,13 +25,13 @@ beforeAll(async () => {
     }));
     // seller
     await request(app).post('/api/v1/auth/register').send({
-        name: 'Transaction Seller',
-        email: 'transactionseller@gmail.com',
-        password: '@TransactionSeller123'
+        name: 'Wishlist Seller',
+        email: 'wishlistseller@gmail.com',
+        password: '@WishlistSeller123'
     });
     const seller = await request(app).post('/api/v1/auth/login').send({
-        email: 'transactionseller@gmail.com',
-        password: '@TransactionSeller123'
+        email: 'wishlistseller@gmail.com',
+        password: '@WishlistSeller123'
     });
     sellerToken = seller.res.rawHeaders[7].slice(6).replace('; Path=/', '');
     await request(app)
@@ -53,23 +53,15 @@ beforeAll(async () => {
         .attach('images', path.join(__dirname, '../../resources/product.jpg'));
     // buyer
     await request(app).post('/api/v1/auth/register').send({
-        name: 'Transaction Buyer',
-        email: 'transactionbuyer@gmail.com',
-        password: '@TransactionBuyer123'
+        name: 'Wishlist Buyer',
+        email: 'wishlistbuyer@gmail.com',
+        password: '@WishlistBuyer123'
     });
     const buyer = await request(app).post('/api/v1/auth/login').send({
-        email: 'transactionbuyer@gmail.com',
-        password: '@TransactionBuyer123'
+        email: 'wishlistbuyer@gmail.com',
+        password: '@WishlistBuyer123'
     });
     buyerToken = buyer.res.rawHeaders[7].slice(6).replace('; Path=/', '');
-    await request(app)
-        .post('/api/v1/products/offers')
-        .set('Authorization', `Bearer ${buyerToken}`)
-        .send({ productId: 1, priceOffer: 10000 });
-    await request(app)
-        .put('/api/v1/products/offer/1')
-        .set('Authorization', `Bearer ${sellerToken}`)
-        .send({ status: true });
 });
 afterAll(async () => {
     jest.clearAllMocks();
@@ -114,46 +106,99 @@ afterAll(async () => {
         restartIdentity: true
     });
 });
-
-describe('GET /api/v1/transactions/history', () => {
-    test('200 OK (Buyer)', async () => {
+describe('GET /api/v1/user/wishlists not found', () => {
+    test('404 OK', async () => {
         const res = await request(app)
-            .get('/api/v1/transactions/history')
+            .get('/api/v1/user/wishlists')
             .set('Authorization', `Bearer ${buyerToken}`);
-        expect(res.statusCode).toEqual(200);
-        expect(res.body.message).toEqual('Riwayat transaksi ditemukan');
-    });
-    test('200 OK (Seller)', async () => {
-        const res = await request(app)
-            .get('/api/v1/transactions/history')
-            .set('Authorization', `Bearer ${sellerToken}`);
-        expect(res.statusCode).toEqual(200);
-        expect(res.body.message).toEqual('Riwayat transaksi ditemukan');
+        expect(res.statusCode).toEqual(404);
+        expect(res.body.message).toEqual('Daftar keinginan tidak ditemukan');
     });
     test('401 Unauthorized', async () => {
-        const res = await request(app).get('/api/v1/transactions/history');
+        const res = await request(app).get('/api/v1/user/wishlists');
         expect(res.statusCode).toEqual(401);
         expect(res.body.message).toEqual('Tidak memiliki token');
     });
 });
 
-describe('GET /api/v1/transactions/history/:id', () => {
-    test('200 OK (Buyer)', async () => {
+describe('POST /api/v1/user/wishlists', () => {
+    test('200 OK', async () => {
         const res = await request(app)
-            .get('/api/v1/transactions/history/1')
-            .set('Authorization', `Bearer ${buyerToken}`);
-        expect(res.statusCode).toEqual(200);
-        expect(res.body.message).toEqual('Riwayat transaksi ditemukan');
+            .post('/api/v1/user/wishlists')
+            .set('Authorization', `Bearer ${buyerToken}`)
+            .send({
+                productId: 1
+            });
+
+        expect(res.statusCode).toEqual(201);
+        expect(res.body.message).toEqual('Daftar keinginan berhasil ditambah');
     });
-    test('200 OK (Seller)', async () => {
+    test('400 Bad Request', async () => {
         const res = await request(app)
-            .get('/api/v1/transactions/history/1')
-            .set('Authorization', `Bearer ${sellerToken}`);
-        expect(res.statusCode).toEqual(200);
-        expect(res.body.message).toEqual('Riwayat transaksi ditemukan');
+            .post('/api/v1/user/wishlists')
+            .set('Authorization', `Bearer ${buyerToken}`)
+            .send({
+                productId: 'satu'
+            });
+        expect(res.statusCode).toEqual(400);
+        expect(res.body.message).toEqual('Kesalahan validasi');
     });
     test('401 Unauthorized', async () => {
-        const res = await request(app).get('/api/v1/transactions/history/1');
+        const res = await request(app).post('/api/v1/user/wishlists').send({
+            productId: 1
+        });
+        expect(res.statusCode).toEqual(401);
+        expect(res.body.message).toEqual('Tidak memiliki token');
+    });
+    test('404 Not Found', async () => {
+        const res = await request(app)
+            .post('/api/v1/user/wishlists')
+            .set('Authorization', `Bearer ${buyerToken}`)
+            .send({
+                productId: 100
+            });
+        expect(res.statusCode).toEqual(404);
+        expect(res.body.message).toEqual('Produk tidak ditemukan');
+    });
+
+    test('400 Bad Request', async () => {
+        const res = await request(app)
+            .post('/api/v1/user/wishlists')
+            .set('Authorization', `Bearer ${buyerToken}`)
+            .send({
+                productId: 1
+            });
+
+        expect(res.statusCode).toEqual(400);
+        expect(res.body.message).toEqual('Kesalahan validasi');
+    });
+});
+
+describe('GET /api/v1/user/wishlist', () => {
+    test('200 OK (Buyer)', async () => {
+        const res = await request(app)
+            .get('/api/v1/user/wishlists')
+            .set('Authorization', `Bearer ${buyerToken}`);
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.message).toEqual('Daftar keinginan ditemukan');
+    });
+    test('401 Unauthorized', async () => {
+        const res = await request(app).get('/api/v1/user/wishlists');
+        expect(res.statusCode).toEqual(401);
+        expect(res.body.message).toEqual('Tidak memiliki token');
+    });
+});
+
+describe('DELETE /api/v1/user/wishlist/:id', () => {
+    test('200 OK', async () => {
+        const res = await request(app)
+            .delete('/api/v1/user/wishlist/1')
+            .set('Authorization', `Bearer ${buyerToken}`);
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.message).toEqual('Daftar keinginan berhasil dihapus');
+    });
+    test('401 Unatuhorized', async () => {
+        const res = await request(app).delete('/api/v1/user/wishlist/1');
         expect(res.statusCode).toEqual(401);
         expect(res.body.message).toEqual('Tidak memiliki token');
     });

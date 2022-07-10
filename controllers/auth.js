@@ -50,7 +50,12 @@ module.exports = {
         const { name, email, password } = req.body;
         const hashedPassword = await bcryptjs.hash(password, 10);
         const user = await User.create({ email, password: hashedPassword });
-        await Profile.create({ userId: user.id, name });
+        await Profile.create({
+            userId: user.id,
+            name,
+            profilePicture:
+                'https://res.cloudinary.com/dko04cygp/image/upload/v1657013827/profiles/default.png'
+        });
 
         //Step 1: Creating the transporter
         const transporter = nodemailer.createTransport({

@@ -1,6 +1,12 @@
 const { validationResult } = require('express-validator');
 const { badRequest, forbidden, notFound } = require('../controllers/error');
-const { Product, Transaction, User, Wishlist } = require('../models');
+const {
+    Product,
+    ProductResource,
+    Transaction,
+    User,
+    Wishlist
+} = require('../models');
 
 module.exports = {
     findByUser: async (req, res) => {
@@ -14,7 +20,9 @@ module.exports = {
             //kalo dia buyer dia bakal nampilin transaksi yang dia ajukan
             transaction = await Transaction.findAll({
                 where: { buyerId: req.user.id },
-                include: [{ model: Product }]
+                include: [
+                    { model: Product, include: [{ model: ProductResource }] }
+                ]
             });
         }
 
@@ -52,17 +60,27 @@ module.exports = {
         });
 
         if (updatedData.status === 'true' || updatedData.status === true) {
-            // TODO kalo status selesai/true maka product akan terjual dan berkurang 1, kalo stoct 1 maka terjual dan habis jadi false dan di wishlist juga akan false
+            // transaction completed
             await Product.update(
-                { status: false },
+                { status: false }, // product sold
                 { where: { id: transaction.productId } }
             );
 
+            // make product unavailable for other buyers
             await Wishlist.update(
-                { status: false },
+                { status: false }, // wishlist product unavailable
                 { where: { productId: transaction.productId } }
             );
+
+            // delete wishlist for buyer who bought the product
+            await Wishlist.destroy({
+                where: {
+                    userId: transaction.buyerId,
+                    productId: transaction.productId
+                }
+            });
         }
+
         res.status(200).json({
             success: true,
             message: 'Transaksi berhasil diperbarui',

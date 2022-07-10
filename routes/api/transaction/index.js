@@ -1,4 +1,4 @@
-const express = require('express');
+const { Router } = require('express');
 const {
     internalServerError,
     notFoundDefault
@@ -6,7 +6,8 @@ const {
 const transactionRouter = require('./transaction');
 const transactionHistoryRouter = require('./transactionhistory');
 
-const router = express.Router();
+const router = Router();
+
 router.use(transactionHistoryRouter); // /history
 router.use(transactionRouter); // /
 

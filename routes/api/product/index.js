@@ -1,4 +1,4 @@
-const express = require('express');
+const { Router } = require('express');
 const {
     internalServerError,
     notFoundDefault
@@ -7,7 +7,7 @@ const categoryRouter = require('./productcategory');
 const productRouter = require('./product');
 const offerRouter = require('./productoffer');
 
-const router = express.Router();
+const router = Router();
 
 router.use(categoryRouter); // /categories
 router.use(offerRouter); // /offers /offer/:id
