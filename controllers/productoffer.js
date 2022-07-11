@@ -26,7 +26,8 @@ module.exports = {
         } else {
             //kalo dia buyer dia bakal nampilin produk yang lagi dia tawar
             userProductOffer = await ProductOffer.findAll({
-                where: { buyerId: req.user.id }
+                where: { buyerId: req.user.id },
+                include: [{ model: Product }]
             });
         }
 
