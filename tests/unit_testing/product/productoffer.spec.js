@@ -143,9 +143,6 @@ describe('GET /api/v1/products/offers', () => {
             isEmpty: () => true,
             array: () => []
         }));
-        ProductOffer.findAll = jest
-            .fn()
-            .mockImplementation(() => [{ ...productOffer }]);
 
         await findByUser(req, res);
 
@@ -223,7 +220,7 @@ describe('GET /api/v1/products/offer/:id', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'Penawaran produk ditemukan',
-            data: [{ ...productOffer }]
+            data: [{ ...productOfferGetById }]
         });
     });
     test('400 Bad Request', async () => {
