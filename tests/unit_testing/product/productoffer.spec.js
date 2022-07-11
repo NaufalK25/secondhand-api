@@ -2,7 +2,8 @@ const { validationResult } = require('express-validator');
 const {
     create,
     findByUser,
-    update
+    update,
+    findById
 } = require('../../../controllers/productoffer');
 const {
     Notification,
@@ -107,7 +108,7 @@ describe('GET /api/v1/products/offers', () => {
             isEmpty: () => true,
             array: () => []
         }));
-        ProductOffer.findALl = jest
+        ProductOffer.findAll = jest
             .fn()
             .mockImplementation(() => [{ ...productOffer }]);
 
@@ -149,6 +150,83 @@ describe('GET /api/v1/products/offers', () => {
         ProductOffer.findAll = jest.fn().mockImplementation(() => []);
 
         await findByUser(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Penawaran produk tidak ditemukan',
+            data: null
+        });
+    });
+});
+
+describe('GET /api/v1/products/offer/:id', () => {
+    beforeEach(() => {
+        ProductOffer.findByPk = jest
+            .fn()
+            .mockImplementation(() => [{ ...productOffer }]);
+    });
+    afterEach(() => jest.clearAllMocks());
+    test('200 OK', async () => {
+        const req = mockRequest({ user: { id: 1, roleId: 2 }, params: { id:1}});
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+        ProductOffer.findByPk = jest
+            .fn()
+            .mockImplementation(() => [{ ...productOffer }]);
+
+        await findById(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({
+            success: true,
+            message: 'Penawaran produk ditemukan',
+            data: [{ ...productOffer }]
+        });
+    });
+    test('400 Bad Request', async () => {
+        const req = mockRequest({
+            user: { id: 2, roleId: 1 },
+            params: { id: '' }
+        });
+        const res = mockResponse();
+        const errors = [
+            {
+                value: '',
+                msg: 'Id harus berupa angka',
+                param: 'id',
+                location: 'params'
+            }
+        ];
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => false,
+            array: () => errors
+        }));
+
+        await findById(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Kesalahan validasi',
+            data: errors
+        });
+    });
+    test('404 Not Found', async () => {
+        const req = mockRequest({ user: { id: 1 }, params: { id:10}});
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+        ProductOffer.findByPk = jest.fn().mockImplementation(() => null);
+        await findById(req, res);
 
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
