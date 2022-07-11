@@ -1,9 +1,11 @@
 const { validationResult } = require('express-validator');
 const {
+    City,
     Notification,
     Product,
     ProductOffer,
     ProductResource,
+    Profile,
     Transaction,
     TransactionHistory,
     User,
@@ -56,6 +58,10 @@ module.exports = {
                 {
                     model: Product,
                     include: [{ model: ProductResource, limit: 1 }]
+                },
+                {
+                    model: User,
+                    include: [{ model: Profile, include: [{ model: City }] }]
                 }
             ]
         });
