@@ -3,6 +3,7 @@ const {
     Notification,
     Product,
     ProductOffer,
+    ProductResource,
     Transaction,
     TransactionHistory,
     User,
@@ -19,14 +20,21 @@ module.exports = {
                 include: [
                     {
                         model: Product,
-                        where: { sellerId: req.user.id }
+                        where: { sellerId: req.user.id },
+                        include: [{ model: ProductResource, limit: 1 }]
                     }
                 ]
             });
         } else {
             //kalo dia buyer dia bakal nampilin produk yang lagi dia tawar
             userProductOffer = await ProductOffer.findAll({
-                where: { buyerId: req.user.id }
+                where: { buyerId: req.user.id },
+                include: [
+                    {
+                        model: Product,
+                        include: [{ model: ProductResource, limit: 1 }]
+                    }
+                ]
             });
         }
 
@@ -40,16 +48,20 @@ module.exports = {
         });
     },
     findById: async (req, res) => {
-        let userProductOffer;
-        userProductOffer = await ProductOffer.findByPk(req.params.id, {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+
+        const userProductOffer = await ProductOffer.findByPk(req.params.id, {
             include: [
                 {
-                    model: Product
+                    model: Product,
+                    include: [{ model: ProductResource, limit: 1 }]
                 }
             ]
         });
 
-        if (!userProductOffer)return notFound(req, res, 'Penawaran produk tidak ditemukan');
+        if (!userProductOffer)
+            return notFound(req, res, 'Penawaran produk tidak ditemukan');
 
         res.status(200).json({
             success: true,

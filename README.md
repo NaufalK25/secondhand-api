@@ -46,8 +46,8 @@
 
 Status: `Under Development`
 
-### URL
+### Base URL
 
 1. [Local](https://localhost:8000)
 
-2. [Base URL](https://secondhand-be-api.herokuapp.com/)
+2. [Heroku](https://secondhand-be-api.herokuapp.com)

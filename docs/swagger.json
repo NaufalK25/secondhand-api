@@ -901,7 +901,7 @@
                     "Notification"
                 ],
                 "summary": "Update notification by notification id",
-                "operationId": "notification-put",
+                "operationId": "notification-update",
                 "parameters": [
                     {
                         "name": "id",
@@ -978,7 +978,7 @@
                     "Product"
                 ],
                 "summary": "Get all products",
-                "operationId": "products-get",
+                "operationId": "products-get-all",
                 "responses": {
                     "200": {
                         "description": "Product found",
@@ -1042,28 +1042,8 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1438,7 +1418,7 @@
                     "Product Offer"
                 ],
                 "summary": "Get product offer as seller or buyer",
-                "operationId": "product-offer-get",
+                "operationId": "product-offer-get-all",
                 "responses": {
                     "200": {
                         "description": "ProductOffer found",
@@ -1492,7 +1472,7 @@
                     "Product Offer"
                 ],
                 "summary": "Create new trancaction for product offer (buyer)",
-                "operationId": "trancaction-offer-create",
+                "operationId": "product-offer-create",
                 "requestBody": {
                     "content": {
                         "application/x-www-form-urlencoded": {
@@ -1584,8 +1564,8 @@
                 "tags": [
                     "Product Offer"
                 ],
-                "summary": "Get product offer as seller or buyer",
-                "operationId": "product-offer-get-id",
+                "summary": "Get product offer by id",
+                "operationId": "product-offer-get-by-id",
                 "parameters": [
                     {
                         "name": "id",
@@ -1603,7 +1583,17 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/responses/Offer/GetByUser"
+                                    "$ref": "#/components/responses/Offer/GetById"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
                                 }
                             }
                         }
@@ -1650,7 +1640,7 @@
                     "Product Offer"
                 ],
                 "summary": "Update trancaction for product offer (buyer)",
-                "operationId": "trancaction-offer-update",
+                "operationId": "product-offer-update",
                 "parameters": [
                     {
                         "name": "id",
@@ -1761,7 +1751,7 @@
                     "Transaction"
                 ],
                 "summary": "Get all transactions",
-                "operationId": "transactions-get",
+                "operationId": "transactions-get-all",
                 "responses": {
                     "200": {
                         "description": "Transactions found",
@@ -1812,6 +1802,81 @@
             }
         },
         "/transactions/{id}": {
+            "get": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Get transaction by id",
+                "operationId": "transaction-get-by-id",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ProductOffer found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Transaction/GetById"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            },
             "put": {
                 "tags": [
                     "Transaction"
@@ -1918,7 +1983,7 @@
                     "Transaction History"
                 ],
                 "summary": "Get all transactions histories",
-                "operationId": "transactions-history-get",
+                "operationId": "transactions-history-get-all",
                 "responses": {
                     "200": {
                         "description": "Transaction History found",
@@ -3004,6 +3069,20 @@
                         }
                     }
                 },
+                "GetById": {
+                    "type": "object",
+                    "properties": {
+                        "success": {
+                            "type": "boolean"
+                        },
+                        "message": {
+                            "type": "string"
+                        },
+                        "data": {
+                            "$ref": "#/components/includes/ProductOfferGetByUser"
+                        }
+                    }
+                },
                 "Post": {
                     "type": "object",
                     "properties": {
@@ -3162,6 +3241,20 @@
                             "items": {
                                 "$ref": "#/components/includes/TransactionGetByUser"
                             }
+                        }
+                    }
+                },
+                "GetById": {
+                    "type": "object",
+                    "properties": {
+                        "success": {
+                            "type": "boolean"
+                        },
+                        "message": {
+                            "type": "string"
+                        },
+                        "data": {
+                            "$ref": "#/components/includes/TransactionGetByUser"
                         }
                     }
                 },
