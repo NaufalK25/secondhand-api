@@ -6,7 +6,11 @@ const {
     methodNotAllowed,
     unAuthorized
 } = require('../../../controllers/error');
-const { findByUser, update } = require('../../../controllers/transaction');
+const {
+    findById,
+    findByUser,
+    update
+} = require('../../../controllers/transaction');
 
 const router = Router();
 
@@ -27,6 +31,22 @@ router
     .all(methodNotAllowed);
 router
     .route('/:id')
+    .get(
+        (req, res, next) => {
+            passport.authenticate(
+                'jwt',
+                { session: false },
+                async (err, user, info) => {
+                    if (err) return internalServerError(err, req, res);
+                    if (!user) return unAuthorized(req, res);
+                    req.user = user;
+                    next();
+                }
+            )(req, res, next);
+        },
+        [param('id').isInt().withMessage('Id harus berupa angka')],
+        findById
+    )
     .put(
         (req, res, next) => {
             passport.authenticate(
