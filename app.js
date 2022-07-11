@@ -20,7 +20,7 @@ app.use(
         credentials: true,
         origin: [
             'http://localhost:3000',
-            'https://secondhand-fe.vercel.app/',
+            'https://secondhand-fe.vercel.app',
             'https://secondhand-fe.herokuapp.com'
         ]
     })
