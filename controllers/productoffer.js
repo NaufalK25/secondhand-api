@@ -39,6 +39,24 @@ module.exports = {
             data: userProductOffer
         });
     },
+    findById: async (req, res) => {
+        let userProductOffer;
+        userProductOffer = await ProductOffer.findByPk(req.params.id, {
+            include: [
+                {
+                    model: Product
+                }
+            ]
+        });
+
+        if (!userProductOffer)return notFound(req, res, 'Penawaran produk tidak ditemukan');
+
+        res.status(200).json({
+            success: true,
+            message: 'Penawaran produk ditemukan',
+            data: userProductOffer
+        });
+    },
     create: async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
