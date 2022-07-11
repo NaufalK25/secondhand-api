@@ -8,9 +8,9 @@ const {
 } = require('../../../controllers/error');
 const {
     create,
+    findById,
     findByUser,
-    update,
-    findById
+    update
 } = require('../../../controllers/productoffer');
 
 const router = Router();
@@ -73,9 +73,7 @@ router
                 }
             )(req, res, next);
         },
-        [
-            param('id').isInt().withMessage('Id harus berupa angka')
-        ],
+        [param('id').isInt().withMessage('Id harus berupa angka')],
         findById
     )
     .put(
