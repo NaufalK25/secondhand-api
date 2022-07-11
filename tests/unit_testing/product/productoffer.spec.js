@@ -32,6 +32,24 @@ const user = {
     createdAt: date,
     updatedAt: date
 };
+const profile = {
+    id: 1,
+    userId: 1,
+    name: 'John Doe',
+    profilePicture:
+        'https://res.cloudinary.com/dko04cygp/image/upload/v1656654290/profiles/default.png',
+    phoneNumber: '081234567890',
+    cityId: 1,
+    address: 'Jl. Kebon Jeruk No. 1',
+    createdAt: date,
+    updatedAt: date
+};
+const city = {
+    id: 1,
+    city: 'Kota Surabaya',
+    createdAt: date,
+    updatedAt: date
+};
 const product = {
     id: 1,
     sellerId: 1,
@@ -49,6 +67,14 @@ const productOffer = {
     buyerId: 1,
     priceOffer: 100,
     status: null,
+    createdAt: date,
+    updatedAt: date
+};
+const productResource = {
+    id: 1,
+    productId: 1,
+    filename:
+        'https://res.cloudinary.com/dko04cygp/image/upload/v1656654290/products/1/1-1.jpg',
     createdAt: date,
     updatedAt: date
 };
@@ -86,6 +112,15 @@ const notification = {
     createdAt: date,
     updatedAt: date
 };
+const productOfferGetByUser = {
+    ...productOffer,
+    Product: { ...product, ProductResource: { ...productResource } }
+};
+const productOfferGetById = {
+    ...productOffer,
+    Product: { ...product, ProductResource: { ...productResource } },
+    User: { ...user, Profile: { ...profile, City: { ...city } } }
+};
 const productOfferPut = {
     ...productOffer,
     Product: { ...product, User: { ...user } }
@@ -97,7 +132,7 @@ describe('GET /api/v1/products/offers', () => {
     beforeEach(() => {
         ProductOffer.findAll = jest
             .fn()
-            .mockImplementation(() => [{ ...productOffer }]);
+            .mockImplementation(() => [{ ...productOfferGetByUser }]);
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK (Seller)', async () => {
@@ -118,7 +153,7 @@ describe('GET /api/v1/products/offers', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'Penawaran produk ditemukan',
-            data: [{ ...productOffer }]
+            data: [{ ...productOfferGetByUser }]
         });
     });
     test('200 OK (Buyer)', async () => {
@@ -136,7 +171,7 @@ describe('GET /api/v1/products/offers', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'Penawaran produk ditemukan',
-            data: [{ ...productOffer }]
+            data: [{ ...productOfferGetByUser }]
         });
     });
     test('404 Not Found', async () => {
@@ -164,11 +199,14 @@ describe('GET /api/v1/products/offer/:id', () => {
     beforeEach(() => {
         ProductOffer.findByPk = jest
             .fn()
-            .mockImplementation(() => [{ ...productOffer }]);
+            .mockImplementation(() => [{ ...productOfferGetById }]);
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
-        const req = mockRequest({ user: { id: 1, roleId: 2 }, params: { id:1}});
+        const req = mockRequest({
+            user: { id: 1, roleId: 2 },
+            params: { id: 1 }
+        });
         const res = mockResponse();
 
         validationResult.mockImplementation(() => ({
@@ -177,7 +215,7 @@ describe('GET /api/v1/products/offer/:id', () => {
         }));
         ProductOffer.findByPk = jest
             .fn()
-            .mockImplementation(() => [{ ...productOffer }]);
+            .mockImplementation(() => [{ ...productOfferGetById }]);
 
         await findById(req, res);
 
@@ -218,7 +256,7 @@ describe('GET /api/v1/products/offer/:id', () => {
         });
     });
     test('404 Not Found', async () => {
-        const req = mockRequest({ user: { id: 1 }, params: { id:10}});
+        const req = mockRequest({ user: { id: 1 }, params: { id: 10 } });
         const res = mockResponse();
 
         validationResult.mockImplementation(() => ({
@@ -226,6 +264,7 @@ describe('GET /api/v1/products/offer/:id', () => {
             array: () => []
         }));
         ProductOffer.findByPk = jest.fn().mockImplementation(() => null);
+
         await findById(req, res);
 
         expect(res.status).toHaveBeenCalledWith(404);

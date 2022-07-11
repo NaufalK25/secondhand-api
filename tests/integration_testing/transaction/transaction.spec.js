@@ -152,6 +152,11 @@ describe('GET /api/v1/transactions/:id', () => {
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Transaksi ditemukan');
     });
+    test('400 Bad Request', async () => {
+        const res = await request(app).get('/api/v1/transactions/a').set('Authorization', `Bearer ${buyerToken}`);
+        expect(res.statusCode).toEqual(400);
+        expect(res.body.message).toEqual('Kesalahan validasi');
+    });
     test('401 Unauthorized', async () => {
         const res = await request(app).get('/api/v1/transactions/1');
         expect(res.statusCode).toEqual(401);
