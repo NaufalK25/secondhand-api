@@ -135,6 +135,14 @@ describe('POST /api/v1/products/offers', () => {
         expect(res.statusCode).toEqual(401);
         expect(res.body.message).toEqual('Tidak memiliki token');
     });
+    test('403 Forbidden', async () => {
+        const res = await request(app)
+            .post('/api/v1/products/offers')
+            .set('Authorization', `Bearer ${buyerToken}`)
+            .send({ productId: 1, priceOffer: 10000 });
+        expect(res.statusCode).toEqual(403);
+        expect(res.body.message).toEqual('Anda sudah menawar produk ini');
+    });
     test('404 Not Found', async () => {
         const res = await request(app)
             .post('/api/v1/products/offers')
