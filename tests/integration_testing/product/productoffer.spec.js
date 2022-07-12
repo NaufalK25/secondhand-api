@@ -167,6 +167,7 @@ describe('GET /api/v1/products/offers', () => {
     });
 });
 
+
 describe('GET /api/v1/products/offers/:id', () => {
     test('200 OK (Buyer)', async () => {
         const res = await request(app)
