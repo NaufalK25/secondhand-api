@@ -175,7 +175,6 @@ describe('GET /api/v1/products/offers', () => {
     });
 });
 
-
 describe('GET /api/v1/products/offers/:id', () => {
     test('200 OK (Buyer)', async () => {
         const res = await request(app)
@@ -194,7 +193,7 @@ describe('GET /api/v1/products/offers/:id', () => {
     test('400 Bad Request', async () => {
         const res = await request(app)
             .get('/api/v1/products/offer/b')
-            .set('Authorization', `Bearer ${buyerToken}`)
+            .set('Authorization', `Bearer ${buyerToken}`);
         expect(res.statusCode).toEqual(400);
         expect(res.body.message).toEqual('Kesalahan validasi');
     });
@@ -206,8 +205,7 @@ describe('GET /api/v1/products/offers/:id', () => {
 });
 
 describe('PUT /api/v1/products/offers/:id', () => {
-    test('200 OK', async () =>
-     {
+    test('200 OK', async () => {
         const res = await request(app)
             .put('/api/v1/products/offer/1')
             .set('Authorization', `Bearer ${sellerToken}`)
