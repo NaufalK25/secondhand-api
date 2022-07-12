@@ -8,6 +8,7 @@ const {
 } = require('../../../controllers/error');
 const {
     create,
+    findById,
     findByUser,
     update
 } = require('../../../controllers/productoffer');
@@ -59,6 +60,22 @@ router
 
 router
     .route('/offer/:id')
+    .get(
+        (req, res, next) => {
+            passport.authenticate(
+                'jwt',
+                { session: false },
+                async (err, user, info) => {
+                    if (err) return internalServerError(err, req, res);
+                    if (!user) return unAuthorized(req, res);
+                    req.user = user;
+                    next();
+                }
+            )(req, res, next);
+        },
+        [param('id').isInt().withMessage('Id harus berupa angka')],
+        findById
+    )
     .put(
         (req, res, next) => {
             passport.authenticate(

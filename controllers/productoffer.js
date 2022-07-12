@@ -1,8 +1,11 @@
 const { validationResult } = require('express-validator');
 const {
+    City,
     Notification,
     Product,
     ProductOffer,
+    ProductResource,
+    Profile,
     Transaction,
     TransactionHistory,
     User,
@@ -19,18 +22,51 @@ module.exports = {
                 include: [
                     {
                         model: Product,
-                        where: { sellerId: req.user.id }
+                        where: { sellerId: req.user.id },
+                        include: [{ model: ProductResource, limit: 1 }]
                     }
                 ]
             });
         } else {
             //kalo dia buyer dia bakal nampilin produk yang lagi dia tawar
             userProductOffer = await ProductOffer.findAll({
-                where: { buyerId: req.user.id }
+                where: { buyerId: req.user.id },
+                include: [
+                    {
+                        model: Product,
+                        include: [{ model: ProductResource, limit: 1 }]
+                    }
+                ]
             });
         }
 
         if (userProductOffer.length === 0)
+            return notFound(req, res, 'Penawaran produk tidak ditemukan');
+
+        res.status(200).json({
+            success: true,
+            message: 'Penawaran produk ditemukan',
+            data: userProductOffer
+        });
+    },
+    findById: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+
+        const userProductOffer = await ProductOffer.findByPk(req.params.id, {
+            include: [
+                {
+                    model: Product,
+                    include: [{ model: ProductResource, limit: 1 }]
+                },
+                {
+                    model: User,
+                    include: [{ model: Profile, include: [{ model: City }] }]
+                }
+            ]
+        });
+
+        if (!userProductOffer)
             return notFound(req, res, 'Penawaran produk tidak ditemukan');
 
         res.status(200).json({

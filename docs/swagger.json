@@ -901,7 +901,7 @@
                     "Notification"
                 ],
                 "summary": "Update notification by notification id",
-                "operationId": "notification-put",
+                "operationId": "notification-update",
                 "parameters": [
                     {
                         "name": "id",
@@ -978,7 +978,7 @@
                     "Product"
                 ],
                 "summary": "Get all products",
-                "operationId": "products-get",
+                "operationId": "products-get-all",
                 "responses": {
                     "200": {
                         "description": "Product found",
@@ -1042,28 +1042,8 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    },
                     "404": {
                         "description": "Not Found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/responses/Error"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1438,7 +1418,7 @@
                     "Product Offer"
                 ],
                 "summary": "Get product offer as seller or buyer",
-                "operationId": "product-offer-get",
+                "operationId": "product-offer-get-all",
                 "responses": {
                     "200": {
                         "description": "ProductOffer found",
@@ -1492,7 +1472,7 @@
                     "Product Offer"
                 ],
                 "summary": "Create new trancaction for product offer (buyer)",
-                "operationId": "trancaction-offer-create",
+                "operationId": "product-offer-create",
                 "requestBody": {
                     "content": {
                         "application/x-www-form-urlencoded": {
@@ -1580,12 +1560,87 @@
             }
         },
         "/products/offer/{id}": {
+            "get": {
+                "tags": [
+                    "Product Offer"
+                ],
+                "summary": "Get product offer by id",
+                "operationId": "product-offer-get-by-id",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ProductOffer found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Offer/GetById"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            },
             "put": {
                 "tags": [
                     "Product Offer"
                 ],
                 "summary": "Update trancaction for product offer (buyer)",
-                "operationId": "trancaction-offer-update",
+                "operationId": "product-offer-update",
                 "parameters": [
                     {
                         "name": "id",
@@ -1696,7 +1751,7 @@
                     "Transaction"
                 ],
                 "summary": "Get all transactions",
-                "operationId": "transactions-get",
+                "operationId": "transactions-get-all",
                 "responses": {
                     "200": {
                         "description": "Transactions found",
@@ -1747,6 +1802,81 @@
             }
         },
         "/transactions/{id}": {
+            "get": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Get transaction by id",
+                "operationId": "transaction-get-by-id",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ProductOffer found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Transaction/GetById"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            },
             "put": {
                 "tags": [
                     "Transaction"
@@ -1853,7 +1983,7 @@
                     "Transaction History"
                 ],
                 "summary": "Get all transactions histories",
-                "operationId": "transactions-history-get",
+                "operationId": "transactions-history-get-all",
                 "responses": {
                     "200": {
                         "description": "Transaction History found",
@@ -2378,7 +2508,176 @@
                         "format": "date-time"
                     },
                     "Product": {
-                        "$ref": "#/components/schemas/Product"
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "sellerId": {
+                                "type": "integer"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "price": {
+                                "type": "integer"
+                            },
+                            "publishDate": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "type": "string"
+                            },
+                            "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        },
+                        "ProductResources": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/ProductResource"
+                            }
+                        }
+                    }
+                }
+            },
+            "ProductOfferGetById": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "buyerId": {
+                        "type": "integer"
+                    },
+                    "priceOffer": {
+                        "type": "integer"
+                    },
+                    "status": {
+                        "type": "boolean"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "Product": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "sellerId": {
+                                "type": "integer"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "price": {
+                                "type": "integer"
+                            },
+                            "publishDate": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "type": "string"
+                            },
+                            "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        },
+                        "ProductResources": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/ProductResource"
+                            }
+                        }
+                    },
+                    "User": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "roleId": {
+                                "type": "integer"
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "password": {
+                                "type": "string"
+                            },
+                            "googleId": {
+                                "type": "string"
+                            },
+                            "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "Profile": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "userId": {
+                                        "type": "integer"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "profilePicture": {
+                                        "type": "string"
+                                    },
+                                    "phoneNumber": {
+                                        "type": "string"
+                                    },
+                                    "cityId": {
+                                        "type": "integer"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "createdAt": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "updatedAt": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "City": {
+                                        "$ref": "#/components/schemas/City"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -2728,6 +3027,12 @@
                                 "type": "string",
                                 "format": "date-time"
                             },
+                            "ProductCategories": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Category"
+                                }
+                            },
                             "ProductResources": {
                                 "type": "array",
                                 "items": {
@@ -2735,9 +3040,6 @@
                                 }
                             }
                         }
-                    },
-                    "ProductCategory": {
-                        "$ref": "#/components/schemas/Category"
                     }
                 }
             },
@@ -2936,6 +3238,20 @@
                         }
                     }
                 },
+                "GetById": {
+                    "type": "object",
+                    "properties": {
+                        "success": {
+                            "type": "boolean"
+                        },
+                        "message": {
+                            "type": "string"
+                        },
+                        "data": {
+                            "$ref": "#/components/includes/ProductOfferGetById"
+                        }
+                    }
+                },
                 "Post": {
                     "type": "object",
                     "properties": {
@@ -3094,6 +3410,20 @@
                             "items": {
                                 "$ref": "#/components/includes/TransactionGetByUser"
                             }
+                        }
+                    }
+                },
+                "GetById": {
+                    "type": "object",
+                    "properties": {
+                        "success": {
+                            "type": "boolean"
+                        },
+                        "message": {
+                            "type": "string"
+                        },
+                        "data": {
+                            "$ref": "#/components/includes/TransactionGetByUser"
                         }
                     }
                 },

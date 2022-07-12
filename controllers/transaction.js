@@ -10,15 +10,21 @@ const {
 
 module.exports = {
     findByUser: async (req, res) => {
-        let transaction;
+        let transactions;
         if (req.user.roleId === 2) {
             //kalo dia seller dia bakal nampilin transaksi barang seller
-            transaction = await Transaction.findAll({
-                include: [{ model: Product, where: { sellerId: req.user.id } }]
+            transactions = await Transaction.findAll({
+                include: [
+                    {
+                        model: Product,
+                        where: { sellerId: req.user.id },
+                        include: [{ model: ProductResource }]
+                    }
+                ]
             });
         } else {
             //kalo dia buyer dia bakal nampilin transaksi yang dia ajukan
-            transaction = await Transaction.findAll({
+            transactions = await Transaction.findAll({
                 where: { buyerId: req.user.id },
                 include: [
                     { model: Product, include: [{ model: ProductResource }] }
@@ -26,7 +32,24 @@ module.exports = {
             });
         }
 
-        if (transaction.length === 0)
+        if (transactions.length === 0)
+            return notFound(req, res, 'Transaksi tidak ditemukan');
+
+        res.status(200).json({
+            success: true,
+            message: 'Transaksi ditemukan',
+            data: transactions
+        });
+    },
+    findById: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+
+        const transaction = await Transaction.findByPk(req.params.id, {
+            include: [{ model: Product, include: [{ model: ProductResource }] }]
+        });
+
+        if (!transaction)
             return notFound(req, res, 'Transaksi tidak ditemukan');
 
         res.status(200).json({

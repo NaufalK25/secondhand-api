@@ -112,10 +112,7 @@ describe('POST /api/v1/products/offers', () => {
         const res = await request(app)
             .post('/api/v1/products/offers')
             .set('Authorization', `Bearer ${buyerToken}`)
-            .send({
-                productId: 1,
-                priceOffer: 10000
-            });
+            .send({ productId: 1, priceOffer: 10000 });
 
         expect(res.statusCode).toEqual(201);
         expect(res.body.message).toEqual('Penawaran produk berhasil dibuat');
@@ -124,9 +121,7 @@ describe('POST /api/v1/products/offers', () => {
         const res = await request(app)
             .post('/api/v1/products/offers')
             .set('Authorization', `Bearer ${buyerToken}`)
-            .send({
-                productId: 1
-            });
+            .send({ productId: 1 });
         expect(res.statusCode).toEqual(400);
         expect(res.body.message).toEqual('Kesalahan validasi');
     });
@@ -144,10 +139,7 @@ describe('POST /api/v1/products/offers', () => {
         const res = await request(app)
             .post('/api/v1/products/offers')
             .set('Authorization', `Bearer ${buyerToken}`)
-            .send({
-                productId: 10, 
-                priceOffer: 10000
-            });
+            .send({ productId: 10, priceOffer: 10000 });
         expect(res.statusCode).toEqual(404);
         expect(res.body.message).toEqual('Produk tidak ditemukan');
     });
@@ -168,7 +160,7 @@ describe('GET /api/v1/products/offers', () => {
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Penawaran produk ditemukan');
     });
-    test('401 Unauthorized',  async () => {
+    test('401 Unauthorized', async () => {
         const res = await request(app).get('/api/v1/products/offers');
         expect(res.statusCode).toEqual(401);
         expect(res.body.message).toEqual('Tidak memiliki token');
@@ -194,9 +186,9 @@ describe('PUT /api/v1/products/offers/:id', () => {
         expect(res.body.message).toEqual('Kesalahan validasi');
     });
     test('401 Unatuhorized', async () => {
-        const res = await request(app).put('/api/v1/products/offer/1').send({
-            status: true
-        });
+        const res = await request(app)
+            .put('/api/v1/products/offer/1')
+            .send({ status: true });
         expect(res.statusCode).toEqual(401);
         expect(res.body.message).toEqual('Tidak memiliki token');
     });

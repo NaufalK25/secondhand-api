@@ -189,18 +189,18 @@ module.exports = {
         const productCategory = await ProductCategory.findOne({
             where: { category: { [Op.iLike]: `%${category}%` } }
         });
-        // const products = await Product.findAll({
-        //     include: [
-        //         { model: ProductCategory, through: { attributes: [] } },
-        //         { model: ProductResource }
-        //     ]
-        // });
+       
         const products = await ProductCategoryThrough.findAll({
             where: { productCategoryId: productCategory.id },
             attributes: [],
             include: [
-                { model: Product, include: [{ model: ProductCategory}] },
-                { model: ProductResource }
+                {
+                    model: Product,
+                    include: [
+                        { model: ProductCategory, through: { attributes: [] } },
+                        { model: ProductResource }
+                    ]
+                }
             ]
         });
 

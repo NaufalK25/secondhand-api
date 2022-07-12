@@ -129,9 +129,9 @@ const productFindById = {
 const productFilter = {
     Product: {
         ...product,
+        ProductCategories: [{ ...category }],
         ProductResources: [{ ...productResource }]
-    },
-    ProductCategory: { ...category }
+    }
 };
 
 jest.mock('fs/promises');
