@@ -1531,6 +1531,16 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "Not Found",
                         "content": {

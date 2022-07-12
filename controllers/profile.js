@@ -52,10 +52,7 @@ module.exports = {
         res.status(200).json({
             success: true,
             message: 'Profil berhasil diperbarui',
-            data: {
-                id: req.user.id,
-                ...updatedData
-            }
+            data: { id: req.user.id, ...updatedData }
         });
     }
 };
