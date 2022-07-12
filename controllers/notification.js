@@ -10,7 +10,7 @@ const {
 module.exports = {
     findByUser: async (req, res) => {
         const notification = await Notification.findAll({
-            where: { userId: req.user.id, status: false },
+            where: { userId: req.user.id },
             include: [
                 { model: Product, include: [{ model: ProductResource }] },
                 { model: ProductOffer }
