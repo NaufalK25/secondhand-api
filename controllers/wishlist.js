@@ -44,7 +44,8 @@ module.exports = {
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
         const wishlist = await Wishlist.findByPk(req.params.id);
-        if (!wishlist) return notFound(req, res, 'Daftar keinginan tidak ditemukan');
+        if (!wishlist)
+            return notFound(req, res, 'Daftar keinginan tidak ditemukan');
         if (wishlist.userId !== req.user.id)
             return forbidden(
                 req,

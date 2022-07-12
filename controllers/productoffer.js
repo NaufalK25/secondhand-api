@@ -82,6 +82,16 @@ module.exports = {
         const product = await Product.findByPk(req.body.productId);
         if (!product) return notFound(req, res, 'Produk tidak ditemukan');
 
+        const productOffer = await ProductOffer.findOne({
+            where: {
+                buyerId: req.user.id,
+                productId: req.body.productId,
+                status: null
+            }
+        });
+        if (productOffer)
+            return forbidden(req, res, 'Anda sudah menawar produk ini');
+
         const newProductOffer = await ProductOffer.create({
             productId: req.body.productId,
             buyerId: req.user.id,
@@ -162,10 +172,7 @@ module.exports = {
         res.status(200).json({
             success: true,
             message: 'Penawaran produk berhasil diperbarui',
-            data: {
-                id: req.user.id,
-                ...updatedData
-            }
+            data: { id: req.user.id, ...updatedData }
         });
     }
 };

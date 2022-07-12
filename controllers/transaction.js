@@ -107,10 +107,7 @@ module.exports = {
         res.status(200).json({
             success: true,
             message: 'Transaksi berhasil diperbarui',
-            data: {
-                id: req.user.id,
-                ...updatedData
-            }
+            data: { id: req.user.id, ...updatedData }
         });
     }
 };
