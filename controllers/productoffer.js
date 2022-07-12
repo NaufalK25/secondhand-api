@@ -167,6 +167,15 @@ module.exports = {
                 type: 'Penawaran produk',
                 description: 'Kamu akan segera dihubungi penjual via whatsapp'
             });
+        } else {
+            // notify buyer if product offer rejected by seller
+            await Notification.create({
+                userId: userProductOffer.buyerId,
+                productId: userProductOffer.productId,
+                productOfferId: userProductOffer.id,
+                type: 'Penawaran produk',
+                description: 'Penawaran produk anda ditolak'
+            });
         }
 
         res.status(200).json({

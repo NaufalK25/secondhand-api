@@ -12,6 +12,7 @@ const {
     findByUser,
     update
 } = require('../../../controllers/productoffer');
+const { Product } = require('../../../models');
 
 const router = Router();
 
@@ -53,6 +54,16 @@ router
                 .withMessage('Harga tawar harus diisi')
                 .isInt()
                 .withMessage('Harga tawar harus berupa angka')
+                .custom(async (value, { req }) => {
+                    const product = await Product.findByPk(req.body.productId);
+                    if (!product) return true;
+                    if (value > product.price) {
+                        throw new Error(
+                            'Harga tawar tidak boleh melebihi harga produk'
+                        );
+                    }
+                    return true;
+                })
         ],
         create
     )

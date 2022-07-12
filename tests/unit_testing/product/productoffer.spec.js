@@ -296,6 +296,7 @@ describe('POST /api/v1/products/offers', () => {
             isEmpty: () => true,
             array: () => []
         }));
+        ProductOffer.findOne = jest.fn().mockImplementation(() => null);
 
         await create(req, res);
 
@@ -333,6 +334,30 @@ describe('POST /api/v1/products/offers', () => {
             success: false,
             message: 'Kesalahan validasi',
             data: errors
+        });
+    });
+    test('403 Forbidden', async () => {
+        const req = mockRequest({
+            user: { id: 1 },
+            body: { productId: 1, priceOffer: 100 }
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+        ProductOffer.findOne = jest
+            .fn()
+            .mockImplementation(() => ({ ...productOffer }));
+
+        await create(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(403);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Anda sudah menawar produk ini',
+            data: null
         });
     });
     test('404 Not Found', async () => {

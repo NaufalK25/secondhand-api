@@ -14,7 +14,8 @@ module.exports = {
             include: [
                 { model: Product, include: [{ model: ProductResource }] },
                 { model: ProductOffer }
-            ]
+            ],
+            order: [['updatedAt', 'DESC']]
         });
 
         if (notification.length === 0)
