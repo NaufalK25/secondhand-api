@@ -16,6 +16,31 @@ const mockResponse = () => {
 };
 
 const date = new Date();
+const user = {
+    id: 1,
+    email: 'johndoe@gmail.com',
+    password: '12345678',
+    createdAt: date,
+    updatedAt: date
+};
+const profile = {
+    id: 1,
+    userId: 1,
+    name: 'John Doe',
+    profilePicture:
+        'https://res.cloudinary.com/dko04cygp/image/upload/v1656654290/profiles/default.png',
+    phoneNumber: '081234567890',
+    cityId: 1,
+    address: 'Jl. Kebon Jeruk No. 1',
+    createdAt: date,
+    updatedAt: date
+};
+const city = {
+    id: 1,
+    city: 'Kota Surabaya',
+    createdAt: date,
+    updatedAt: date
+};
 const product = {
     id: 1,
     sellerId: 1,
@@ -27,9 +52,26 @@ const product = {
     createdAt: date,
     updatedAt: date
 };
-const transaction = {
+const productOffer = {
     id: 1,
     productId: 1,
+    buyerId: 1,
+    priceOffer: 100,
+    status: null,
+    createdAt: date,
+    updatedAt: date
+};
+const productResource = {
+    id: 1,
+    productId: 1,
+    filename:
+        'https://res.cloudinary.com/dko04cygp/image/upload/v1656654290/products/1/1-1.jpg',
+    createdAt: date,
+    updatedAt: date
+};
+const transaction = {
+    id: 1,
+    productOfferId: 1,
     buyerId: 2,
     transactionDate: date,
     fixPrice: 100000,
@@ -44,14 +86,19 @@ const transactionHistory = {
     createdAt: date,
     updatedAt: date
 };
-const transactionHistoryBuyer = {
+const transactionHistoryGet = {
     ...transactionHistory,
-    Transaction: { ...transaction },
-    Product: { ...product }
-};
-const transactionHistorySeller = {
-    ...transactionHistory,
-    Transaction: { ...transaction }
+    Transaction: {
+        ...transaction,
+        ProductOffer: {
+            ...productOffer,
+            Product: { ...product, ProductResource: { ...productResource } }
+        }
+    },
+    User: {
+        ...user,
+        Profile: { ...profile, City: { ...city } }
+    }
 };
 
 jest.mock('express-validator');
@@ -60,7 +107,7 @@ describe('GET /api/v1/transactions/history', () => {
     beforeEach(() => {
         TransactionHistory.findAll = jest
             .fn()
-            .mockImplementation(() => [{ ...transactionHistoryBuyer }]);
+            .mockImplementation(() => [{ ...transactionHistoryGet }]);
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK (Seller)', async () => {
@@ -71,7 +118,7 @@ describe('GET /api/v1/transactions/history', () => {
 
         TransactionHistory.findAll = jest
             .fn()
-            .mockImplementation(() => [{ ...transactionHistorySeller }]);
+            .mockImplementation(() => [{ ...transactionHistoryGet }]);
 
         await findByUser(req, res);
 
@@ -79,7 +126,7 @@ describe('GET /api/v1/transactions/history', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'Riwayat transaksi ditemukan',
-            data: [{ ...transactionHistorySeller }]
+            data: [{ ...transactionHistoryGet }]
         });
     });
     test('200 OK (Buyer)', async () => {
@@ -94,7 +141,7 @@ describe('GET /api/v1/transactions/history', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'Riwayat transaksi ditemukan',
-            data: [{ ...transactionHistoryBuyer }]
+            data: [{ ...transactionHistoryGet }]
         });
     });
     test('404 Not Found', async () => {
@@ -120,7 +167,7 @@ describe('GET /api/v1/transactions/history/:id', () => {
     beforeEach(() => {
         TransactionHistory.findAll = jest
             .fn()
-            .mockImplementation(() => ({ ...transactionHistoryBuyer }));
+            .mockImplementation(() => ({ ...transactionHistoryGet }));
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK (Seller)', async () => {
@@ -135,8 +182,8 @@ describe('GET /api/v1/transactions/history/:id', () => {
             array: () => []
         }));
         TransactionHistory.findAll = jest
-        .fn()
-        .mockImplementation(() => ({ ...transactionHistorySeller }));
+            .fn()
+            .mockImplementation(() => ({ ...transactionHistoryGet }));
 
         await findById(req, res);
 
@@ -144,7 +191,7 @@ describe('GET /api/v1/transactions/history/:id', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'Riwayat transaksi ditemukan',
-            data: { ...transactionHistorySeller }
+            data: { ...transactionHistoryGet }
         });
     });
     test('200 OK (Buyer)', async () => {
@@ -165,7 +212,7 @@ describe('GET /api/v1/transactions/history/:id', () => {
         expect(res.json).toHaveBeenCalledWith({
             success: true,
             message: 'Riwayat transaksi ditemukan',
-            data: { ...transactionHistoryBuyer }
+            data: { ...transactionHistoryGet }
         });
     });
     test('400 Bad Request', async () => {

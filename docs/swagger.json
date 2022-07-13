@@ -2376,6 +2376,9 @@
                     "id": {
                         "type": "integer"
                     },
+                    "productOfferId": {
+                        "type": "integer"
+                    },
                     "productId": {
                         "type": "integer"
                     },
@@ -2408,7 +2411,7 @@
                     "id": {
                         "type": "integer"
                     },
-                    "userId": {
+                    "buyerId": {
                         "type": "integer"
                     },
                     "transactionId": {
@@ -2697,6 +2700,9 @@
                     "id": {
                         "type": "integer"
                     },
+                    "productOfferId": {
+                        "type": "integer"
+                    },
                     "productId": {
                         "type": "integer"
                     },
@@ -2721,30 +2727,20 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "Product": {
+                    "ProductOffer": {
                         "type": "object",
                         "properties": {
                             "id": {
                                 "type": "integer"
                             },
-                            "sellerId": {
+                            "buyerId": {
                                 "type": "integer"
                             },
-                            "name": {
-                                "type": "string"
-                            },
-                            "price": {
+                            "priceOffer": {
                                 "type": "integer"
-                            },
-                            "publishDate": {
-                                "type": "string",
-                                "format": "date-time"
-                            },
-                            "description": {
-                                "type": "string"
                             },
                             "status": {
-                                "type": "string"
+                                "type": "boolean"
                             },
                             "createdAt": {
                                 "type": "string",
@@ -2753,12 +2749,47 @@
                             "updatedAt": {
                                 "type": "string",
                                 "format": "date-time"
-                            }
-                        },
-                        "ProductResources": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/components/schemas/ProductResource"
+                            },
+                            "Product": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "sellerId": {
+                                        "type": "integer"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "type": "integer"
+                                    },
+                                    "publishDate": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string"
+                                    },
+                                    "createdAt": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "updatedAt": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    }
+                                },
+                                "ProductResources": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductResource"
+                                    }
+                                }
                             }
                         }
                     }
@@ -2770,7 +2801,7 @@
                     "id": {
                         "type": "integer"
                     },
-                    "userId": {
+                    "buyerId": {
                         "type": "integer"
                     },
                     "transactionId": {
@@ -2785,7 +2816,170 @@
                         "format": "date-time"
                     },
                     "Transaction": {
-                        "$ref": "#/components/schemas/Transaction"
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "productOfferId": {
+                                "type": "integer"
+                            },
+                            "productId": {
+                                "type": "integer"
+                            },
+                            "buyerId": {
+                                "type": "integer"
+                            },
+                            "transactionDate": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "fixPrice": {
+                                "type": "integer"
+                            },
+                            "status": {
+                                "type": "boolean"
+                            },
+                            "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "ProductOffer": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "buyerId": {
+                                        "type": "integer"
+                                    },
+                                    "priceOffer": {
+                                        "type": "integer"
+                                    },
+                                    "status": {
+                                        "type": "boolean"
+                                    },
+                                    "createdAt": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "updatedAt": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "Product": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "sellerId": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "type": "integer"
+                                            },
+                                            "publishDate": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "status": {
+                                                "type": "string"
+                                            },
+                                            "createdAt": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updatedAt": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "ProductResources": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ProductResource"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "User": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "roleId": {
+                                "type": "integer"
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "password": {
+                                "type": "string"
+                            },
+                            "googleId": {
+                                "type": "string"
+                            },
+                            "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "Profile": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "userId": {
+                                        "type": "integer"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "profilePicture": {
+                                        "type": "string"
+                                    },
+                                    "phoneNumber": {
+                                        "type": "string"
+                                    },
+                                    "cityId": {
+                                        "type": "integer"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "createdAt": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "updatedAt": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "City": {
+                                        "$ref": "#/components/schemas/City"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
