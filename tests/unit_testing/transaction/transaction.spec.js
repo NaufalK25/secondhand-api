@@ -1,6 +1,15 @@
 const { validationResult } = require('express-validator');
-const { findByUser, update, findById } = require('../../../controllers/transaction');
-const { Product, Transaction, Wishlist } = require('../../../models');
+const {
+    findByUser,
+    update,
+    findById
+} = require('../../../controllers/transaction');
+const {
+    Product,
+    Transaction,
+    TransactionHistory,
+    Wishlist
+} = require('../../../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -15,7 +24,7 @@ const mockResponse = () => {
 const date = new Date();
 const transaction = {
     id: 1,
-    productId: 1,
+    productOfferId: 1,
     buyerId: 2,
     transactionDate: date,
     fixPrice: 100000,
@@ -42,6 +51,22 @@ const productResource = {
     createdAt: date,
     updatedAt: date
 };
+const productOffer = {
+    id: 1,
+    productId: 1,
+    buyerId: 1,
+    priceOffer: 100,
+    status: null,
+    createdAt: date,
+    updatedAt: date
+};
+const transactionhistory = {
+    id: 1,
+    userId: 1,
+    transactionId: 1,
+    createdAt: date,
+    updatedAt: date
+};
 const wishlist = {
     id: 1,
     userId: 2,
@@ -50,21 +75,18 @@ const wishlist = {
     createdAt: date,
     updatedAt: date
 };
-const buyer = {
-    id: 2,
-    email: 'buyer@gmail.com',
-    password: '12345678',
-    createdAt: date,
-    updatedAt: date
-};
 const transactionGet = {
     ...transaction,
-    Product: { ...product, ProductResources: [{ ...productResource }] }
+    ProductOffer: {
+        ...productOffer,
+        Product: { ...product, ProductResources: [{ ...productResource }] }
+    }
 };
 const transactionPut = {
     ...transaction,
-    Product: { ...product, User: { ...buyer } }
+    ProductOffer: { ...productOffer, Product: { ...product } }
 };
+
 jest.mock('express-validator');
 
 describe('GET /api/v1/transactions', () => {
@@ -142,8 +164,8 @@ describe('GET /api/v1/transactions/:id', () => {
             array: () => []
         }));
         Transaction.findOne = jest
-        .fn()
-        .mockImplementation(() => ({ ...transactionGet }));
+            .fn()
+            .mockImplementation(() => ({ ...transactionGet }));
 
         await findById(req, res);
 
@@ -228,7 +250,6 @@ describe('GET /api/v1/transactions/:id', () => {
     });
 });
 
-
 describe('PUT /api/v1/transactions/:id', () => {
     beforeEach(() => {
         Transaction.findByPk = jest.fn().mockImplementation(() => ({
@@ -242,6 +263,9 @@ describe('PUT /api/v1/transactions/:id', () => {
         Transaction.update = jest
             .fn()
             .mockImplementation(() => ({ ...transaction }));
+        TransactionHistory.create = jest
+            .fn()
+            .mockImplementation(() => ({ ...transactionhistory }));
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {

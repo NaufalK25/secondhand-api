@@ -1,13 +1,15 @@
 const { validationResult } = require('express-validator');
 const { badRequest, forbidden, notFound } = require('../controllers/error');
 const {
+    City,
     Product,
+    ProductOffer,
     ProductResource,
+    Profile,
     Transaction,
+    TransactionHistory,
     User,
     Wishlist,
-    Profile,
-    City
 } = require('../models');
 
 module.exports = {
@@ -18,9 +20,14 @@ module.exports = {
             transactions = await Transaction.findAll({
                 include: [
                     {
-                        model: Product,
-                        where: { sellerId: req.user.id },
-                        include: [{ model: ProductResource }]
+                        model: ProductOffer,
+                        include: [
+                            {
+                                model: Product,
+                                where: { sellerId: req.user.id },
+                                include: [{ model: ProductResource }]
+                            }
+                        ]
                     }
                 ]
             });
@@ -29,7 +36,15 @@ module.exports = {
             transactions = await Transaction.findAll({
                 where: { buyerId: req.user.id },
                 include: [
-                    { model: Product, include: [{ model: ProductResource }] }
+                    {
+                        model: ProductOffer,
+                        include: [
+                            {
+                                model: Product,
+                                include: [{ model: ProductResource }]
+                            }
+                        ]
+                    }
                 ]
             });
         }
@@ -77,12 +92,12 @@ module.exports = {
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
         const transaction = await Transaction.findByPk(req.params.id, {
-            include: [{ model: Product, include: [{ model: User }] }]
+            include: [{ model: ProductOffer, include: [{ model: Product }] }]
         });
         const updatedData = {};
         if (!transaction)
             return notFound(req, res, 'Transaksi tidak ditemukan');
-        if (transaction.Product.sellerId !== req.user.id)
+        if (transaction.ProductOffer.Product.sellerId !== req.user.id)
             return forbidden(
                 req,
                 res,
@@ -100,23 +115,28 @@ module.exports = {
             // transaction completed
             await Product.update(
                 { status: false }, // product sold
-                { where: { id: transaction.productId } }
+                { where: { id: transaction.ProductOffer.Product.id } }
             );
 
             // make product unavailable for other buyers
             await Wishlist.update(
                 { status: false }, // wishlist product unavailable
-                { where: { productId: transaction.productId } }
+                { where: { productId: transaction.ProductOffer.Product.id } }
             );
 
             // delete wishlist for buyer who bought the product
             await Wishlist.destroy({
                 where: {
                     userId: transaction.buyerId,
-                    productId: transaction.productId
+                    productId: transaction.ProductOffer.Product.id
                 }
             });
         }
+
+        await TransactionHistory.create({
+            buyerId: transaction.buyerId,
+            transactionId: transaction.id
+        });
 
         res.status(200).json({
             success: true,

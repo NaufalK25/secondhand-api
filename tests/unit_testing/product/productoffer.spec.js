@@ -10,7 +10,6 @@ const {
     Product,
     ProductOffer,
     Transaction,
-    TransactionHistory,
     Wishlist
 } = require('../../../models');
 
@@ -87,18 +86,11 @@ const wishlist = {
 };
 const transaction = {
     id: 1,
-    productId: 1,
+    productOfferId: 1,
     buyerId: 1,
     transactionDate: date,
     fixPrice: 100,
     status: null,
-    createdAt: date,
-    updatedAt: date
-};
-const transactionhistory = {
-    id: 1,
-    userId: 1,
-    transactionId: 1,
     createdAt: date,
     updatedAt: date
 };
@@ -398,9 +390,6 @@ describe('PUT /api/v1/products/offer/:id', () => {
         Transaction.create = jest
             .fn()
             .mockImplementation(() => ({ ...transaction }));
-        TransactionHistory.create = jest
-            .fn()
-            .mockImplementation(() => ({ ...transactionhistory }));
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK (Pending)', async () => {

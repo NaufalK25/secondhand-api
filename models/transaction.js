@@ -6,13 +6,15 @@ module.exports = (sequelize, DataTypes) => {
             this.hasMany(models.TransactionHistory, {
                 foreignKey: 'transactionId'
             });
-            this.belongsTo(models.Product, { foreignKey: 'productId' });
+            this.belongsTo(models.ProductOffer, {
+                foreignKey: 'productOfferId'
+            });
             this.belongsTo(models.User, { foreignKey: 'buyerId' });
         }
     }
     Transaction.init(
         {
-            productId: DataTypes.INTEGER,
+            productOfferId: DataTypes.INTEGER,
             buyerId: DataTypes.INTEGER,
             transactionDate: DataTypes.DATE,
             fixPrice: DataTypes.INTEGER,
