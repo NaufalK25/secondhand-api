@@ -2727,6 +2727,71 @@
                         "type": "string",
                         "format": "date-time"
                     },
+                    "User": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "roleId": {
+                                "type": "integer"
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "password": {
+                                "type": "string"
+                            },
+                            "googleId": {
+                                "type": "string"
+                            },
+                            "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "Profile": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "integer"
+                                    },
+                                    "userId": {
+                                        "type": "integer"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "profilePicture": {
+                                        "type": "string"
+                                    },
+                                    "phoneNumber": {
+                                        "type": "string"
+                                    },
+                                    "cityId": {
+                                        "type": "integer"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "createdAt": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "updatedAt": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "City": {
+                                        "$ref": "#/components/schemas/City"
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "ProductOffer": {
                         "type": "object",
                         "properties": {

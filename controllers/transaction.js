@@ -9,7 +9,7 @@ const {
     Transaction,
     TransactionHistory,
     User,
-    Wishlist,
+    Wishlist
 } = require('../models');
 
 module.exports = {
@@ -19,6 +19,10 @@ module.exports = {
             //kalo dia seller dia bakal nampilin transaksi barang seller
             transactions = await Transaction.findAll({
                 include: [
+                    {
+                        model: User,
+                        include: [{ model: Profile, include: [{ model: City }] }]
+                    },
                     {
                         model: ProductOffer,
                         include: [
@@ -36,6 +40,10 @@ module.exports = {
             transactions = await Transaction.findAll({
                 where: { buyerId: req.user.id },
                 include: [
+                    {
+                        model: User,
+                        include: [{ model: Profile, include: [{ model: City }] }]
+                    },
                     {
                         model: ProductOffer,
                         include: [
@@ -62,21 +70,23 @@ module.exports = {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const transaction = await Transaction.findByPk(
-            req.params.id,
-
-            {
-                include: [
-                    {
-                        model: User,
-                        include: [
-                            { model: Profile, include: [{ model: City }] }
-                        ]
-                    },
-                    { model: Product, include: [{ model: ProductResource }] }
-                ]
-            }
-        );
+        const transaction = await Transaction.findByPk(req.params.id, {
+            include: [
+                {
+                    model: User,
+                    include: [{ model: Profile, include: [{ model: City }] }]
+                },
+                {
+                    model: ProductOffer,
+                    include: [
+                        {
+                            model: Product,
+                            include: [{ model: ProductResource }]
+                        }
+                    ]
+                }
+            ]
+        });
 
         if (!transaction)
             return notFound(req, res, 'Transaksi tidak ditemukan');

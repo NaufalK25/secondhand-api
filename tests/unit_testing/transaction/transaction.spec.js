@@ -22,6 +22,31 @@ const mockResponse = () => {
 };
 
 const date = new Date();
+const user = {
+    id: 1,
+    email: 'johndoe@gmail.com',
+    password: '12345678',
+    createdAt: date,
+    updatedAt: date
+};
+const profile = {
+    id: 1,
+    userId: 1,
+    name: 'John Doe',
+    profilePicture:
+        'https://res.cloudinary.com/dko04cygp/image/upload/v1656654290/profiles/default.png',
+    phoneNumber: '081234567890',
+    cityId: 1,
+    address: 'Jl. Kebon Jeruk No. 1',
+    createdAt: date,
+    updatedAt: date
+};
+const city = {
+    id: 1,
+    city: 'Kota Surabaya',
+    createdAt: date,
+    updatedAt: date
+};
 const transaction = {
     id: 1,
     productOfferId: 1,
@@ -77,6 +102,7 @@ const wishlist = {
 };
 const transactionGet = {
     ...transaction,
+    User: { ...user, Profile: { ...profile, City: { ...city } } },
     ProductOffer: {
         ...productOffer,
         Product: { ...product, ProductResources: [{ ...productResource }] }
