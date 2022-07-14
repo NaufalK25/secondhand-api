@@ -1,12 +1,15 @@
 const { validationResult } = require('express-validator');
 const { badRequest, forbidden, notFound } = require('../controllers/error');
 const {
+    City,
     Product,
     ProductOffer,
     ProductResource,
+    Profile,
     Transaction,
     TransactionHistory,
-    Wishlist
+    User,
+    Wishlist,
 } = require('../models');
 
 module.exports = {
@@ -59,19 +62,21 @@ module.exports = {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const transaction = await Transaction.findByPk(req.params.id, {
-            include: [
-                {
-                    model: ProductOffer,
-                    include: [
-                        {
-                            model: Product,
-                            include: [{ model: ProductResource }]
-                        }
-                    ]
-                }
-            ]
-        });
+        const transaction = await Transaction.findByPk(
+            req.params.id,
+
+            {
+                include: [
+                    {
+                        model: User,
+                        include: [
+                            { model: Profile, include: [{ model: City }] }
+                        ]
+                    },
+                    { model: Product, include: [{ model: ProductResource }] }
+                ]
+            }
+        );
 
         if (!transaction)
             return notFound(req, res, 'Transaksi tidak ditemukan');
