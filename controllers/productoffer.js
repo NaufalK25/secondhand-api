@@ -7,7 +7,6 @@ const {
     ProductResource,
     Profile,
     Transaction,
-    TransactionHistory,
     User,
     Wishlist
 } = require('../models');
@@ -149,14 +148,9 @@ module.exports = {
         if (updatedData.status === 'true' || updatedData.status === true) {
             // product offer accepted
             const transaction = await Transaction.create({
-                productId: userProductOffer.productId,
+                productOfferId: userProductOffer.id,
                 buyerId: userProductOffer.buyerId,
                 fixPrice: userProductOffer.priceOffer
-            });
-
-            await TransactionHistory.create({
-                productId: userProductOffer.productId,
-                transactionId: transaction.id
             });
 
             // notify buyer if product offer accepted by seller

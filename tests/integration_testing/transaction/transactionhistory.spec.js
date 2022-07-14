@@ -70,6 +70,10 @@ beforeAll(async () => {
         .put('/api/v1/products/offer/1')
         .set('Authorization', `Bearer ${sellerToken}`)
         .send({ status: true });
+        await request(app)
+        .put('/api/v1/transactions/1')
+        .set('Authorization', `Bearer ${sellerToken}`)
+        .send({ status: true });
 });
 afterAll(async () => {
     jest.clearAllMocks();

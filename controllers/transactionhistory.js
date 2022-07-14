@@ -1,6 +1,15 @@
 const { validationResult } = require('express-validator');
 const { badRequest, notFound } = require('../controllers/error');
-const { Product, Transaction, TransactionHistory } = require('../models');
+const {
+    City,
+    Product,
+    ProductOffer,
+    ProductResource,
+    Profile,
+    Transaction,
+    TransactionHistory,
+    User
+} = require('../models');
 
 module.exports = {
     findByUser: async (req, res) => {
@@ -9,15 +18,55 @@ module.exports = {
             //kalo dia seller dia bakal nampilin transaksi barang seller
             transaction = await TransactionHistory.findAll({
                 include: [
-                    { model: Transaction },
-                    { model: Product, where: { sellerId: req.user.id } }
+                    {
+                        model: Transaction,
+                        include: [
+                            {
+                                model: ProductOffer,
+                                include: [
+                                    {
+                                        model: Product,
+                                        where: { sellerId: req.user.id },
+                                        include: [{ model: ProductResource }]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        model: User,
+                        include: [
+                            { model: Profile, include: [{ model: City }] }
+                        ]
+                    }
                 ]
             });
         } else {
             //kalo dia buyer dia bakal nampilin transaksi yang dia ajukan
             transaction = await TransactionHistory.findAll({
                 include: [
-                    { model: Transaction, where: { buyerId: req.user.id } }
+                    {
+                        model: Transaction,
+                        where: { buyerId: req.user.id },
+                        include: [
+                            {
+                                model: ProductOffer,
+                                include: [
+                                    {
+                                        model: Product,
+                                        where: { sellerId: req.user.id },
+                                        include: [{ model: ProductResource }]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        model: User,
+                        include: [
+                            { model: Profile, include: [{ model: City }] }
+                        ]
+                    }
                 ]
             });
         }
@@ -40,15 +89,55 @@ module.exports = {
             //kalo dia seller dia bakal nampilin transaksi barang seller
             transaction = await TransactionHistory.findByPk(req.params.id, {
                 include: [
-                    { model: Transaction },
-                    { model: Product, where: { sellerId: req.user.id } }
+                    {
+                        model: Transaction,
+                        include: [
+                            {
+                                model: ProductOffer,
+                                include: [
+                                    {
+                                        model: Product,
+                                        where: { sellerId: req.user.id },
+                                        include: [{ model: ProductResource }]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        model: User,
+                        include: [
+                            { model: Profile, include: [{ model: City }] }
+                        ]
+                    }
                 ]
             });
         } else {
             //kalo dia buyer dia bakal nampilin transaksi yang dia ajukan
             transaction = await TransactionHistory.findByPk(req.params.id, {
                 include: [
-                    { model: Transaction, where: { buyerId: req.user.id } }
+                    {
+                        model: Transaction,
+                        where: { buyerId: req.user.id },
+                        include: [
+                            {
+                                model: ProductOffer,
+                                include: [
+                                    {
+                                        model: Product,
+                                        where: { sellerId: req.user.id },
+                                        include: [{ model: ProductResource }]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        model: User,
+                        include: [
+                            { model: Profile, include: [{ model: City }] }
+                        ]
+                    }
                 ]
             });
         }

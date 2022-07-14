@@ -8,7 +8,7 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            productId: { type: Sequelize.INTEGER, allowNull: false },
+            buyerId: { type: Sequelize.INTEGER, allowNull: false },
             transactionId: { type: Sequelize.INTEGER, allowNull: false },
             createdAt: { allowNull: false, type: Sequelize.DATE },
             updatedAt: { allowNull: false, type: Sequelize.DATE }

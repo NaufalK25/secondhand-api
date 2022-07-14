@@ -9,6 +9,7 @@ const {
     Product,
     ProductCategory,
     ProductCategoryThrough,
+    ProductOffer,
     ProductResource,
     User,
     Wishlist,
@@ -100,7 +101,9 @@ module.exports = {
         if (sortBy === 'sold') orders.unshift(['status', 'DESC']);
         if (sortBy === 'wishlist') {
             orders.unshift([
-                sequelize.fn('count', sequelize.col('Wishlists.id')),
+                sequelize.literal(
+                    `(SELECT COUNT(*) FROM "Wishlists" WHERE "Wishlists"."productId" = "Product"."id")`
+                ),
                 'DESC'
             ]);
         }
@@ -110,14 +113,8 @@ module.exports = {
             include: [
                 { model: ProductCategory, through: { attributes: [] } },
                 { model: ProductResource },
-                { model: Wishlist }
-            ],
-            group: [
-                'ProductResources.id',
-                'ProductCategories.id',
-                'Product.id',
-                'Wishlists.id',
-                'Wishlists.productId'
+                { model: Wishlist },
+                { model: ProductOffer }
             ],
             order: orders
         });
