@@ -3080,6 +3080,12 @@
                         "items": {
                             "$ref": "#/components/schemas/Wishlist"
                         }
+                    },
+                    "ProductOffers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProductOffer"
+                        }
                     }
                 }
             },
