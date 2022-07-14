@@ -5,7 +5,9 @@ const {
     ProductResource,
     Transaction,
     User,
-    Wishlist
+    Wishlist,
+    Profile,
+    City
 } = require('../models');
 
 module.exports = {
@@ -45,9 +47,21 @@ module.exports = {
         const errors = validationResult(req);
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const transaction = await Transaction.findByPk(req.params.id, {
-            include: [{ model: Product, include: [{ model: ProductResource }] }]
-        });
+        const transaction = await Transaction.findByPk(
+            req.params.id,
+
+            {
+                include: [
+                    {
+                        model: User,
+                        include: [
+                            { model: Profile, include: [{ model: City }] }
+                        ]
+                    },
+                    { model: Product, include: [{ model: ProductResource }] }
+                ]
+            }
+        );
 
         if (!transaction)
             return notFound(req, res, 'Transaksi tidak ditemukan');
