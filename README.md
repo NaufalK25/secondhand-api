@@ -41,7 +41,7 @@
 4. Run the server
     ```
     npm run dev
-    yarn run dev
+    yarn dev
     ```
 
 Status: `Under Development`
