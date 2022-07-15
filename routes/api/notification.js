@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { param } = require('express-validator');
+const { param, query } = require('express-validator');
 const passport = require('../../middlewares/passport');
 const {
     internalServerError,
@@ -12,18 +12,27 @@ const router = Router();
 
 router
     .route('/')
-    .get((req, res, next) => {
-        passport.authenticate(
-            'jwt',
-            { session: false },
-            async (err, user, info) => {
-                if (err) return internalServerError(err, req, res);
-                if (!user) return unAuthorized(req, res);
-                req.user = user;
-                next();
-            }
-        )(req, res, next);
-    }, findByUser)
+    .get(
+        (req, res, next) => {
+            passport.authenticate(
+                'jwt',
+                { session: false },
+                async (err, user, info) => {
+                    if (err) return internalServerError(err, req, res);
+                    if (!user) return unAuthorized(req, res);
+                    req.user = user;
+                    next();
+                }
+            )(req, res, next);
+        },
+        [
+            query('limit')
+                .optional()
+                .isNumeric()
+                .withMessage('Limit harus berupa angka')
+        ],
+        findByUser
+    )
     .all(methodNotAllowed);
 
 router

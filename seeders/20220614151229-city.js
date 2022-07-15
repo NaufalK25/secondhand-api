@@ -96,7 +96,7 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    city: 'Kota Bima"',
+                    city: 'Kota Bima',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
@@ -141,7 +141,7 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    city: 'Cirebon',
+                    city: 'Kota Cirebon',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
@@ -271,12 +271,12 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    city: 'Kota Pagar Alam"',
+                    city: 'Kota Pagar Alam',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
                 {
-                    city: 'Kota Palangka Raya"',
+                    city: 'Kota Palangka Raya',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
@@ -431,12 +431,12 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    city: 'Kota Tangerang Selatan"',
+                    city: 'Kota Tangerang Selatan',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
                 {
-                    city: 'Kota Tanjung Pinang"',
+                    city: 'Kota Tanjung Pinang',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
@@ -541,7 +541,7 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    city: 'Kabupaten Aceh Utara"',
+                    city: 'Kabupaten Aceh Utara',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
@@ -626,7 +626,7 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    city: 'Kabupaten Bangkalan"',
+                    city: 'Kabupaten Bangkalan',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
@@ -1081,7 +1081,7 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    city: 'Kabupaten Hulu Sungai Utara"',
+                    city: 'Kabupaten Hulu Sungai Utara',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
@@ -1096,7 +1096,7 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    city: 'Kabupaten Indragiri Hulu"',
+                    city: 'Kabupaten Indragiri Hulu',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
@@ -1286,7 +1286,7 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    city: 'Kabupaten Ketapang"',
+                    city: 'Kabupaten Ketapang',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
@@ -1506,7 +1506,7 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    city: 'Kabupaten Luwu"',
+                    city: 'Kabupaten Luwu',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
@@ -1601,7 +1601,7 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    city: '"Kabupaten Mandailing Natal',
+                    city: 'Kabupaten Mandailing Natal',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
@@ -1656,7 +1656,7 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    city: '"Kabupaten Merauke',
+                    city: 'Kabupaten Merauke',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
@@ -1721,7 +1721,7 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    city: 'Kabupaten Murung Raya"',
+                    city: 'Kabupaten Murung Raya',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },
@@ -2076,7 +2076,7 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    city: 'Kabupaten Sarolangun"',
+                    city: 'Kabupaten Sarolangun',
                     createdAt: new Date(),
                     updatedAt: new Date()
                 },

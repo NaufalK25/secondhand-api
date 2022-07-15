@@ -130,6 +130,20 @@ describe('GET /api/v1/notifications', () => {
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Notifikasi ditemukan');
     });
+    test('200 OK (Limit)', async () => {
+        const res = await request(app)
+            .get('/api/v1/notifications?limit=3')
+            .set('Authorization', `Bearer ${sellerToken}`);
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.message).toEqual('Notifikasi ditemukan');
+    });
+    test('400 Bad Request', async () => {
+        const res = await request(app)
+        .get('/api/v1/notifications?limit=a')
+        .set('Authorization', `Bearer ${sellerToken}`);
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toEqual('Kesalahan validasi');
+    });
     test('401 Unauthorized', async () => {
         const res = await request(app).get('/api/v1/notifications');
         expect(res.statusCode).toEqual(401);
@@ -141,7 +155,7 @@ describe('PUT /api/v1/notifications/:id', () => {
     test('200 OK', async () => {
         const res = await request(app)
             .put('/api/v1/notifications/1')
-            .set('Authorization', `Bearer ${sellerToken}`)
+            .set('Authorization', `Bearer ${sellerToken}`);
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Notifikasi berhasil diperbarui');
     });
