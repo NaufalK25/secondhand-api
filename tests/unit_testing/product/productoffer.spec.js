@@ -378,7 +378,7 @@ describe('POST /api/v1/products/offers', () => {
 
 describe('PUT /api/v1/products/offer/:id', () => {
     beforeEach(() => {
-        Notification.create = jest.fn().mockImplementation(() => ({
+        Notification.update = jest.fn().mockImplementation(() => ({
             ...notification
         }));
         ProductOffer.findByPk = jest.fn().mockImplementation(() => ({
