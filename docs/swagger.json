@@ -846,6 +846,17 @@
                 ],
                 "summary": "Get all notifications by user",
                 "operationId": "notification-get",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 5
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Notification found",
@@ -853,6 +864,16 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/responses/Notification/GetByUser"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/responses/Error"
                                 }
                             }
                         }
