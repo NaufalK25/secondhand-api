@@ -154,21 +154,23 @@ module.exports = {
             });
 
             // notify buyer if product offer accepted by seller
-            await Notification.create({
+            await Notification.update({
                 userId: userProductOffer.buyerId,
                 productId: userProductOffer.productId,
-                productOfferId: userProductOffer.id,
                 type: 'Penawaran produk',
                 description: 'Kamu akan segera dihubungi penjual via whatsapp'
+            },{
+                where: { productOfferId: userProductOffer.id, userId: userProductOffer.buyerId }
             });
         } else {
             // notify buyer if product offer rejected by seller
-            await Notification.create({
+            await Notification.update({
                 userId: userProductOffer.buyerId,
                 productId: userProductOffer.productId,
-                productOfferId: userProductOffer.id,
                 type: 'Penawaran produk',
                 description: 'Penawaran produk anda ditolak'
+            },{
+                where: { productOfferId: userProductOffer.id,  userId: userProductOffer.buyerId}
             });
         }
 
