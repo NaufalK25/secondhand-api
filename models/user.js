@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
             this.hasMany(models.Wishlist, { foreignKey: 'userId' });
             this.hasMany(models.ProductOffer, { foreignKey: 'buyerId' });
             this.hasMany(models.Transaction, { foreignKey: 'buyerId' });
+            this.hasMany(models.TransactionHistory, { foreignKey: 'buyerId' });
         }
     }
     User.init(

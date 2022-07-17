@@ -4,7 +4,7 @@ const { Notification } = require('../../models');
 
 process.env.NODE_ENV = 'test';
 
-const mockRequest = ({ user, params } = {}) => ({ user, params });
+const mockRequest = ({ user, params, query } = {}) => ({ user, params, query });
 const mockResponse = () => {
     const res = {};
     res.status = jest.fn().mockReturnValue(res);
@@ -66,8 +66,13 @@ describe('GET /api/v1/notifications', () => {
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {
-        const req = mockRequest({ user: { id: 1 } });
+        const req = mockRequest({ user: { id: 1 }, query: { limit: '' } });
         const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
 
         await findByUser(req, res);
 
@@ -78,10 +83,40 @@ describe('GET /api/v1/notifications', () => {
             data: [{ ...notificationGet }]
         });
     });
+    test('400 Bad Request', async () => {
+        const req = mockRequest({ user: { id: 1 }, query: { limit: 'a' } });
+        const res = mockResponse();
+        const errors = [
+            {
+                value: '',
+                msg: 'Limit harus berupa angka',
+                param: 'limit',
+                location: 'query'
+            }
+        ];
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => false,
+            array: () => errors
+        }));
+
+        await findByUser(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Kesalahan validasi',
+            data: errors
+        });
+    });
     test('404 Not Found', async () => {
-        const req = mockRequest({ user: { id: 1 } });
+        const req = mockRequest({ user: { id: 1 }, query: { limit: '' } });
         const res = mockResponse();
 
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
         Notification.findAll = jest.fn().mockImplementation(() => []);
 
         await findByUser(req, res);

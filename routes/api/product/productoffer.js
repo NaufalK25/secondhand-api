@@ -8,9 +8,11 @@ const {
 } = require('../../../controllers/error');
 const {
     create,
+    findById,
     findByUser,
     update
 } = require('../../../controllers/productoffer');
+const { Product } = require('../../../models');
 
 const router = Router();
 
@@ -52,6 +54,16 @@ router
                 .withMessage('Harga tawar harus diisi')
                 .isInt()
                 .withMessage('Harga tawar harus berupa angka')
+                .custom(async (value, { req }) => {
+                    const product = await Product.findByPk(req.body.productId);
+                    if (!product) return true;
+                    if (value > product.price) {
+                        throw new Error(
+                            'Harga tawar tidak boleh melebihi harga produk'
+                        );
+                    }
+                    return true;
+                })
         ],
         create
     )
@@ -59,6 +71,22 @@ router
 
 router
     .route('/offer/:id')
+    .get(
+        (req, res, next) => {
+            passport.authenticate(
+                'jwt',
+                { session: false },
+                async (err, user, info) => {
+                    if (err) return internalServerError(err, req, res);
+                    if (!user) return unAuthorized(req, res);
+                    req.user = user;
+                    next();
+                }
+            )(req, res, next);
+        },
+        [param('id').isInt().withMessage('Id harus berupa angka')],
+        findById
+    )
     .put(
         (req, res, next) => {
             passport.authenticate(

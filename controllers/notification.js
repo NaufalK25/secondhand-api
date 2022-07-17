@@ -9,12 +9,20 @@ const {
 
 module.exports = {
     findByUser: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+
+        let { limit } = req.query;
+        if (limit) limit = +limit;
+
         const notification = await Notification.findAll({
-            where: { userId: req.user.id, status: false },
+            where: { userId: req.user.id },
             include: [
                 { model: Product, include: [{ model: ProductResource }] },
                 { model: ProductOffer }
-            ]
+            ],
+            order: [['updatedAt', 'DESC']],
+            limit: limit || (await Notification.count())
         });
 
         if (notification.length === 0)

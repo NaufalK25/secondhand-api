@@ -92,6 +92,15 @@ const productResource = {
     createdAt: date,
     updatedAt: date
 };
+const productOffer = {
+    id: 1,
+    productId: 1,
+    buyerId: 1,
+    priceOffer: 100,
+    status: null,
+    createdAt: date,
+    updatedAt: date
+};
 const wishlist = {
     id: 1,
     userId: 1,
@@ -118,7 +127,8 @@ const productFindBySeller = {
     ...product,
     ProductCategories: [{ ...category }],
     ProductResources: [{ ...productResource }],
-    Wishlists: [{ ...wishlist }]
+    Wishlists: [{ ...wishlist }],
+    ProductOffers: [{ ...productOffer }]
 };
 const productFindById = {
     ...product,

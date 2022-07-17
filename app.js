@@ -18,7 +18,11 @@ app.use(
             'Accept'
         ],
         credentials: true,
-        origin: ['http://localhost:3000', 'https://secondhand-fe.herokuapp.com']
+        origin: [
+            'http://localhost:3000',
+            'https://secondhand-fe.vercel.app',
+            'https://secondhand-fe.herokuapp.com'
+        ]
     })
 );
 app.use(cookieParser());

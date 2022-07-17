@@ -1,6 +1,15 @@
 const { validationResult } = require('express-validator');
-const { findByUser, update } = require('../../../controllers/transaction');
-const { Product, Transaction, Wishlist } = require('../../../models');
+const {
+    findByUser,
+    update,
+    findById
+} = require('../../../controllers/transaction');
+const {
+    Product,
+    Transaction,
+    TransactionHistory,
+    Wishlist
+} = require('../../../models');
 
 process.env.NODE_ENV = 'test';
 
@@ -13,9 +22,34 @@ const mockResponse = () => {
 };
 
 const date = new Date();
+const user = {
+    id: 1,
+    email: 'johndoe@gmail.com',
+    password: '12345678',
+    createdAt: date,
+    updatedAt: date
+};
+const profile = {
+    id: 1,
+    userId: 1,
+    name: 'John Doe',
+    profilePicture:
+        'https://res.cloudinary.com/dko04cygp/image/upload/v1656654290/profiles/default.png',
+    phoneNumber: '081234567890',
+    cityId: 1,
+    address: 'Jl. Kebon Jeruk No. 1',
+    createdAt: date,
+    updatedAt: date
+};
+const city = {
+    id: 1,
+    city: 'Kota Surabaya',
+    createdAt: date,
+    updatedAt: date
+};
 const transaction = {
     id: 1,
-    productId: 1,
+    productOfferId: 1,
     buyerId: 2,
     transactionDate: date,
     fixPrice: 100000,
@@ -42,6 +76,22 @@ const productResource = {
     createdAt: date,
     updatedAt: date
 };
+const productOffer = {
+    id: 1,
+    productId: 1,
+    buyerId: 1,
+    priceOffer: 100,
+    status: null,
+    createdAt: date,
+    updatedAt: date
+};
+const transactionhistory = {
+    id: 1,
+    userId: 1,
+    transactionId: 1,
+    createdAt: date,
+    updatedAt: date
+};
 const wishlist = {
     id: 1,
     userId: 2,
@@ -50,21 +100,19 @@ const wishlist = {
     createdAt: date,
     updatedAt: date
 };
-const buyer = {
-    id: 2,
-    email: 'buyer@gmail.com',
-    password: '12345678',
-    createdAt: date,
-    updatedAt: date
-};
 const transactionGet = {
     ...transaction,
-    Product: { ...product, ProductResources: [{ ...productResource }] }
+    User: { ...user, Profile: { ...profile, City: { ...city } } },
+    ProductOffer: {
+        ...productOffer,
+        Product: { ...product, ProductResources: [{ ...productResource }] }
+    }
 };
 const transactionPut = {
     ...transaction,
-    Product: { ...product, User: { ...buyer } }
+    ProductOffer: { ...productOffer, Product: { ...product } }
 };
+
 jest.mock('express-validator');
 
 describe('GET /api/v1/transactions', () => {
@@ -123,6 +171,111 @@ describe('GET /api/v1/transactions', () => {
     });
 });
 
+describe('GET /api/v1/transactions/:id', () => {
+    beforeEach(() => {
+        Transaction.findOne = jest
+            .fn()
+            .mockImplementation(() => [{ ...transactionGet }]);
+    });
+    afterEach(() => jest.clearAllMocks());
+    test('200 OK (Seller)', async () => {
+        const req = mockRequest({
+            user: { id: 1, roleId: 2 },
+            params: { id: 1 }
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+        Transaction.findOne = jest
+            .fn()
+            .mockImplementation(() => ({ ...transactionGet }));
+
+        await findById(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({
+            success: true,
+            message: 'Transaksi ditemukan',
+            data: { ...transactionGet }
+        });
+    });
+    test('200 OK (Buyer)', async () => {
+        const req = mockRequest({
+            user: { id: 2, roleId: 1 },
+            params: { id: 1 }
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+
+        await findById(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({
+            success: true,
+            message: 'Transaksi ditemukan',
+            data: [{ ...transactionGet }]
+        });
+    });
+    test('400 Bad Request', async () => {
+        const req = mockRequest({
+            user: { id: 2, roleId: 1 },
+            params: { id: '' }
+        });
+        const res = mockResponse();
+        const errors = [
+            {
+                value: '',
+                msg: 'Id harus berupa angka',
+                param: 'id',
+                location: 'params'
+            }
+        ];
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => false,
+            array: () => errors
+        }));
+
+        await findById(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Kesalahan validasi',
+            data: errors
+        });
+    });
+    test('404 Not Found', async () => {
+        const req = mockRequest({
+            user: { id: 2, roleId: 1 },
+            params: { id: 10 }
+        });
+        const res = mockResponse();
+
+        validationResult.mockImplementation(() => ({
+            isEmpty: () => true,
+            array: () => []
+        }));
+        Transaction.findByPk = jest.fn().mockImplementation(() => null);
+
+        await findById(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            message: 'Transaksi tidak ditemukan',
+            data: null
+        });
+    });
+});
+
 describe('PUT /api/v1/transactions/:id', () => {
     beforeEach(() => {
         Transaction.findByPk = jest.fn().mockImplementation(() => ({
@@ -136,6 +289,9 @@ describe('PUT /api/v1/transactions/:id', () => {
         Transaction.update = jest
             .fn()
             .mockImplementation(() => ({ ...transaction }));
+        TransactionHistory.create = jest
+            .fn()
+            .mockImplementation(() => ({ ...transactionhistory }));
     });
     afterEach(() => jest.clearAllMocks());
     test('200 OK', async () => {

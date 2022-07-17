@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
             this.belongsTo(models.Product, { foreignKey: 'productId' });
             this.belongsTo(models.User, { foreignKey: 'buyerId' });
             this.hasMany(models.Notification, { foreignKey: 'productOfferId' });
+            this.hasOne(models.Transaction, { foreignKey: 'productOfferId' });
         }
     }
     ProductOffer.init(

@@ -1,10 +1,12 @@
 const { validationResult } = require('express-validator');
 const {
+    City,
     Notification,
     Product,
     ProductOffer,
+    ProductResource,
+    Profile,
     Transaction,
-    TransactionHistory,
     User,
     Wishlist
 } = require('../models');
@@ -19,18 +21,51 @@ module.exports = {
                 include: [
                     {
                         model: Product,
-                        where: { sellerId: req.user.id }
+                        where: { sellerId: req.user.id },
+                        include: [{ model: ProductResource, limit: 1 }]
                     }
                 ]
             });
         } else {
             //kalo dia buyer dia bakal nampilin produk yang lagi dia tawar
             userProductOffer = await ProductOffer.findAll({
-                where: { buyerId: req.user.id }
+                where: { buyerId: req.user.id },
+                include: [
+                    {
+                        model: Product,
+                        include: [{ model: ProductResource, limit: 1 }]
+                    }
+                ]
             });
         }
 
         if (userProductOffer.length === 0)
+            return notFound(req, res, 'Penawaran produk tidak ditemukan');
+
+        res.status(200).json({
+            success: true,
+            message: 'Penawaran produk ditemukan',
+            data: userProductOffer
+        });
+    },
+    findById: async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+
+        const userProductOffer = await ProductOffer.findByPk(req.params.id, {
+            include: [
+                {
+                    model: Product,
+                    include: [{ model: ProductResource, limit: 1 }]
+                },
+                {
+                    model: User,
+                    include: [{ model: Profile, include: [{ model: City }] }]
+                }
+            ]
+        });
+
+        if (!userProductOffer)
             return notFound(req, res, 'Penawaran produk tidak ditemukan');
 
         res.status(200).json({
@@ -45,6 +80,16 @@ module.exports = {
 
         const product = await Product.findByPk(req.body.productId);
         if (!product) return notFound(req, res, 'Produk tidak ditemukan');
+
+        const productOffer = await ProductOffer.findOne({
+            where: {
+                buyerId: req.user.id,
+                productId: req.body.productId,
+                status: null
+            }
+        });
+        if (productOffer)
+            return forbidden(req, res, 'Anda sudah menawar produk ini');
 
         const newProductOffer = await ProductOffer.create({
             productId: req.body.productId,
@@ -102,34 +147,50 @@ module.exports = {
 
         if (updatedData.status === 'true' || updatedData.status === true) {
             // product offer accepted
-            const transaction = await Transaction.create({
-                productId: userProductOffer.productId,
+            await Transaction.create({
+                productOfferId: userProductOffer.id,
                 buyerId: userProductOffer.buyerId,
                 fixPrice: userProductOffer.priceOffer
             });
 
-            await TransactionHistory.create({
-                productId: userProductOffer.productId,
-                transactionId: transaction.id
-            });
-
             // notify buyer if product offer accepted by seller
-            await Notification.create({
-                userId: userProductOffer.buyerId,
-                productId: userProductOffer.productId,
-                productOfferId: userProductOffer.id,
-                type: 'Penawaran produk',
-                description: 'Kamu akan segera dihubungi penjual via whatsapp'
-            });
+            await Notification.update(
+                {
+                    userId: userProductOffer.buyerId,
+                    productId: userProductOffer.productId,
+                    type: 'Penawaran produk',
+                    description:
+                        'Kamu akan segera dihubungi penjual via whatsapp'
+                },
+                {
+                    where: {
+                        productOfferId: userProductOffer.id,
+                        userId: userProductOffer.buyerId
+                    }
+                }
+            );
+        } else {
+            // notify buyer if product offer rejected by seller
+            await Notification.update(
+                {
+                    userId: userProductOffer.buyerId,
+                    productId: userProductOffer.productId,
+                    type: 'Penawaran produk',
+                    description: 'Penawaran produk anda ditolak'
+                },
+                {
+                    where: {
+                        productOfferId: userProductOffer.id,
+                        userId: userProductOffer.buyerId
+                    }
+                }
+            );
         }
 
         res.status(200).json({
             success: true,
             message: 'Penawaran produk berhasil diperbarui',
-            data: {
-                id: req.user.id,
-                ...updatedData
-            }
+            data: { id: req.user.id, ...updatedData }
         });
     }
 };
