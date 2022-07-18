@@ -185,7 +185,7 @@ describe('GET /api/v1/products', () => {
     });
 });
 
-describe('GET /api/v1/products/:productId', () => {
+describe('GET /api/v1/products/:id', () => {
     beforeEach(() => {
         Product.findOne = jest.fn().mockImplementation(() => ({ ...product }));
         Product.findByPk = jest
