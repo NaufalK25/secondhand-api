@@ -121,6 +121,15 @@ describe('POST /api/v1/products/offers', () => {
         const res = await request(app)
             .post('/api/v1/products/offers')
             .set('Authorization', `Bearer ${buyerToken}`)
+            .send({ productId: 1, priceOffer: 10000000000 });
+
+        expect(res.statusCode).toEqual(400);
+        expect(res.body.message).toEqual('Kesalahan validasi');
+    });
+    test('400 Bad Request', async () => {
+        const res = await request(app)
+            .post('/api/v1/products/offers')
+            .set('Authorization', `Bearer ${buyerToken}`)
             .send({ productId: 1 });
         expect(res.statusCode).toEqual(400);
         expect(res.body.message).toEqual('Kesalahan validasi');
