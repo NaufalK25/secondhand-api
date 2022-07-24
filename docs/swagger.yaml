@@ -7,6 +7,8 @@ servers:
     - url: http://localhost:8000/api/v1
       description: Local server
     - url: https://secondhand-be-api.herokuapp.com/api/v1
+      description: Staging server
+    - url: https://secondhand-6.herokuapp.com/api/v1
       description: Production server
 tags:
     - name: Auth
