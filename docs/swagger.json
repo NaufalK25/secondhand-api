@@ -2,7 +2,7 @@
     "openapi": "3.0.1",
     "info": {
         "title": "SecondHand API",
-        "description": "Backend API for SecondHnad website",
+        "description": "Backend API for SecondHand website",
         "version": "1.0.0"
     },
     "servers": [
