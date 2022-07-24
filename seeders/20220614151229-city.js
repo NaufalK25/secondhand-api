@@ -586,11 +586,6 @@ module.exports = {
                     updatedAt: new Date()
                 },
                 {
-                    city: '',
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                },
-                {
                     city: 'Kabupaten Bandung Barat',
                     createdAt: new Date(),
                     updatedAt: new Date()
