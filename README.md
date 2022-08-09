@@ -44,7 +44,7 @@
     yarn dev
     ```
 
-Status: `Under Development`
+Status: `Deployed`
 
 ### Base URL
 
