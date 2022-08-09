@@ -1,5 +1,7 @@
 # SecondHand
 
+Mirror repository from [GitLab](https://gitlab.com/NaufalK25/fejs-4-x-bejs-4-kel-6-secondhand)
+
 ### Prerequisites
 
 1. [Git](https://git-scm.com/downloads)
@@ -23,7 +25,7 @@
 
 1. Clone the repository
     ```
-    git clone https://gitlab.com/NaufalK25/fejs-4-x-bejs-4-kel-6-secondhand.git
+    git clone https://github.com/NaufalK25/secondhand-api.git
     ```
 2. Install dependencies
     ```
